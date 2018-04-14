@@ -1,0 +1,62 @@
+#!/bin/bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -ex
+
+. `dirname $0`/bigtop.bom
+
+if [ $HOSTTYPE = "powerpc64le" ] ; then
+  git clone https://github.com/ibmsoe/phantomjs-1
+  cd phantomjs-1
+  export PHANTOMJS_CDNURL=https://github.com/ibmsoe/phantomjs/releases/download/2.1.1
+  npm install -g
+  cd ..
+  rm -rf phantomjs-1
+  sed  -i "s|<nodeVersion>.*</nodeVersion>|<nodeVersion>v4.4.7</nodeVersion>|" zeppelin-web/pom.xml
+  sed -i 's|"karma-phantomjs-launcher": "~0.1.4"|"karma-phantomjs-launcher": "~1.0.0"|' zeppelin-web/package.json
+  sed  -i "s|<version>0.0.25</version>|<version>1.1</version>|" zeppelin-web/pom.xml
+fi
+
+./dev/change_scala_version.sh ${SCALA_VERSION%.*}
+
+BUILD_OPTS="-Dscala.version=${SCALA_VERSION} \
+            -Dscala.binary.version=${SCALA_VERSION%.*} \
+            -Dscala.macros.version=2.1.0 \
+            -Dspark.version=${SPARK_VERSION} \
+            -Dhadoop.version=${HADOOP_VERSION} \
+            -Dhbase.hbase.version=${HBASE_VERSION} \
+            -Dhbase.hadoop.version=${HADOOP_VERSION} \
+            -Dignite.version=${IGNITE_HADOOP_VERSION} \
+            -Dflink.version=${FLINK_VERSION} \
+            -Pspark-${SPARK_VERSION%.*} \
+            -Phadoop-${HADOOP_VERSION%.*} \
+            -Pscala-${SCALA_VERSION%.*} \
+            -Ppyspark \
+            -Psparkr \
+            -Pbuild-distr"
+
+if [ "$ZEPPELIN_RUN_TESTS" = "true" ]; then
+  BUILD_OPTS="$BUILD_OPTS -DskipTests=false"
+else
+  BUILD_OPTS="$BUILD_OPTS -DskipTests"
+fi
+
+export MAVEN_OPTS="-Xmx1500m -Xms1500m"
+
+mvn $BUILD_OPTS clean package
+
+mkdir -p build/dist
+tar -C build/dist --strip-components=1 -xzf zeppelin-distribution/target/zeppelin-*.tar.gz

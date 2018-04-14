@@ -1,0 +1,48 @@
+#!/bin/bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -ex
+
+echo "-------------- ClickHouse-do-component-build-started -----------"
+
+base_path=`pwd`
+
+echo "current path: ${base_path}"
+
+. `dirname $0`/bigtop.bom
+
+# Basic environment
+export CMAKE=cmake3
+export CC=/opt/rh/devtoolset-7/root/usr/bin/gcc
+export CXX=/opt/rh/devtoolset-7/root/usr/bin/g++
+
+# Detect number of threads to run 'make' command
+export THREADS=$(grep -c ^processor /proc/cpuinfo)
+
+echo "CMAKE=$CMAKE"
+echo "CC=$CC"
+echo "CXX=$CXX"
+echo "THREADS=$THREADS"
+
+# Build clickhouse rdbms
+rm -rf build
+mkdir build
+cd build
+$CMAKE .. -DCMAKE_INSTALL_PREFIX=/usr/jdp/3.0.0.0-108/clickhouse -DCMAKE_BUILD_TYPE:STRING=Release  -DHAVE_THREE_PARAM_SCHED_SETAFFINITY=1 -DOPENSSL_SSL_LIBRARY=/usr/lib64/libssl.so -DOPENSSL_CRYPTO_LIBRARY=/usr/lib64/libcrypto.so -DOPENSSL_INCLUDE_DIR=/usr/include/openssl
+make -j $THREADS
+cd ..
+
+echo "-------------- ClickHouse-do-component-build-completed --------------"
