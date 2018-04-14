@@ -1,2 +1,2 @@
 # jdp-package
-JDP
+JDP DataFlow Platfrom
