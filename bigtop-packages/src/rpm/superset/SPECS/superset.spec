@@ -46,7 +46,7 @@ Source2: do-component-build
 Source3: install.sh
 Source4: init.d.tmpl
 Requires(pre): jdp-select
-Requires: openblas-devel, lapack, postgresql-libs
+Requires: openblas-devel, lapack, postgresql-libs, openssl >= 1.0.2k
 AutoReq: no
 
 
@@ -79,7 +79,6 @@ bash $RPM_SOURCE_DIR/install.sh \
 install -d -m 0755 $PREFIX/%{config_dir}
 cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/conf/
 /usr/bin/jdp-select set %{component_name} %{stack_version}
-
 
 %preun
 

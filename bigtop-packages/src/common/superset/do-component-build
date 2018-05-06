@@ -25,7 +25,7 @@ echo "current path: ${base_path}"
 . `dirname $0`/bigtop.bom
 
 # Install system package
-sudo yum install gcc gcc-c++ libffi-devel python-devel python-pip python-wheel openssl-devel openldap-devel mysql-devel -y
+sudo yum install gcc gcc-c++ libffi-devel python-devel python-pip python-wheel openssl-devel openldap-devel mysql-devel postgresql-devel -y
 # yum -y install nodejs npm
 
 # Install virtualenv package
@@ -44,6 +44,8 @@ pip install mysqlclient
 pip install impyla
 pip install pyhive
 pip install psycopg2
+pip install PyMySQL
+pip install PyGreSQL
 
 # Build superset core and assets
 
