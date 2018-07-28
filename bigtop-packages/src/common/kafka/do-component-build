@@ -33,10 +33,10 @@ gradle wrapper
 
 ./gradlew -PscalaVersion=${SCALA_VERSION} clean jarAll javadocJar srcJar releaseTarGz -x signArchives
 
-rm -rf build && mkdir build && tar -C build --strip-components=1 -xzf core/build/distributions/kafka_*-SNAPSHOT.tgz
+rm -rf build && mkdir build && tar -C build --strip-components=1 -xzf core/build/distributions/kafka_2.11-1.0.1.tgz
 cd build && tar -C site-docs --strip-components=1 -xzf site-docs/kafka_*.tgz && rm -fr site-docs/kafka_*.tgz
 mkdir -p examples/lib/ && cd .. && cp -r examples/build/libs/* build/examples/lib/
-cp -r contrib/kafka-ganglia/build/libs/* build/libs
+#cp -r contrib/kafka-ganglia/build/libs/* build/libs
 
 # save components`s .bin package
 tar -zcvf kafka-$KAFKA_VERSION-bin.tar.gz build/

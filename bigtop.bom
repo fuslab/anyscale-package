@@ -77,8 +77,8 @@ bigtop {
 /** Base Configuration of the mirror and archives */
 
   version = "1.2.1"
-  soft_stack_version = "3.0.0.0-108"
-  soft_package_version = "-3-0-0-0-108"
+  soft_stack_version = "3.1.0.0-108"
+  soft_package_version = "-3-1-0-0-108"
   soft_stack_name = "jdp"
 
   stack {
@@ -86,8 +86,8 @@ bigtop {
     'scala' { version = '2.11.8'; version_base = version }
   }
   apache {
-    APACHE_MIRROR = "http://archive.jikelab.com/dist/3.0.0.0"
-    APACHE_ARCHIVE = "http://archive.jikelab.com/dist/3.0.0.0"
+    APACHE_MIRROR = "http://archive.jikelab.com/dist/3.1.0.0"
+    APACHE_ARCHIVE = "http://archive.jikelab.com/dist/3.1.0.0"
   }
   git { 
     user = "jdp-dev"
@@ -482,7 +482,7 @@ bigtop {
          pkg     = name
          relNotes = 'Apache incubator-superset'
          version {
-           base = '0.22.1';
+           base = '0.26.3';
            pkg = base;
            release = 1
          }
@@ -540,7 +540,7 @@ bigtop {
       name    = 'kafka'
       relNotes = 'Apache Kafka'
       version { 
-        base = '0.10.2'; 
+        base = '1.0.1'; 
         pkg = base; 
         release = 1 
       }
@@ -600,7 +600,7 @@ bigtop {
       pkg     = name
       relNotes = 'Apache Nifi'
       version { 
-        base = '1.2.0'; 
+        base = '1.7.0'; 
         pkg = base; 
         release = 1 
       }
@@ -618,10 +618,10 @@ bigtop {
     'clickhouse' {
       name    = 'clickhouse'
       pkg     = name
-      relNotes = 'Apache Clickhouse'
+      relNotes = 'Yandex Clickhouse'
       version { 
-        base = '1.1.54362'; 
-        pkg = base; 
+        base = '18.1.0';
+        pkg = base;
         release = 1 
       }
       tarball { 

@@ -57,7 +57,7 @@ ClickHouse is an open source column-oriented database management system capable 
 
 
 %build
-# bash %{SOURCE2}
+bash %{SOURCE2}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT

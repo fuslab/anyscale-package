@@ -97,8 +97,8 @@ install -d -m 0755 $PREFIX/$LIB_DIR
 
 CONF_DIR=${CONF_DIR:-$STACK_HOME/etc/${COMPONENT_NAME}-server/conf.dist}
 install -d -m 0755 $PREFIX/$CONF_DIR
-cp -a ${BUILD_DIR}/dbms/src/Server/config.xml $PREFIX/$CONF_DIR
-cp -a ${BUILD_DIR}/dbms/src/Server/users.xml $PREFIX/$CONF_DIR
+cp -a ${BUILD_DIR}/dbms/programs/server/config.xml $PREFIX/$CONF_DIR
+cp -a ${BUILD_DIR}/dbms/programs/server/users.xml $PREFIX/$CONF_DIR
 
 # create folders structure to be distributed
 INSTALL_DIR=$PREFIX/$STACK_HOME/$COMPONENT_NAME
@@ -116,33 +116,32 @@ INSTALL_DIR=$PREFIX/$STACK_HOME/$COMPONENT_NAME
 # cmake install clickhouse to buildroot
 
 cd build
-#DAEMONS="clickhouse clickhouse-test clickhouse-compressor clickhouse-client clickhouse-server"
-#for daemon in $DAEMONS; do \
-#        DESTDIR=$PREFIX $CMAKE -DCOMPONENT=$daemon -P cmake_install.cmake; \
-#done
-cp -a usr/bin $INSTALL_DIR/
-cp -a usr/share $INSTALL_DIR/
+DAEMONS="clickhouse clickhouse-test clickhouse-compressor clickhouse-client clickhouse-server"
+for daemon in $DAEMONS; do \
+        DESTDIR=$PREFIX $CMAKE -DCOMPONENT=$daemon -P cmake_install.cmake; \
+done
+# cp -a usr/bin $INSTALL_DIR/
+# cp -a usr/share $INSTALL_DIR/
 cd .. 
 
-
 # copy headers folder
-#cp -a ${BUILD_DIR}/contrib/libsparsehash $INSTALL_DIR/share/clickhouse/headers/contrib/
-#cp -a ${BUILD_DIR}/contrib/libdivide $INSTALL_DIR/share/clickhouse/headers/contrib/
-#cp -a ${BUILD_DIR}/contrib/double-conversion $INSTALL_DIR/share/clickhouse/headers/contrib/
-#cp -a ${BUILD_DIR}/contrib/libpcg-random/include $INSTALL_DIR/share/clickhouse/headers/contrib/libpcg-random/
-#cp -a ${BUILD_DIR}/contrib/libcityhash/include $INSTALL_DIR/share/clickhouse/headers/contrib/libcityhash/
-#cp -a ${BUILD_DIR}/contrib/cctz/include $INSTALL_DIR/share/clickhouse/headers/contrib/cctz/
-#cp -a ${BUILD_DIR}/contrib/boost $INSTALL_DIR/share/clickhouse/headers/contrib/
-#cp -a ${BUILD_DIR}/contrib/poco/Foundation/include $INSTALL_DIR/share/clickhouse/headers/contrib/poco/Foundation/
+# cp -a ${BUILD_DIR}/contrib/libsparsehash $INSTALL_DIR/share/clickhouse/headers/contrib/
+# cp -a ${BUILD_DIR}/contrib/libdivide $INSTALL_DIR/share/clickhouse/headers/contrib/
+# cp -a ${BUILD_DIR}/contrib/double-conversion $INSTALL_DIR/share/clickhouse/headers/contrib/
+# cp -a ${BUILD_DIR}/contrib/libpcg-random/include $INSTALL_DIR/share/clickhouse/headers/contrib/libpcg-random/
+# cp -a ${BUILD_DIR}/contrib/libcityhash/include $INSTALL_DIR/share/clickhouse/headers/contrib/libcityhash/
+# cp -a ${BUILD_DIR}/contrib/cctz/include $INSTALL_DIR/share/clickhouse/headers/contrib/cctz/
+# cp -a ${BUILD_DIR}/contrib/boost $INSTALL_DIR/share/clickhouse/headers/contrib/
+# cp -a ${BUILD_DIR}/contrib/poco/Foundation/include $INSTALL_DIR/share/clickhouse/headers/contrib/poco/Foundation/
 
 
-#cp -a /usr/include $INSTALL_DIR/share/clickhouse/headers/usr/
+# cp -a /usr/include $INSTALL_DIR/share/clickhouse/headers/usr/
 
-#cp -a ${BUILD_DIR}/dbms/src  $INSTALL_DIR/share/clickhouse/headers/dbms/
-#cp -a ${BUILD_DIR}/build/dbms/src  $INSTALL_DIR/share/clickhouse/headers/dbms/
+# cp -a ${BUILD_DIR}/dbms/src  $INSTALL_DIR/share/clickhouse/headers/dbms/
+# cp -a ${BUILD_DIR}/build/dbms/src  $INSTALL_DIR/share/clickhouse/headers/dbms/
 
-#cp -a ${BUILD_DIR}/libs/libcommon/include  $INSTALL_DIR/share/clickhouse/headers/libs/libcommon/
-#cp -a ${BUILD_DIR}/build/libs/libcommon/include  $INSTALL_DIR/share/clickhouse/headers/libs/libcommon/
+# cp -a ${BUILD_DIR}/libs/libcommon/include  $INSTALL_DIR/share/clickhouse/headers/libs/libcommon/
+# cp -a ${BUILD_DIR}/build/libs/libcommon/include  $INSTALL_DIR/share/clickhouse/headers/libs/libcommon/
 
 #cp -a /usr/lib64/libstdc++.so.6 $INSTALL_DIR/share/clickhouse/bin/
 #cp -a /opt/rh/devtoolset-7/root/usr/bin/ld.bfd $INSTALL_DIR/share/clickhouse/bin/ld
