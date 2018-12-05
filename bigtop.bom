@@ -86,8 +86,8 @@ bigtop {
     'scala' { version = '2.11.8'; version_base = version }
   }
   apache {
-    APACHE_MIRROR = "http://archive.jikelab.com/dist/3.1.0.0"
-    APACHE_ARCHIVE = "http://archive.jikelab.com/dist/3.1.0.0"
+    APACHE_MIRROR = "http://archive.fusionlab.cn/dist/3.1.0.0"
+    APACHE_ARCHIVE = "http://archive.fusionlab.cn/dist/3.1.0.0"
   }
   git { 
     user = "jdp-dev"
@@ -620,7 +620,7 @@ bigtop {
       pkg     = name
       relNotes = 'Yandex Clickhouse'
       version { 
-        base = '18.1.0';
+        base = '18.14.13';
         pkg = base;
         release = 1 
       }

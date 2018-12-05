@@ -26,12 +26,15 @@ echo "current path: ${base_path}"
 
 # Install system package
 sudo yum install gcc gcc-c++ libffi-devel python-devel python-pip python-wheel openssl-devel openldap-devel mysql-devel postgresql-devel -y
-# yum -y install nodejs npm
+# TODO: node version is too low recommended upgrade version
+# wget https://nodejs.org/download/release/v8.9.4/node-v8.9.4-linux-x64.tar.gz
+# tar -zxf node-v8.9.4-linux-x64.tar.gz -C /usr/local
+# rm -f /usr/local/node
+# ln -s /usr/local/node-v8.9.4-linux-x64 /usr/local/node
+# rm -f node-v8.9.4-linux-x64.tar.gz
 
-# Install virtualenv package
+# Install virtualenv && Create python virtual environment
 pip install virtualenv
-
-# Create python virtual environment
 mkdir -p /usr/jdp/current
 virtualenv /usr/jdp/current/superset
 
@@ -47,8 +50,8 @@ pip install psycopg2
 pip install PyMySQL
 pip install PyGreSQL
 
-# Build superset core and assets
-
+# Build superset core and assets 
+# TODO: support python in 2.7 | 3.x not working
 cd superset/assets/
 
 sh ./js_build.sh
@@ -60,7 +63,7 @@ python setup.py install
 mkdir -p build/superset && cp -r /usr/jdp/current/superset/* build/superset/
 
 # save components`s .bin package
-tar -zcvf superset-$SUPERSET_VERSION-bin.tar.gz build/
+tar -zcf superset-$SUPERSET_VERSION-bin.tar.gz build/
 mv superset-$SUPERSET_VERSION-bin.tar.gz ../../../tar/
 
 echo "-------------- Superset-do-component-build-completed --------------"

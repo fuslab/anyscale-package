@@ -90,7 +90,6 @@ if [ -f "$SOURCE_DIR/bigtop.bom" ]; then
   . $SOURCE_DIR/bigtop.bom
 fi
 
-
 # Generate configuration and directory
 LIB_DIR=${LIB_DIR:-$STACK_HOME/$COMPONENT_NAME}
 install -d -m 0755 $PREFIX/$LIB_DIR
@@ -102,49 +101,19 @@ cp -a ${BUILD_DIR}/dbms/programs/server/users.xml $PREFIX/$CONF_DIR
 
 # create folders structure to be distributed
 INSTALL_DIR=$PREFIX/$STACK_HOME/$COMPONENT_NAME
-#install -d -m 0755 $INSTALL_DIR/bin
-#install -d -m 0755 $INSTALL_DIR/share/clickhouse/bin
-
-#install -d -m 0755 $INSTALL_DIR/share/clickhouse/headers
-
-#install -d -m 0755 $INSTALL_DIR/share/clickhouse/headers/contrib/{libpcg-random,libcityhash,cctz}
-#install -d -m 0755 $INSTALL_DIR/share/clickhouse/headers/contrib/poco/Foundation
-#install -d -m 0755 $INSTALL_DIR/share/clickhouse/headers/dbms
-#install -d -m 0755 $INSTALL_DIR/share/clickhouse/headers/libs/libcommon
-#install -d -m 0755 $INSTALL_DIR/share/clickhouse/headers/bin
 
 # cmake install clickhouse to buildroot
+export CMAKE=cmake3
 
 cd build
 DAEMONS="clickhouse clickhouse-test clickhouse-compressor clickhouse-client clickhouse-server"
 for daemon in $DAEMONS; do \
         DESTDIR=$PREFIX $CMAKE -DCOMPONENT=$daemon -P cmake_install.cmake; \
 done
-# cp -a usr/bin $INSTALL_DIR/
-# cp -a usr/share $INSTALL_DIR/
-cd .. 
+cd ..
 
-# copy headers folder
-# cp -a ${BUILD_DIR}/contrib/libsparsehash $INSTALL_DIR/share/clickhouse/headers/contrib/
-# cp -a ${BUILD_DIR}/contrib/libdivide $INSTALL_DIR/share/clickhouse/headers/contrib/
-# cp -a ${BUILD_DIR}/contrib/double-conversion $INSTALL_DIR/share/clickhouse/headers/contrib/
-# cp -a ${BUILD_DIR}/contrib/libpcg-random/include $INSTALL_DIR/share/clickhouse/headers/contrib/libpcg-random/
-# cp -a ${BUILD_DIR}/contrib/libcityhash/include $INSTALL_DIR/share/clickhouse/headers/contrib/libcityhash/
-# cp -a ${BUILD_DIR}/contrib/cctz/include $INSTALL_DIR/share/clickhouse/headers/contrib/cctz/
-# cp -a ${BUILD_DIR}/contrib/boost $INSTALL_DIR/share/clickhouse/headers/contrib/
-# cp -a ${BUILD_DIR}/contrib/poco/Foundation/include $INSTALL_DIR/share/clickhouse/headers/contrib/poco/Foundation/
-
-
-# cp -a /usr/include $INSTALL_DIR/share/clickhouse/headers/usr/
-
-# cp -a ${BUILD_DIR}/dbms/src  $INSTALL_DIR/share/clickhouse/headers/dbms/
-# cp -a ${BUILD_DIR}/build/dbms/src  $INSTALL_DIR/share/clickhouse/headers/dbms/
-
-# cp -a ${BUILD_DIR}/libs/libcommon/include  $INSTALL_DIR/share/clickhouse/headers/libs/libcommon/
-# cp -a ${BUILD_DIR}/build/libs/libcommon/include  $INSTALL_DIR/share/clickhouse/headers/libs/libcommon/
-
-#cp -a /usr/lib64/libstdc++.so.6 $INSTALL_DIR/share/clickhouse/bin/
-#cp -a /opt/rh/devtoolset-7/root/usr/bin/ld.bfd $INSTALL_DIR/share/clickhouse/bin/ld
+echo `pwd`
+cp -a /usr/jdp/3.1.0.0-108/clickhouse/* $INSTALL_DIR/
 
 # create symlink 
 ln -s /var/log/${COMPONENT_NAME}-server $PREFIX/$STACK_HOME/$COMPONENT_NAME/logs

@@ -30,7 +30,7 @@ Name: %{component_name}%{soft_package_version}
 Version: %{zookeeper_version}
 Release: %{zookeeper_release}
 Summary: A high-performance coordination service for distributed applications.
-URL: http://www.jikelab.com
+URL: http://www.fusionlab.cn
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{component_name}-%{version}-%{release}-XXXXXX)

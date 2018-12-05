@@ -30,7 +30,7 @@ Name: %{component_name}%{soft_package_version}
 Version: %{nifi_version}
 Release: %{nifi_release}
 Summary: NiFi is to automate the flow of data between systems
-URL: http://www.jikelab.com
+URL: http://www.fusionlab.cn
 Group: Applications/Engineering
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{component_name}-%{version}-%{release}-XXXXXX)

@@ -35,7 +35,7 @@ Name: %{component_name}%{soft_package_version}
 Version: %{superset_version}
 Release: %{superset_release}
 Summary: Superset is a data exploration platform designed to be visual, intuitive and interactive
-URL: http://www.jikelab.com
+URL: http://www.fusionlab.cn
 Group: Applications/Engineering
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{component_name}-%{version}-%{release}-XXXXXX)
@@ -46,7 +46,7 @@ Source2: do-component-build
 Source3: install.sh
 Source4: init.d.tmpl
 Requires(pre): jdp-select
-Requires: openblas-devel, lapack, postgresql-libs, openssl >= 1.0.2k
+Requires: postgresql-libs, openssl >= 1.0.2k
 AutoReq: no
 
 

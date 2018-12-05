@@ -30,7 +30,7 @@ Name: %{component_name}%{soft_package_version}
 Version: %{registry_version}
 Release: %{registry_release}
 Summary: SchemaRegistry provides a central repository for a message’s metadata.
-URL: http://www.jikelab.com
+URL: http://www.fusionlab.cn
 Group: Applications/Engineering
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{component_name}-%{version}-%{release}-XXXXXX)

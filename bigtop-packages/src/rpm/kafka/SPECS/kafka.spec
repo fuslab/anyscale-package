@@ -30,7 +30,7 @@ Name: %{component_name}%{soft_package_version}
 Version: %{kafka_version}
 Release: %{kafka_release}
 Summary: Apache Kafka is publish-subscribe messaging rethought as a distributed commit log.
-URL: http://www.jikelab.com
+URL: http://www.fusionlab.cn
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{component_name}-%{version}-%{release}-XXXXXX)

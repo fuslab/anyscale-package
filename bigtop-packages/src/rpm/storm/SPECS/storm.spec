@@ -30,7 +30,7 @@ Name: %{component_name}%{soft_package_version}
 Version: %{storm_version}
 Release: %{storm_release}
 Summary: Storm is a distributed, fault-tolerant, and high-performance realtime computation system that provides strong guarantees on the processing of data.
-URL: http://www.jikelab.com
+URL: http://www.fusionlab.cn/
 Group: Applications/Server
 Buildroot: %(mktemp -ud %{_tmppath}/%{component_name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0

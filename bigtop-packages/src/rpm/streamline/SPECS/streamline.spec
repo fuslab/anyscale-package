@@ -30,7 +30,7 @@ Name: %{component_name}%{soft_package_version}
 Version: %{streamline_version}
 Release: %{streamline_release}
 Summary: Streaming Analytics Manager makes it easy to build streaming applications and do analytics on streaming data.
-URL: http://www.jikelab.com
+URL: http://www.fusionlab.cn/
 Group: Applications/Engineering
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{component_name}-%{version}-%{release}-XXXXXX)
