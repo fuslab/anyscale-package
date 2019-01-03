@@ -53,18 +53,18 @@ fi
 mkdir build
 mkdir build/src
 
-# Build artifacts
-# MAVEN_OPTS="-Dzookeeper.version=$ZOOKEEPER_VERSION"
-# MAVEN_OPTS="$MAVEN_OPTS -DskipTests -DskipTest -DskipITs"
-# mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS} -Dtomcat.version=${BIGTOP_TOMCAT_VERSION} -Dtomcat.download.url="http://archive.apache.org/dist/tomcat/tomcat-6/v${BIGTOP_TOMCAT_VERSION}/bin/apache-tomcat-${BIGTOP_TOMCAT_VERSION}.tar.gz" install "$@"
-# mvn site site:stage ${MAVEN_OPTS} $@
+Build artifacts
+MAVEN_OPTS="-Dzookeeper.version=$ZOOKEEPER_VERSION"
+MAVEN_OPTS="$MAVEN_OPTS -DskipTests -DskipTest -DskipITs"
+mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS} -Dtomcat.version=${BIGTOP_TOMCAT_VERSION} -Dtomcat.download.url="http://archive.apache.org/dist/tomcat/tomcat-6/v${BIGTOP_TOMCAT_VERSION}/bin/apache-tomcat-${BIGTOP_TOMCAT_VERSION}.tar.gz" install "$@"
+mvn site site:stage ${MAVEN_OPTS} $@
 
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
 (cd build/src ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${HADOOP_VERSION}-src.tar.gz)
 
 # Copy generated docs
 mkdir -p build/share
-#cp -r target/staging/hadoop-project build/share/doc
+cp -r target/staging/hadoop-project build/share/doc
 
 # Create a manifest for hadoop client package
 (cd hadoop-client/target/hadoop-client-*/share/hadoop/client/lib ; ls) > build/hadoop-client.list
