@@ -21,41 +21,53 @@
 # that would make newer RPM debuginfo generation scripts happy.
 %undefine _missing_build_ids_terminate_build
 
-%define hadoop_name hadoop
-%define etc_hadoop /etc/%{name}
+# Set the following parameters
+%define stack_name %{soft_stack_name}
+%define stack_version %{soft_stack_version}
+
+%define stack_home /usr/%{stack_name}/%{stack_version}
+%define component_name hadoop
+%define component_install_dir %{stack_home}/%{component_name}
+
+
+%define etc_dir /etc/%{component_name}
+%define config_dir %{etc_dir}/conf
+
+%define hadoop_name %{component_name}
+%define etc_hadoop %{etc_dir}
 %define etc_yarn /etc/yarn
-%define etc_httpfs /etc/%{name}-httpfs
+%define etc_httpfs /etc/%{component_name}-httpfs
 %define config_hadoop %{etc_hadoop}/conf
 %define config_yarn %{etc_yarn}/conf
 %define config_httpfs %{etc_httpfs}/conf
 %define tomcat_deployment_httpfs %{etc_httpfs}/tomcat-conf
-%define lib_hadoop_dirname /usr/lib
-%define lib_hadoop %{lib_hadoop_dirname}/%{name}
-%define lib_httpfs %{lib_hadoop_dirname}/%{name}-httpfs
-%define lib_hdfs %{lib_hadoop_dirname}/%{name}-hdfs
-%define lib_yarn %{lib_hadoop_dirname}/%{name}-yarn
-%define lib_mapreduce %{lib_hadoop_dirname}/%{name}-mapreduce
+%define lib_hadoop_dirname %{component_install_dir}
+%define lib_hadoop %{lib_hadoop_dirname}/%{component_name}
+%define lib_httpfs %{lib_hadoop_dirname}/%{component_name}-httpfs
+%define lib_hdfs %{lib_hadoop_dirname}/%{component_name}-hdfs
+%define lib_yarn %{lib_hadoop_dirname}/%{component_name}-yarn
+%define lib_mapreduce %{lib_hadoop_dirname}/%{component_name}-mapreduce
 %define log_hadoop_dirname /var/log
-%define log_hadoop %{log_hadoop_dirname}/%{name}
-%define log_yarn %{log_hadoop_dirname}/%{name}-yarn
-%define log_hdfs %{log_hadoop_dirname}/%{name}-hdfs
-%define log_httpfs %{log_hadoop_dirname}/%{name}-httpfs
-%define log_mapreduce %{log_hadoop_dirname}/%{name}-mapreduce
+%define log_hadoop %{log_hadoop_dirname}/%{component_name}
+%define log_yarn %{log_hadoop_dirname}/%{component_name}-yarn
+%define log_hdfs %{log_hadoop_dirname}/%{component_name}-hdfs
+%define log_httpfs %{log_hadoop_dirname}/%{component_name}-httpfs
+%define log_mapreduce %{log_hadoop_dirname}/%{component_name}-mapreduce
 %define run_hadoop_dirname /var/run
 %define run_hadoop %{run_hadoop_dirname}/hadoop
-%define run_yarn %{run_hadoop_dirname}/%{name}-yarn
-%define run_hdfs %{run_hadoop_dirname}/%{name}-hdfs
-%define run_httpfs %{run_hadoop_dirname}/%{name}-httpfs
-%define run_mapreduce %{run_hadoop_dirname}/%{name}-mapreduce
-%define state_hadoop_dirname /var/lib
+%define run_yarn %{run_hadoop_dirname}/%{component_name}-yarn
+%define run_hdfs %{run_hadoop_dirname}/%{component_name}-hdfs
+%define run_httpfs %{run_hadoop_dirname}/%{component_name}-httpfs
+%define run_mapreduce %{run_hadoop_dirname}/%{component_name}-mapreduce
+%define state_hadoop_dirname %{component_install_dir}
 %define state_hadoop %{state_hadoop_dirname}/hadoop
-%define state_yarn %{state_hadoop_dirname}/%{name}-yarn
-%define state_hdfs %{state_hadoop_dirname}/%{name}-hdfs
-%define state_mapreduce %{state_hadoop_dirname}/%{name}-mapreduce
-%define state_httpfs %{state_hadoop_dirname}/%{name}-httpfs
+%define state_yarn %{state_hadoop_dirname}/%{component_name}-yarn
+%define state_hdfs %{state_hadoop_dirname}/%{component_name}-hdfs
+%define state_mapreduce %{state_hadoop_dirname}/%{component_name}-mapreduce
+%define state_httpfs %{state_hadoop_dirname}/%{component_name}-httpfs
 %define bin_hadoop %{_bindir}
 %define man_hadoop %{_mandir}
-%define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
+%define doc_hadoop %{_docdir}/%{component_name}-%{hadoop_version}
 %define httpfs_services httpfs
 %define mapreduce_services mapreduce-historyserver
 %define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode
@@ -90,7 +102,7 @@
     %{nil}
 
 %define netcat_package nc
-%define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
+%define doc_hadoop %{_docdir}/%{component_name}-%{hadoop_version}
 %define alternatives_cmd alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %endif
@@ -110,14 +122,14 @@
     %{nil}
 
 %define netcat_package netcat-openbsd
-%define doc_hadoop %{_docdir}/%{name}
+%define doc_hadoop %{_docdir}/%{component_name}
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d
 %endif
 
 %if  0%{?mgaversion}
 %define netcat_package netcat-openbsd
-%define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
+%define doc_hadoop %{_docdir}/%{component_name}-%{hadoop_version}
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %endif
@@ -132,16 +144,16 @@
 # like thrift so disable this
 %define _use_internal_dependency_generator 0
 
-Name: %{hadoop_name}
+Name:  %{component_name}%{soft_package_version}
 Version: %{hadoop_version}
 Release: %{hadoop_release}
 Summary: Hadoop is a software platform for processing vast amounts of data
 License: ASL 2.0
 URL: http://hadoop.apache.org/core/
 Group: Development/Libraries
-Source0: %{name}-%{hadoop_base_version}.tar.gz
+Source0: %{component_name}-%{hadoop_base_version}.tar.gz
 Source1: do-component-build
-Source2: install_%{name}.sh
+Source2: install_%{component_name}.sh
 Source3: hadoop.default
 Source4: hadoop-fuse.default
 Source5: httpfs.default
@@ -170,7 +182,7 @@ Source27: hdfs.1
 Source28: mapred.1
 Source29: hadoop-yarn-timelineserver.svc
 #BIGTOP_PATCH_FILES
-Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
+Buildroot: %{_tmppath}/%{component_name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, zookeeper >= 3.4.0
 Requires: psmisc, %{netcat_package}
@@ -223,7 +235,7 @@ located.
 %package hdfs
 Summary: The Hadoop Distributed File System
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}, bigtop-groovy, bigtop-jsvc
+Requires: %{component_name} = %{version}-%{release}, bigtop-groovy, bigtop-jsvc
 
 %description hdfs
 Hadoop Distributed File System (HDFS) is the primary storage system used by
@@ -234,7 +246,7 @@ computations.
 %package yarn
 Summary: The Hadoop NextGen MapReduce (YARN)
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
+Requires: %{component_name} = %{version}-%{release}
 
 %description yarn
 YARN (Hadoop NextGen MapReduce) is a general purpose data-computation framework.
@@ -255,7 +267,7 @@ execute and monitor the tasks.
 %package mapreduce
 Summary: The Hadoop MapReduce (MRv2)
 Group: System/Daemons
-Requires: %{name}-yarn = %{version}-%{release}
+Requires: %{component_name}-yarn = %{version}-%{release}
 
 %description mapreduce
 Hadoop MapReduce is a programming model and software framework for writing applications
@@ -265,9 +277,9 @@ that rapidly process vast amounts of data in parallel on large clusters of compu
 %package hdfs-namenode
 Summary: The Hadoop namenode manages the block locations of HDFS files
 Group: System/Daemons
-Requires: %{name}-hdfs = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
-Requires(pre): %{name}-hdfs = %{version}-%{release}
+Requires: %{component_name}-hdfs = %{version}-%{release}
+Requires(pre): %{component_name} = %{version}-%{release}
+Requires(pre): %{component_name}-hdfs = %{version}-%{release}
 
 %description hdfs-namenode
 The Hadoop Distributed Filesystem (HDFS) requires one unique server, the
@@ -277,9 +289,9 @@ namenode, which manages the block locations of files on the filesystem.
 %package hdfs-secondarynamenode
 Summary: Hadoop Secondary namenode
 Group: System/Daemons
-Requires: %{name}-hdfs = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
-Requires(pre): %{name}-hdfs = %{version}-%{release}
+Requires: %{component_name}-hdfs = %{version}-%{release}
+Requires(pre): %{component_name} = %{version}-%{release}
+Requires(pre): %{component_name}-hdfs = %{version}-%{release}
 
 %description hdfs-secondarynamenode
 The Secondary Name Node periodically compacts the Name Node EditLog
@@ -289,9 +301,9 @@ do not incur unnecessary downtime.
 %package hdfs-zkfc
 Summary: Hadoop HDFS failover controller
 Group: System/Daemons
-Requires: %{name}-hdfs = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
-Requires(pre): %{name}-hdfs = %{version}-%{release}
+Requires: %{component_name}-hdfs = %{version}-%{release}
+Requires(pre): %{component_name} = %{version}-%{release}
+Requires(pre): %{component_name}-hdfs = %{version}-%{release}
 
 %description hdfs-zkfc
 The Hadoop HDFS failover controller is a ZooKeeper client which also
@@ -303,8 +315,8 @@ election.
 %package hdfs-journalnode
 Summary: Hadoop HDFS JournalNode
 Group: System/Daemons
-Requires: %{name}-hdfs = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
+Requires: %{component_name}-hdfs = %{version}-%{release}
+Requires(pre): %{component_name} = %{version}-%{release}
 
 %description hdfs-journalnode
 The HDFS JournalNode is responsible for persisting NameNode edit logs.
@@ -314,9 +326,9 @@ separate machines in the cluster.
 %package hdfs-datanode
 Summary: Hadoop Data Node
 Group: System/Daemons
-Requires: %{name}-hdfs = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
-Requires(pre): %{name}-hdfs = %{version}-%{release}
+Requires: %{component_name}-hdfs = %{version}-%{release}
+Requires(pre): %{component_name} = %{version}-%{release}
+Requires(pre): %{component_name}-hdfs = %{version}-%{release}
 
 %description hdfs-datanode
 The Data Nodes in the Hadoop Cluster are responsible for serving up
@@ -326,9 +338,9 @@ blocks of data over the network to Hadoop Distributed Filesystem
 %package httpfs
 Summary: HTTPFS for Hadoop
 Group: System/Daemons
-Requires: %{name}-hdfs = %{version}-%{release}, bigtop-tomcat
-Requires(pre): %{name} = %{version}-%{release}
-Requires(pre): %{name}-hdfs = %{version}-%{release}
+Requires: %{component_name}-hdfs = %{version}-%{release}, bigtop-tomcat
+Requires(pre): %{component_name} = %{version}-%{release}
+Requires(pre): %{component_name}-hdfs = %{version}-%{release}
 
 %description httpfs
 The server providing HTTP REST API support for the complete FileSystem/FileContext
@@ -337,9 +349,9 @@ interface in HDFS.
 %package yarn-resourcemanager
 Summary: YARN Resource Manager
 Group: System/Daemons
-Requires: %{name}-yarn = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
-Requires(pre): %{name}-yarn = %{version}-%{release}
+Requires: %{component_name}-yarn = %{version}-%{release}
+Requires(pre): %{component_name} = %{version}-%{release}
+Requires(pre): %{component_name}-yarn = %{version}-%{release}
 
 %description yarn-resourcemanager
 The resource manager manages the global assignment of compute resources to applications
@@ -347,9 +359,9 @@ The resource manager manages the global assignment of compute resources to appli
 %package yarn-nodemanager
 Summary: YARN Node Manager
 Group: System/Daemons
-Requires: %{name}-yarn = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
-Requires(pre): %{name}-yarn = %{version}-%{release}
+Requires: %{component_name}-yarn = %{version}-%{release}
+Requires(pre): %{component_name} = %{version}-%{release}
+Requires(pre): %{component_name}-yarn = %{version}-%{release}
 
 %description yarn-nodemanager
 The NodeManager is the per-machine framework agent who is responsible for
@@ -359,9 +371,9 @@ reporting the same to the ResourceManager/Scheduler.
 %package yarn-proxyserver
 Summary: YARN Web Proxy
 Group: System/Daemons
-Requires: %{name}-yarn = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
-Requires(pre): %{name}-yarn = %{version}-%{release}
+Requires: %{component_name}-yarn = %{version}-%{release}
+Requires(pre): %{component_name} = %{version}-%{release}
+Requires(pre): %{component_name}-yarn = %{version}-%{release}
 
 %description yarn-proxyserver
 The web proxy server sits in front of the YARN application master web UI.
@@ -369,9 +381,9 @@ The web proxy server sits in front of the YARN application master web UI.
 %package yarn-timelineserver
 Summary: YARN Timeline Server
 Group: System/Daemons
-Requires: %{name}-yarn = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
-Requires(pre): %{name}-yarn = %{version}-%{release}
+Requires: %{component_name}-yarn = %{version}-%{release}
+Requires(pre): %{component_name} = %{version}-%{release}
+Requires(pre): %{component_name}-yarn = %{version}-%{release}
 
 %description yarn-timelineserver
 Storage and retrieval of applications' current as well as historic information in a generic fashion is solved in YARN through the Timeline Server.
@@ -379,10 +391,10 @@ Storage and retrieval of applications' current as well as historic information i
 %package mapreduce-historyserver
 Summary: MapReduce History Server
 Group: System/Daemons
-Requires: %{name}-mapreduce = %{version}-%{release}
-Requires: %{name}-hdfs = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
-Requires(pre): %{name}-mapreduce = %{version}-%{release}
+Requires: %{component_name}-mapreduce = %{version}-%{release}
+Requires: %{component_name}-hdfs = %{version}-%{release}
+Requires(pre): %{component_name} = %{version}-%{release}
+Requires(pre): %{component_name}-mapreduce = %{version}-%{release}
 
 %description mapreduce-historyserver
 The History server keeps records of the different activities being performed on a Apache Hadoop cluster
@@ -390,10 +402,10 @@ The History server keeps records of the different activities being performed on 
 %package client
 Summary: Hadoop client side dependencies
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
-Requires: %{name}-hdfs = %{version}-%{release}
-Requires: %{name}-yarn = %{version}-%{release}
-Requires: %{name}-mapreduce = %{version}-%{release}
+Requires: %{component_name} = %{version}-%{release}
+Requires: %{component_name}-hdfs = %{version}-%{release}
+Requires: %{component_name}-yarn = %{version}-%{release}
+Requires: %{component_name}-mapreduce = %{version}-%{release}
 
 %description client
 Installation of this package will provide you with all the dependencies for Hadoop clients.
@@ -401,13 +413,13 @@ Installation of this package will provide you with all the dependencies for Hado
 %package conf-pseudo
 Summary: Pseudo-distributed Hadoop configuration
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
-Requires: %{name}-hdfs-namenode = %{version}-%{release}
-Requires: %{name}-hdfs-datanode = %{version}-%{release}
-Requires: %{name}-hdfs-secondarynamenode = %{version}-%{release}
-Requires: %{name}-yarn-resourcemanager = %{version}-%{release}
-Requires: %{name}-yarn-nodemanager = %{version}-%{release}
-Requires: %{name}-mapreduce-historyserver = %{version}-%{release}
+Requires: %{component_name} = %{version}-%{release}
+Requires: %{component_name}-hdfs-namenode = %{version}-%{release}
+Requires: %{component_name}-hdfs-datanode = %{version}-%{release}
+Requires: %{component_name}-hdfs-secondarynamenode = %{version}-%{release}
+Requires: %{component_name}-yarn-resourcemanager = %{version}-%{release}
+Requires: %{component_name}-yarn-nodemanager = %{version}-%{release}
+Requires: %{component_name}-mapreduce-historyserver = %{version}-%{release}
 
 %description conf-pseudo
 Contains configuration files for a "pseudo-distributed" Hadoop deployment.
@@ -423,7 +435,7 @@ Documentation for Hadoop
 %package libhdfs
 Summary: Hadoop Filesystem Library
 Group: Development/Libraries
-Requires: %{name}-hdfs = %{version}-%{release}
+Requires: %{component_name}-hdfs = %{version}-%{release}
 # TODO: reconcile libjvm
 AutoReq: no
 
@@ -441,9 +453,9 @@ Includes examples and header files for accessing HDFS from C
 %package hdfs-fuse
 Summary: Mountable HDFS
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
-Requires: %{name}-libhdfs = %{version}-%{release}
-Requires: %{name}-client = %{version}-%{release}
+Requires: %{component_name} = %{version}-%{release}
+Requires: %{component_name}-libhdfs = %{version}-%{release}
+Requires: %{component_name}-client = %{version}-%{release}
 Requires: fuse
 AutoReq: no
 
@@ -459,7 +471,7 @@ These projects (enumerated below) allow HDFS to be mounted (on most flavors of U
 
 
 %prep
-%setup -n %{name}-%{hadoop_base_version}-src
+%setup -n %{component_name}-%{hadoop_base_version}-src
 
 #BIGTOP_PATCH_COMMANDS
 %build
@@ -508,14 +520,14 @@ env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
 %__cp $RPM_SOURCE_DIR/hadoop.default $RPM_BUILD_ROOT/etc/default/hadoop
 # FIXME: BIGTOP-463
 echo 'export JSVC_HOME=%{libexecdir}/bigtop-utils' >> $RPM_BUILD_ROOT/etc/default/hadoop
-%__cp $RPM_SOURCE_DIR/%{name}-fuse.default $RPM_BUILD_ROOT/etc/default/%{name}-fuse
+%__cp $RPM_SOURCE_DIR/%{component_name}-fuse.default $RPM_BUILD_ROOT/etc/default/%{component_name}-fuse
 
 # Generate the init.d scripts
 for service in %{hadoop_services}
 do
-       bash %{SOURCE11} $RPM_SOURCE_DIR/%{name}-${service}.svc rpm $RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
-       cp $RPM_SOURCE_DIR/${service/-*/}.default $RPM_BUILD_ROOT/etc/default/%{name}-${service}
-       chmod 644 $RPM_BUILD_ROOT/etc/default/%{name}-${service}
+       bash %{SOURCE11} $RPM_SOURCE_DIR/%{component_name}-${service}.svc rpm $RPM_BUILD_ROOT/%{initd_dir}/%{component_name}-${service}
+       cp $RPM_SOURCE_DIR/${service/-*/}.default $RPM_BUILD_ROOT/etc/default/%{component_name}-${service}
+       chmod 644 $RPM_BUILD_ROOT/etc/default/%{component_name}-${service}
 done
 
 # Install security limits
@@ -563,32 +575,32 @@ getent group mapred >/dev/null   || groupadd -r mapred
 getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapred -G hadoop --home %{state_mapreduce} mapred
 
 %post
-%{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.empty 10
+%{alternatives_cmd} --install %{config_hadoop} %{component_name}-conf %{etc_hadoop}/conf.empty 10
 
 %post httpfs
-%{alternatives_cmd} --install %{config_httpfs} %{name}-httpfs-conf %{etc_httpfs}/conf.empty 10
-%{alternatives_cmd} --install %{tomcat_deployment_httpfs} %{name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.dist 10
-%{alternatives_cmd} --install %{tomcat_deployment_httpfs} %{name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.https 5
+%{alternatives_cmd} --install %{config_httpfs} %{component_name}-httpfs-conf %{etc_httpfs}/conf.empty 10
+%{alternatives_cmd} --install %{tomcat_deployment_httpfs} %{component_name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.dist 10
+%{alternatives_cmd} --install %{tomcat_deployment_httpfs} %{component_name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.https 5
 
-chkconfig --add %{name}-httpfs
+chkconfig --add %{component_name}-httpfs
 
 %preun
 if [ "$1" = 0 ]; then
-  %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.empty || :
+  %{alternatives_cmd} --remove %{component_name}-conf %{etc_hadoop}/conf.empty || :
 fi
 
 %preun httpfs
 if [ $1 = 0 ]; then
-  service %{name}-httpfs stop > /dev/null 2>&1
-  chkconfig --del %{name}-httpfs
-  %{alternatives_cmd} --remove %{name}-httpfs-conf %{etc_httpfs}/conf.empty || :
-  %{alternatives_cmd} --remove %{name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.dist || :
-  %{alternatives_cmd} --remove %{name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.https || :
+  service %{component_name}-httpfs stop > /dev/null 2>&1
+  chkconfig --del %{component_name}-httpfs
+  %{alternatives_cmd} --remove %{component_name}-httpfs-conf %{etc_httpfs}/conf.empty || :
+  %{alternatives_cmd} --remove %{component_name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.dist || :
+  %{alternatives_cmd} --remove %{component_name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.https || :
 fi
 
 %postun httpfs
 if [ $1 -ge 1 ]; then
-  service %{name}-httpfs condrestart >/dev/null 2>&1
+  service %{component_name}-httpfs condrestart >/dev/null 2>&1
 fi
 
 
@@ -681,9 +693,9 @@ fi
 %files httpfs
 %defattr(-,root,root)
 %config(noreplace) %{etc_httpfs}
-%config(noreplace) /etc/default/%{name}-httpfs
+%config(noreplace) /etc/default/%{component_name}-httpfs
 %{lib_hadoop}/libexec/httpfs-config.sh
-%{initd_dir}/%{name}-httpfs
+%{initd_dir}/%{component_name}-httpfs
 %{lib_httpfs}
 %attr(0775,httpfs,httpfs) %{run_httpfs}
 %attr(0775,httpfs,httpfs) %{log_httpfs}
@@ -693,19 +705,19 @@ fi
 %define service_macro() \
 %files %1 \
 %defattr(-,root,root) \
-%{initd_dir}/%{name}-%1 \
-%config(noreplace) /etc/default/%{name}-%1 \
+%{initd_dir}/%{component_name}-%1 \
+%config(noreplace) /etc/default/%{component_name}-%1 \
 %post %1 \
-chkconfig --add %{name}-%1 \
+chkconfig --add %{component_name}-%1 \
 \
 %preun %1 \
 if [ $1 = 0 ]; then \
-  service %{name}-%1 stop > /dev/null 2>&1 \
-  chkconfig --del %{name}-%1 \
+  service %{component_name}-%1 stop > /dev/null 2>&1 \
+  chkconfig --del %{component_name}-%1 \
 fi \
 %postun %1 \
 if [ $1 -ge 1 ]; then \
-  service %{name}-%1 condrestart >/dev/null 2>&1 \
+  service %{component_name}-%1 condrestart >/dev/null 2>&1 \
 fi
 
 %service_macro hdfs-namenode
@@ -721,11 +733,11 @@ fi
 
 # Pseudo-distributed Hadoop installation
 %post conf-pseudo
-%{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.pseudo 30
+%{alternatives_cmd} --install %{config_hadoop} %{component_name}-conf %{etc_hadoop}/conf.pseudo 30
 
 %preun conf-pseudo
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.pseudo
+        %{alternatives_cmd} --remove %{component_name}-conf %{etc_hadoop}/conf.pseudo
 fi
 
 %files conf-pseudo
