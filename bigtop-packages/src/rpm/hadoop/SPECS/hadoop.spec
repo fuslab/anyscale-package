@@ -27,16 +27,16 @@
 
 %define stack_home /usr/%{stack_name}/%{stack_version}
 %define component_name hadoop
-%define component_install_dir %{stack_home}/%{component_name}
+%define component_install_dir %{stack_home}
 
 
 %define etc_dir /etc/%{component_name}
 %define config_dir %{etc_dir}/conf
 
 %define hadoop_name %{component_name}
-%define etc_hadoop %{etc_dir}
-%define etc_yarn /etc/yarn
-%define etc_httpfs /etc/%{component_name}-httpfs
+%define etc_hadoop %{component_install_dir}/etc/%{component_name}
+%define etc_yarn %{component_install_dir}/etc/yarn
+%define etc_httpfs %{component_install_dir}/etc/%{component_name}-httpfs
 %define config_hadoop %{etc_hadoop}/conf
 %define config_yarn %{etc_yarn}/conf
 %define config_httpfs %{etc_httpfs}/conf
@@ -65,9 +65,9 @@
 %define state_hdfs %{state_hadoop_dirname}/%{component_name}-hdfs
 %define state_mapreduce %{state_hadoop_dirname}/%{component_name}-mapreduce
 %define state_httpfs %{state_hadoop_dirname}/%{component_name}-httpfs
-%define bin_hadoop %{_bindir}
-%define man_hadoop %{_mandir}
-%define doc_hadoop %{_docdir}/%{component_name}-%{hadoop_version}
+%define bin_hadoop %{component_install_dir}/%{component_name}/bin
+%define man_hadoop %{component_install_dir}/%{component_name}/%{_mandir}
+%define doc_hadoop %{component_install_dir}/%{component_name}/%{_docdir}/%{component_name}-%{hadoop_version}
 %define httpfs_services httpfs
 %define mapreduce_services mapreduce-historyserver
 %define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode
@@ -495,12 +495,12 @@ env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
   --distro-dir=$RPM_SOURCE_DIR \
   --build-dir=$PWD/build \
   --httpfs-dir=$RPM_BUILD_ROOT%{lib_httpfs} \
-  --system-include-dir=$RPM_BUILD_ROOT%{_includedir} \
-  --system-lib-dir=$RPM_BUILD_ROOT%{_libdir} \
+  --system-include-dir=$RPM_BUILD_ROOT/%{component_install_dir}/%{_includedir} \
+  --system-lib-dir=$RPM_BUILD_ROOT/%{component_install_dir}/%{_libdir} \
   --system-libexec-dir=$RPM_BUILD_ROOT/%{lib_hadoop}/libexec \
   --hadoop-etc-dir=$RPM_BUILD_ROOT%{etc_hadoop} \
   --httpfs-etc-dir=$RPM_BUILD_ROOT%{etc_httpfs} \
-  --prefix=$RPM_BUILD_ROOT \
+  --prefix=$RPM_BUILD_ROOT/%{component_install_dir} \
   --doc-dir=$RPM_BUILD_ROOT%{doc_hadoop} \
   --example-dir=$RPM_BUILD_ROOT%{doc_hadoop}/examples \
   --native-build-string=%{hadoop_arch} \
@@ -508,9 +508,9 @@ env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
   --man-dir=$RPM_BUILD_ROOT%{man_hadoop} \
 
 # Forcing Zookeeper dependency to be on the packaged jar
-%__ln_s -f /usr/lib/zookeeper/zookeeper.jar $RPM_BUILD_ROOT/%{lib_hadoop}/lib/zookeeper*.jar
+# %__ln_s -f /usr/lib/zookeeper/zookeeper.jar $RPM_BUILD_ROOT/%{lib_hadoop}/lib/zookeeper*.jar
 # Workaround for BIGTOP-583
-%__rm -f $RPM_BUILD_ROOT/%{lib_hadoop}-*/lib/slf4j-log4j12-*.jar
+#%__rm -f $RPM_BUILD_ROOT/%{lib_hadoop}-*/lib/slf4j-log4j12-*.jar
 
 # Init.d scripts
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
@@ -640,7 +640,7 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/mapred-site.xml
 %config(noreplace) %{etc_hadoop}/conf.empty/mapred-env.sh
 %config(noreplace) %{etc_hadoop}/conf.empty/mapred-queues.xml.template
-%config(noreplace) %{etc_hadoop}/conf.empty/mapred-site.xml.template
+%config(noreplace) %{etc_hadoop}/conf.empty/mapred-site.xml
 %config(noreplace) /etc/security/limits.d/mapreduce.conf
 %{lib_mapreduce}
 %{lib_hadoop}/libexec/mapred-config.sh
@@ -654,10 +654,10 @@ fi
 %files
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty/core-site.xml
-%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics.properties
+#%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics2.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/log4j.properties
-%config(noreplace) %{etc_hadoop}/conf.empty/slaves
+#%config(noreplace) %{etc_hadoop}/conf.empty/slaves
 %config(noreplace) %{etc_hadoop}/conf.empty/ssl-client.xml.example
 %config(noreplace) %{etc_hadoop}/conf.empty/ssl-server.xml.example
 %config(noreplace) %{etc_hadoop}/conf.empty/configuration.xsl
@@ -668,7 +668,7 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-log4j.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-site.xml
 %config(noreplace) /etc/default/hadoop
-/etc/bash_completion.d/hadoop
+%{component_install_dir}/etc/bash_completion.d/hadoop
 %{lib_hadoop}/*.jar
 %{lib_hadoop}/lib
 %{lib_hadoop}/sbin
@@ -676,7 +676,7 @@ fi
 %{lib_hadoop}/etc
 %{lib_hadoop}/libexec/hadoop-config.sh
 %{lib_hadoop}/libexec/hadoop-layout.sh
-%{lib_hadoop}/libexec/kms-config.sh
+# %{lib_hadoop}/libexec/kms-config.sh
 %{bin_hadoop}/hadoop
 %{man_hadoop}/man1/hadoop.1.*
 %{man_hadoop}/man1/yarn.1.*
@@ -694,7 +694,7 @@ fi
 %defattr(-,root,root)
 %config(noreplace) %{etc_httpfs}
 %config(noreplace) /etc/default/%{component_name}-httpfs
-%{lib_hadoop}/libexec/httpfs-config.sh
+#%{lib_hadoop}/libexec/httpfs-config.sh
 %{initd_dir}/%{component_name}-httpfs
 %{lib_httpfs}
 %attr(0775,httpfs,httpfs) %{run_httpfs}
@@ -750,10 +750,10 @@ fi
 
 %files libhdfs
 %defattr(-,root,root)
-%{_libdir}/libhdfs*
+%{component_install_dir}/%{_libdir}/libhdfs*
 
 %files libhdfs-devel
-%{_includedir}/hdfs.h
+%{component_install_dir}/%{_includedir}/hdfs.h
 #%doc %{_docdir}/libhdfs-%{hadoop_version}
 
 %files hdfs-fuse
