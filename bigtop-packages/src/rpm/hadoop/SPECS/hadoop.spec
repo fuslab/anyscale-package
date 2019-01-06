@@ -71,7 +71,7 @@
 %define httpfs_services httpfs
 %define mapreduce_services mapreduce-historyserver
 %define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode
-%define yarn_services yarn-resourcemanager yarn-nodemanager yarn-proxyserver yarn-timelineserver
+%define yarn_services yarn-resourcemanager yarn-nodemanager yarn-proxyserver yarn-timelineserver yarn-timelinereader yarn-registrydns
 %define hadoop_services %{hdfs_services} %{mapreduce_services} %{yarn_services} %{httpfs_services}
 # Hadoop outputs built binaries into %{hadoop_build}
 %define hadoop_build_path build
@@ -335,6 +335,17 @@ The Data Nodes in the Hadoop Cluster are responsible for serving up
 blocks of data over the network to Hadoop Distributed Filesystem
 (HDFS) clients.
 
+%package httpfs-server
+Summary: HTTPFS-SERVER for Hadoop
+Group: System/Daemons
+Requires: %{component_name}-hdfs = %{version}-%{release}, bigtop-tomcat
+Requires(pre): %{component_name} = %{version}-%{release}
+Requires(pre): %{component_name}-hdfs = %{version}-%{release}
+
+%description httpfs-server
+The server providing HTTP-SERVER REST API support for the complete FileSystem/FileContext
+interface in HDFS.
+
 %package httpfs
 Summary: HTTPFS for Hadoop
 Group: System/Daemons
@@ -387,6 +398,26 @@ Requires(pre): %{component_name}-yarn = %{version}-%{release}
 
 %description yarn-timelineserver
 Storage and retrieval of applications' current as well as historic information in a generic fashion is solved in YARN through the Timeline Server.
+
+%package yarn-timelinereader
+Summary: YARN Timeline Reader
+Group: System/Daemons
+Requires: %{component_name}-yarn = %{version}-%{release}
+Requires(pre): %{component_name} = %{version}-%{release}
+Requires(pre): %{component_name}-yarn = %{version}-%{release}
+
+%description yarn-timelinereader
+YARN Timeline Service V2, The timeline readers are separate daemons separate from the timeline collectors, and they are dedicated to serving queries via REST API.
+
+%package yarn-registrydns
+Summary: YARN Registry DNS
+Group: System/Daemons
+Requires: %{component_name}-yarn = %{version}-%{release}
+Requires(pre): %{component_name} = %{version}-%{release}
+Requires(pre): %{component_name}-yarn = %{version}-%{release}
+
+%description yarn-registrydns
+The Registry DNS Server provides a standard DNS interface to the information posted into the YARN Registry by deployed applications.
 
 %package mapreduce-historyserver
 Summary: MapReduce History Server
@@ -441,14 +472,6 @@ AutoReq: no
 
 %description libhdfs
 Hadoop Filesystem Library
-
-%package libhdfs-devel
-Summary: Development support for libhdfs
-Group: Development/Libraries
-Requires: hadoop = %{version}-%{release}, hadoop-libhdfs = %{version}-%{release}
-
-%description libhdfs-devel
-Includes examples and header files for accessing HDFS from C
 
 %package hdfs-fuse
 Summary: Mountable HDFS
@@ -513,22 +536,33 @@ env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
 #%__rm -f $RPM_BUILD_ROOT/%{lib_hadoop}-*/lib/slf4j-log4j12-*.jar
 
 # Init.d scripts
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{component_install_dir}/%{initd_dir}/
 
 # Install top level /etc/default files
-%__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
-%__cp $RPM_SOURCE_DIR/hadoop.default $RPM_BUILD_ROOT/etc/default/hadoop
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{component_install_dir}/etc/default
+%__cp $RPM_SOURCE_DIR/hadoop.default $RPM_BUILD_ROOT/%{component_install_dir}/etc/default/hadoop
 # FIXME: BIGTOP-463
-echo 'export JSVC_HOME=%{libexecdir}/bigtop-utils' >> $RPM_BUILD_ROOT/etc/default/hadoop
-%__cp $RPM_SOURCE_DIR/%{component_name}-fuse.default $RPM_BUILD_ROOT/etc/default/%{component_name}-fuse
+echo 'export JSVC_HOME=%{libexecdir}/bigtop-utils' >> $RPM_BUILD_ROOT/%{component_install_dir}/etc/default/hadoop
+%__cp $RPM_SOURCE_DIR/%{component_name}-fuse.default $RPM_BUILD_ROOT/%{component_install_dir}/etc/default/%{component_name}-fuse
 
 # Generate the init.d scripts
 for service in %{hadoop_services}
 do
-       bash %{SOURCE11} $RPM_SOURCE_DIR/%{component_name}-${service}.svc rpm $RPM_BUILD_ROOT/%{initd_dir}/%{component_name}-${service}
-       cp $RPM_SOURCE_DIR/${service/-*/}.default $RPM_BUILD_ROOT/etc/default/%{component_name}-${service}
-       chmod 644 $RPM_BUILD_ROOT/etc/default/%{component_name}-${service}
+      if [[ $service == "yarn"* ]]; then
+        bash %{SOURCE11} $RPM_SOURCE_DIR/%{component_name}-${service}.svc rpm $RPM_BUILD_ROOT/%{component_install_dir}/%{component_name}-yarn/%{initd_dir}/%{component_name}-${service}
+      elif [[ $service == "hdfs"* ]]; then
+        bash %{SOURCE11} $RPM_SOURCE_DIR/%{component_name}-${service}.svc rpm $RPM_BUILD_ROOT/%{component_install_dir}/%{component_name}-hdfs/%{initd_dir}/%{component_name}-${service}
+      elif [[ $service == "mapreduce"* ]]; then
+        bash %{SOURCE11} $RPM_SOURCE_DIR/%{component_name}-${service}.svc rpm $RPM_BUILD_ROOT/%{component_install_dir}/%{component_name}-mapreduce/%{initd_dir}/%{component_name}-${service}
+      else
+        bash %{SOURCE11} $RPM_SOURCE_DIR/%{component_name}-${service}.svc rpm $RPM_BUILD_ROOT/%{component_install_dir}/%{component_name}-${service}/%{initd_dir}/%{component_name}-${service}
+      fi
+      cp $RPM_SOURCE_DIR/${service/-*/}.default $RPM_BUILD_ROOT/%{component_install_dir}/etc/default/%{component_name}-${service}
+      chmod 644 $RPM_BUILD_ROOT/%{component_install_dir}/etc/default/%{component_name}-${service}
 done
+
+# Init.d scripts to httpfs-server
+# %__cp $RPM_BUILD_ROOT/%{component_install_dir}/%{initd_dir}/%{component_name}-httpfs $RPM_BUILD_ROOT/%{component_install_dir}/%{component_name}-httpfs/%{initd_dir}/%{component_name}-httpfs
 
 # Install security limits
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
@@ -537,8 +571,8 @@ done
 %__install -m 0644 %{SOURCE10} $RPM_BUILD_ROOT/etc/security/limits.d/mapreduce.conf
 
 # Install fuse default file
-%__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
-%__cp %{SOURCE4} $RPM_BUILD_ROOT/etc/default/hadoop-fuse
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{component_install_dir}/etc/default
+%__cp %{SOURCE4} $RPM_BUILD_ROOT/%{component_install_dir}/etc/default/hadoop-fuse
 
 # /var/lib/*/cache
 %__install -d -m 1777 $RPM_BUILD_ROOT/%{state_yarn}/cache
@@ -667,7 +701,7 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-env.sh
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-log4j.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-site.xml
-%config(noreplace) /etc/default/hadoop
+%config(noreplace) %{component_install_dir}/etc/default/hadoop
 %{component_install_dir}/etc/bash_completion.d/hadoop
 %{lib_hadoop}/*.jar
 %{lib_hadoop}/lib
@@ -693,20 +727,24 @@ fi
 %files httpfs
 %defattr(-,root,root)
 %config(noreplace) %{etc_httpfs}
-%config(noreplace) /etc/default/%{component_name}-httpfs
+%config(noreplace) %{component_install_dir}/etc/default/%{component_name}-httpfs
 #%{lib_hadoop}/libexec/httpfs-config.sh
-%{initd_dir}/%{component_name}-httpfs
+%{component_install_dir}/%{component_name}-httpfs/%{initd_dir}/%{component_name}-httpfs
 %{lib_httpfs}
 %attr(0775,httpfs,httpfs) %{run_httpfs}
 %attr(0775,httpfs,httpfs) %{log_httpfs}
 %attr(0775,httpfs,httpfs) %{state_httpfs}
 
+%files httpfs-server
+%defattr(-,root,root)
+%{component_install_dir}/%{component_name}-httpfs/%{initd_dir}/%{component_name}-httpfs
+
 # Service file management RPMs
-%define service_macro() \
+%define service_hdfs() \
 %files %1 \
 %defattr(-,root,root) \
-%{initd_dir}/%{component_name}-%1 \
-%config(noreplace) /etc/default/%{component_name}-%1 \
+%{component_install_dir}/%{component_name}-hdfs/%{initd_dir}/%{component_name}-%1 \
+%config(noreplace) %{component_install_dir}/etc/default/%{component_name}-%1 \
 %post %1 \
 chkconfig --add %{component_name}-%1 \
 \
@@ -720,16 +758,56 @@ if [ $1 -ge 1 ]; then \
   service %{component_name}-%1 condrestart >/dev/null 2>&1 \
 fi
 
-%service_macro hdfs-namenode
-%service_macro hdfs-secondarynamenode
-%service_macro hdfs-zkfc
-%service_macro hdfs-journalnode
-%service_macro hdfs-datanode
-%service_macro yarn-resourcemanager
-%service_macro yarn-nodemanager
-%service_macro yarn-proxyserver
-%service_macro yarn-timelineserver
-%service_macro mapreduce-historyserver
+# Service file management RPMs
+%define service_yarn() \
+%files %1 \
+%defattr(-,root,root) \
+%{component_install_dir}/%{component_name}-yarn/%{initd_dir}/%{component_name}-%1 \
+%config(noreplace) %{component_install_dir}/etc/default/%{component_name}-%1 \
+%post %1 \
+chkconfig --add %{component_name}-%1 \
+\
+%preun %1 \
+if [ $1 = 0 ]; then \
+  service %{component_name}-%1 stop > /dev/null 2>&1 \
+  chkconfig --del %{component_name}-%1 \
+fi \
+%postun %1 \
+if [ $1 -ge 1 ]; then \
+  service %{component_name}-%1 condrestart >/dev/null 2>&1 \
+fi
+
+# Service file management RPMs
+%define service_mapreduce() \
+%files %1 \
+%defattr(-,root,root) \
+%{component_install_dir}/%{component_name}-mapreduce/%{initd_dir}/%{component_name}-%1 \
+%config(noreplace) %{component_install_dir}/etc/default/%{component_name}-%1 \
+%post %1 \
+chkconfig --add %{component_name}-%1 \
+\
+%preun %1 \
+if [ $1 = 0 ]; then \
+  service %{component_name}-%1 stop > /dev/null 2>&1 \
+  chkconfig --del %{component_name}-%1 \
+fi \
+%postun %1 \
+if [ $1 -ge 1 ]; then \
+  service %{component_name}-%1 condrestart >/dev/null 2>&1 \
+fi
+
+%service_hdfs hdfs-namenode
+%service_hdfs hdfs-secondarynamenode
+%service_hdfs hdfs-zkfc
+%service_hdfs hdfs-journalnode
+%service_hdfs hdfs-datanode
+%service_yarn yarn-resourcemanager
+%service_yarn yarn-nodemanager
+%service_yarn yarn-proxyserver
+%service_yarn yarn-timelineserver
+%service_yarn yarn-timelinereader
+%service_yarn yarn-registrydns
+%service_mapreduce mapreduce-historyserver
 
 # Pseudo-distributed Hadoop installation
 %post conf-pseudo
@@ -751,14 +829,12 @@ fi
 %files libhdfs
 %defattr(-,root,root)
 %{component_install_dir}/%{_libdir}/libhdfs*
-
-%files libhdfs-devel
 %{component_install_dir}/%{_includedir}/hdfs.h
-#%doc %{_docdir}/libhdfs-%{hadoop_version}
+%{component_install_dir}/%{_includedir}/*.hh
 
 %files hdfs-fuse
 %defattr(-,root,root)
-%attr(0644,root,root) %config(noreplace) /etc/default/hadoop-fuse
+%attr(0644,root,root) %config(noreplace) %{component_install_dir}/etc/default/hadoop-fuse
 %attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs
 %attr(0755,root,root) %{bin_hadoop}/hadoop-fuse-dfs
 

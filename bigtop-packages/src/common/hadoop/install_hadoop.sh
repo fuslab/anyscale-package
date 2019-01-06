@@ -251,6 +251,7 @@ done
 
 install -d -m 0755 ${SYSTEM_INCLUDE_DIR}
 cp ${BUILD_DIR}/include/hdfs.h ${SYSTEM_INCLUDE_DIR}/
+cp ${BUILD_DIR}/include/*.hh ${SYSTEM_INCLUDE_DIR}/
 
 cp ${BUILD_DIR}/lib/native/*.a ${HADOOP_NATIVE_LIB_DIR}/
 for library in `cd ${BUILD_DIR}/lib/native ; ls libsnappy.so.1.* 2>/dev/null` libhadoop.so.1.0.0; do
@@ -325,6 +326,7 @@ done
 
 # HTTPFS
 install -d -m 0755 ${HTTPFS_DIR}/sbin
+install -d -m 0755 ${HTTPFS_DIR}/etc/rc.d/init.d
 cp ${BUILD_DIR}/sbin/httpfs.sh ${HTTPFS_DIR}/sbin/
 #???cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/webapps ${HTTPFS_DIR}/webapps
 install -d -m 0755 ${PREFIX}/var/lib/hadoop-httpfs
