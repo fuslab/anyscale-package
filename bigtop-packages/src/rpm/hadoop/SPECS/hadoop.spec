@@ -565,10 +565,10 @@ done
 # %__cp $RPM_BUILD_ROOT/%{component_install_dir}/%{initd_dir}/%{component_name}-httpfs $RPM_BUILD_ROOT/%{component_install_dir}/%{component_name}-httpfs/%{initd_dir}/%{component_name}-httpfs
 
 # Install security limits
-%__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
-%__install -m 0644 %{SOURCE8} $RPM_BUILD_ROOT/etc/security/limits.d/hdfs.conf
-%__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/etc/security/limits.d/yarn.conf
-%__install -m 0644 %{SOURCE10} $RPM_BUILD_ROOT/etc/security/limits.d/mapreduce.conf
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{component_install_dir}/etc/security/limits.d
+%__install -m 0644 %{SOURCE8} $RPM_BUILD_ROOT/%{component_install_dir}/etc/security/limits.d/hdfs.conf
+%__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/%{component_install_dir}/etc/security/limits.d/yarn.conf
+%__install -m 0644 %{SOURCE10} $RPM_BUILD_ROOT/%{component_install_dir}/etc/security/limits.d/mapreduce.conf
 
 # Install fuse default file
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{component_install_dir}/etc/default
@@ -644,7 +644,7 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/yarn-site.xml
 %config(noreplace) %{etc_hadoop}/conf.empty/capacity-scheduler.xml
 %config(noreplace) %{etc_hadoop}/conf.empty/container-executor.cfg
-%config(noreplace) /etc/security/limits.d/yarn.conf
+%config(noreplace) %{component_install_dir}/etc/security/limits.d/yarn.conf
 %{lib_hadoop}/libexec/yarn-config.sh
 %{lib_yarn}
 %attr(4754,root,yarn) %{lib_yarn}/bin/container-executor
@@ -657,7 +657,7 @@ fi
 %files hdfs
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty/hdfs-site.xml
-%config(noreplace) /etc/security/limits.d/hdfs.conf
+%config(noreplace) %{component_install_dir}/etc/security/limits.d/hdfs.conf
 %{lib_hdfs}
 %{lib_hadoop}/libexec/hdfs-config.sh
 %{bin_hadoop}/hdfs
@@ -675,15 +675,14 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/mapred-env.sh
 %config(noreplace) %{etc_hadoop}/conf.empty/mapred-queues.xml.template
 %config(noreplace) %{etc_hadoop}/conf.empty/mapred-site.xml
-%config(noreplace) /etc/security/limits.d/mapreduce.conf
+%config(noreplace) %{component_install_dir}/etc/security/limits.d/mapreduce.conf
 %{lib_mapreduce}
 %{lib_hadoop}/libexec/mapred-config.sh
 %{bin_hadoop}/mapred
-%attr(0775,mapred,hadoop) %{run_mapreduce}
-%attr(0775,mapred,hadoop) %{log_mapreduce}
-%attr(0775,mapred,hadoop) %{state_mapreduce}
-%attr(1777,mapred,hadoop) %{state_mapreduce}/cache
-
+#%attr(0775,mapred,hadoop) %{run_mapreduce}
+#%attr(0775,mapred,hadoop) %{log_mapreduce}
+#%attr(0775,mapred,hadoop) %{state_mapreduce}
+#%attr(1777,mapred,hadoop) %{state_mapreduce}/cache
 
 %files
 %defattr(-,root,root)

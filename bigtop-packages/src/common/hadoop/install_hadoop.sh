@@ -419,3 +419,7 @@ for file in `cat ${BUILD_DIR}/hadoop-client.list` ; do
   done
   exit 1
 done
+install -d -m 0755 ${CLIENT_DIR}/lib
+cp ${BUILD_DIR}/share/hadoop/tools/lib/*azure*.jar ${CLIENT_DIR}/lib
+install -d -m 0755 ${CLIENT_DIR}/shaded
+cp ${BUILD_DIR}/share/hadoop/client/*.jar ${CLIENT_DIR}/shaded
