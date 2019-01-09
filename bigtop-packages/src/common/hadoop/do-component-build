@@ -57,13 +57,13 @@ mkdir build/src
 # MAVEN_OPTS="-DskipTests -DskipTest -DskipITs"
 # mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS} install package "$@"
 # mvn site site:stage ${MAVEN_OPTS} $@
-cp -r /ws/jdp-package/dl/hadoop-3.1.1.3.1.0.0-src/* ./
+cp -r /ws/jdp-package/dl/hadoop-3.1.1-src/* ./
 
 (cd build ; tar --strip-components=1 -xzf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
 (cd build/src ; tar --strip-components=1 -xzf  ../../hadoop-dist/target/hadoop-${HADOOP_VERSION}-src.tar.gz)
 
 # Copy generated docs
-#mkdir -p build/share
+mkdir -p build/share
 #cp -r target/staging/hadoop-project build/share/doc
 
 # Create a manifest for hadoop client package

@@ -102,7 +102,7 @@
     %{nil}
 
 %define netcat_package nc
-%define doc_hadoop %{_docdir}/%{component_name}-%{hadoop_version}
+%define doc_hadoop %{component_install_dir}/%{component_name}/%{_docdir}/%{component_name}-%{hadoop_version}
 %define alternatives_cmd alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %endif
@@ -122,14 +122,14 @@
     %{nil}
 
 %define netcat_package netcat-openbsd
-%define doc_hadoop %{_docdir}/%{component_name}
+%define doc_hadoop %{component_install_dir}/%{component_name}/%{_docdir}/%{component_name}
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d
 %endif
 
 %if  0%{?mgaversion}
 %define netcat_package netcat-openbsd
-%define doc_hadoop %{_docdir}/%{component_name}-%{hadoop_version}
+%define doc_hadoop %{component_install_dir}/%{component_name}/%{_docdir}/%{component_name}-%{hadoop_version}
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %endif
@@ -515,6 +515,7 @@ env HADOOP_VERSION=%{hadoop_base_version} HADOOP_ARCH=%{hadoop_arch} bash %{SOUR
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{lib_hadoop}
 
 env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
+  --stack-home=%{component_install_dir} \
   --distro-dir=$RPM_SOURCE_DIR \
   --build-dir=$PWD/build \
   --httpfs-dir=$RPM_BUILD_ROOT%{lib_httpfs} \
@@ -523,7 +524,7 @@ env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
   --system-libexec-dir=$RPM_BUILD_ROOT/%{lib_hadoop}/libexec \
   --hadoop-etc-dir=$RPM_BUILD_ROOT%{etc_hadoop} \
   --httpfs-etc-dir=$RPM_BUILD_ROOT%{etc_httpfs} \
-  --prefix=$RPM_BUILD_ROOT/%{component_install_dir} \
+  --prefix=$RPM_BUILD_ROOT \
   --doc-dir=$RPM_BUILD_ROOT%{doc_hadoop} \
   --example-dir=$RPM_BUILD_ROOT%{doc_hadoop}/examples \
   --native-build-string=%{hadoop_arch} \
@@ -575,9 +576,9 @@ done
 %__cp %{SOURCE4} $RPM_BUILD_ROOT/%{component_install_dir}/etc/default/hadoop-fuse
 
 # /var/lib/*/cache
-%__install -d -m 1777 $RPM_BUILD_ROOT/%{state_yarn}/cache
-%__install -d -m 1777 $RPM_BUILD_ROOT/%{state_hdfs}/cache
-%__install -d -m 1777 $RPM_BUILD_ROOT/%{state_mapreduce}/cache
+#%__install -d -m 1777 $RPM_BUILD_ROOT/%{state_yarn}/cache
+#%__install -d -m 1777 $RPM_BUILD_ROOT/%{state_hdfs}/cache
+#%__install -d -m 1777 $RPM_BUILD_ROOT/%{state_mapreduce}/cache
 # /var/log/*
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{log_yarn}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{log_hdfs}
@@ -652,7 +653,7 @@ fi
 %attr(0775,yarn,hadoop) %{run_yarn}
 %attr(0775,yarn,hadoop) %{log_yarn}
 %attr(0755,yarn,hadoop) %{state_yarn}
-%attr(1777,yarn,hadoop) %{state_yarn}/cache
+#%attr(1777,yarn,hadoop) %{state_yarn}/cache
 
 %files hdfs
 %defattr(-,root,root)
@@ -664,7 +665,7 @@ fi
 %attr(0775,hdfs,hadoop) %{run_hdfs}
 %attr(0775,hdfs,hadoop) %{log_hdfs}
 %attr(0755,hdfs,hadoop) %{state_hdfs}
-%attr(1777,hdfs,hadoop) %{state_hdfs}/cache
+#%attr(1777,hdfs,hadoop) %{state_hdfs}/cache
 %{lib_hadoop}/libexec/init-hdfs.sh
 %{lib_hadoop}/libexec/init-hcfs.json
 %{lib_hadoop}/libexec/init-hcfs.groovy
@@ -675,10 +676,15 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/mapred-env.sh
 %config(noreplace) %{etc_hadoop}/conf.empty/mapred-queues.xml.template
 %config(noreplace) %{etc_hadoop}/conf.empty/mapred-site.xml
+%config(noreplace) %{etc_hadoop}/conf.empty/user_ec_policies.xml.template
 %config(noreplace) %{component_install_dir}/etc/security/limits.d/mapreduce.conf
 %{lib_mapreduce}
+%{lib_mapreduce}/lib
 %{lib_hadoop}/libexec/mapred-config.sh
 %{bin_hadoop}/mapred
+# Shouldn't the following be moved to hadoop-mapreduce-historyserver?
+%exclude %{component_install_dir}/%{component_name}-mapreduce/%{initd_dir}/%{component_name}-mapreduce-historyserver
+
 #%attr(0775,mapred,hadoop) %{run_mapreduce}
 #%attr(0775,mapred,hadoop) %{log_mapreduce}
 #%attr(0775,mapred,hadoop) %{state_mapreduce}

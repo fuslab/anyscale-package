@@ -35,6 +35,7 @@ OPTS=$(getopt \
   -n $0 \
   -o '' \
   -l 'prefix:' \
+  -L 'stack-home:' \
   -l 'distro-dir:' \
   -l 'build-dir:' \
   -l 'native-build-string:' \
@@ -68,6 +69,9 @@ while true ; do
         ;;
         --distro-dir)
         DISTRO_DIR=$2 ; shift 2
+        ;;
+        --stack-home)
+        STACK_HOME=$2 ; shift 2
         ;;
         --httpfs-dir)
         HTTPFS_DIR=$2 ; shift 2
@@ -138,24 +142,24 @@ for var in PREFIX BUILD_DIR; do
   fi
 done
 
-HADOOP_DIR=${HADOOP_DIR:-$PREFIX/hadoop}
-HDFS_DIR=${HDFS_DIR:-$PREFIX/hadoop-hdfs}
-YARN_DIR=${YARN_DIR:-$PREFIX/hadoop-yarn}
-MAPREDUCE_DIR=${MAPREDUCE_DIR:-$PREFIX/hadoop-mapreduce}
-CLIENT_DIR=${CLIENT_DIR:-$PREFIX/hadoop/client}
-HTTPFS_DIR=${HTTPFS_DIR:-$PREFIX/hadoop-httpfs}
-SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-$PREFIX/usr/lib}
-BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
-DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/hadoop}
-MAN_DIR=${MAN_DIR:-$PREFIX/usr/man}
-SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-$PREFIX/usr/include}
-SYSTEM_LIBEXEC_DIR=${SYSTEM_LIBEXEC_DIR:-$PREFIX/usr/libexec}
+HADOOP_DIR=${HADOOP_DIR:-$STACK_HOME/hadoop}
+HDFS_DIR=${HDFS_DIR:-$STACK_HOME/hadoop-hdfs}
+YARN_DIR=${YARN_DIR:-$STACK_HOME/hadoop-yarn}
+MAPREDUCE_DIR=${MAPREDUCE_DIR:-$STACK_HOME/hadoop-mapreduce}
+CLIENT_DIR=${CLIENT_DIR:-$STACK_HOME/hadoop/client}
+HTTPFS_DIR=${HTTPFS_DIR:-$STACK_HOME/hadoop-httpfs}
+SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-$PREFIX/$STACK_HOME/usr/lib}
+BIN_DIR=${BIN_DIR:-$PREFIX/$STACK_HOME/usr/bin}
+DOC_DIR=${DOC_DIR:-$PREFIX/$STACK_HOME/usr/share/doc/hadoop}
+MAN_DIR=${MAN_DIR:-$PREFIX/$STACK_HOME/usr/man}
+SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-$PREFIX/$STACK_HOME/usr/include}
+SYSTEM_LIBEXEC_DIR=${SYSTEM_LIBEXEC_DIR:-$PREFIX/$STACK_HOME/usr/libexec}
 EXAMPLE_DIR=${EXAMPLE_DIR:-$DOC_DIR/examples}
-HADOOP_ETC_DIR=${HADOOP_ETC_DIR:-$PREFIX/etc/hadoop}
-HTTPFS_ETC_DIR=${HTTPFS_ETC_DIR:-$PREFIX/etc/hadoop-httpfs}
-BASH_COMPLETION_DIR=${BASH_COMPLETION_DIR:-$PREFIX/etc/bash_completion.d}
+HADOOP_ETC_DIR=${HADOOP_ETC_DIR:-$PREFIX/$STACK_HOME/etc/hadoop}
+HTTPFS_ETC_DIR=${HTTPFS_ETC_DIR:-$PREFIX/$STACK_HOME/etc/hadoop-httpfs}
+BASH_COMPLETION_DIR=${BASH_COMPLETION_DIR:-$PREFIX/$STACK_HOME/etc/bash_completion.d}
 
-INSTALLED_HADOOP_DIR=${INSTALLED_HADOOP_DIR:-/usr/lib/hadoop}
+INSTALLED_HADOOP_DIR=${INSTALLED_HADOOP_DIR:-${STACK_HOME}/hadoop}
 HADOOP_NATIVE_LIB_DIR=${HADOOP_DIR}/lib/native
 
 ##Needed for some distros to find ldconfig
@@ -167,12 +171,15 @@ mkdir -p $BIN_DIR
 for component in $HADOOP_DIR/bin/hadoop $HDFS_DIR/bin/hdfs $YARN_DIR/bin/yarn $MAPREDUCE_DIR/bin/mapred ; do
   wrapper=$BIN_DIR/${component#*/bin/}
   cat > $wrapper <<EOF
+
 #!/bin/bash
 
-# Autodetect JAVA_HOME if not defined
-. /usr/lib/bigtop-utils/bigtop-detect-javahome
-
-export HADOOP_LIBEXEC_DIR=/${SYSTEM_LIBEXEC_DIR#${PREFIX}}
+export HADOOP_HOME=${HADOOP_HOME:-$STACK_HOME/hadoop}
+export HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME:-$STACK_HOME/hadoop-mapreduce}
+export HADOOP_YARN_HOME=${HADOOP_YARN_HOME:-$STACK_HOME/hadoop-yarn}
+export HADOOP_LIBEXEC_DIR=${HADOOP_HOME}/libexec
+export JDP_VERSION=${JDP_VERSION:-3.1.0.0-108}
+export HADOOP_OPTS="${HADOOP_OPTS} -Djdp.version=${JDP_VERSION}"
 
 exec ${component#${PREFIX}} "\$@"
 EOF
@@ -193,7 +200,7 @@ install -d -m 0755 ${HADOOP_DIR}
 cp ${BUILD_DIR}/share/hadoop/common/*.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/share/hadoop/common/lib/hadoop-auth*.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/share/hadoop/common/lib/hadoop-annotations*.jar ${HADOOP_DIR}/
-install -d -m 0755 ${MAPREDUCE_DIR}
+install -d -m 0755 ${MAPREDUCE_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-mapreduce*.jar ${MAPREDUCE_DIR}
 cp ${BUILD_DIR}/share/hadoop/tools/lib/*.jar ${MAPREDUCE_DIR}
 install -d -m 0755 ${HDFS_DIR}
@@ -216,19 +223,23 @@ cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HDFS_DIR}/
 
 # bin
 install -d -m 0755 ${HADOOP_DIR}/bin
-cp -a ${BUILD_DIR}/bin/{hadoop,fuse_dfs} ${HADOOP_DIR}/bin
+cp -a ${BUILD_DIR}/bin/fuse_dfs ${HADOOP_DIR}/bin
+cp -a ${BUILD_DIR}/bin/hadoop ${HADOOP_DIR}/bin/hadoop.distro
+cp -a ${BIN_DIR}/hadoop ${HADOOP_DIR}/bin
 install -d -m 0755 ${HDFS_DIR}/bin
-cp -a ${BUILD_DIR}/bin/hdfs ${HDFS_DIR}/bin
-cp -a ${BUILD_DIR}/bin/hdfs ${HADOOP_DIR}/bin
+cp -a ${BUILD_DIR}/bin/hdfs ${HDFS_DIR}/bin/hdfs.distro
+cp -a ${BIN_DIR}/hdfs ${HADOOP_DIR}/bin
 install -d -m 0755 ${YARN_DIR}/bin
-cp -a ${BUILD_DIR}/bin/{yarn,container-executor} ${YARN_DIR}/bin
-cp -a ${BUILD_DIR}/bin/{yarn,container-executor} ${HADOOP_DIR}/bin
+cp -a ${BUILD_DIR}/bin/container-executor ${YARN_DIR}/bin
+cp -a ${BUILD_DIR}/bin/yarn ${YARN_DIR}/bin/yarn.distro
+cp -a ${BIN_DIR}/yarn ${HADOOP_DIR}/bin
 install -d -m 0755 ${MAPREDUCE_DIR}/bin
-cp -a ${BUILD_DIR}/bin/mapred ${MAPREDUCE_DIR}/bin
-cp -a ${BUILD_DIR}/bin/mapred ${HADOOP_DIR}/bin
+cp -a ${BUILD_DIR}/bin/mapred ${MAPREDUCE_DIR}/bin/mapred.distro
+cp -a ${BIN_DIR}/mapred ${MAPREDUCE_DIR}/bin
+cp -a ${BIN_DIR}/mapred ${HADOOP_DIR}/bin
 # FIXME: MAPREDUCE-3980
-cp -a ${BUILD_DIR}/bin/mapred ${YARN_DIR}/bin
-cp -a ${BUILD_DIR}/bin/mapred ${HADOOP_DIR}/bin
+cp -a ${BIN_DIR}/mapred ${YARN_DIR}/bin
+cp -a ${BIN_DIR}/mapred ${HADOOP_DIR}/bin
 
 # sbin
 install -d -m 0755 ${HADOOP_DIR}/sbin
@@ -391,9 +402,9 @@ install -d -m 0755 ${YARN_DIR}/etc
 #ln -sf ${HADOOP_ETC_DIR##${PREFIX}}/conf ${YARN_DIR}/etc/hadoop
 
 # Create log, var and lib
-install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-hdfs
-install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-yarn
-install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-mapreduce
+install -d -m 0755 $PREFIX/$STACK_HOME/var/{log,run,lib}/hadoop-hdfs
+install -d -m 0755 $PREFIX/$STACK_HOME/var/{log,run,lib}/hadoop-yarn
+install -d -m 0755 $PREFIX/$STACK_HOME/var/{log,run,lib}/hadoop-mapreduce
 
 # Remove all source and create version-less symlinks to offer integration point with other projects
 for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} ; do
@@ -413,8 +424,8 @@ install -d -m 0755 ${CLIENT_DIR}
 for file in `cat ${BUILD_DIR}/hadoop-client.list` ; do
   for dir in ${HADOOP_DIR}/{lib,} ${HDFS_DIR}/{lib,} ${YARN_DIR}/{lib,} ${MAPREDUCE_DIR}/{lib,} ; do
     [ -e $dir/$file ] && \
-    ln -fs ${dir#$PREFIX}/$file ${CLIENT_DIR}/${file} && \
-    ln -fs ${dir#$PREFIX}/$file ${CLIENT_DIR}/${file/-[[:digit:]]*/.jar} && \
+    ln -fs ${dir#$PREFIX}/$STACK_HOME/$file ${CLIENT_DIR}/${file} && \
+    ln -fs ${dir#$PREFIX}/$STACK_HOME/$file ${CLIENT_DIR}/${file/-[[:digit:]]*/.jar} && \
     continue 2
   done
   exit 1
