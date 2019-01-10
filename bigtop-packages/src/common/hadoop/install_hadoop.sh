@@ -211,6 +211,9 @@ install -m 0755 ${DISTRO_DIR}/init-hdfs.sh ${SYSTEM_LIBEXEC_DIR}/
 install -m 0755 ${DISTRO_DIR}/init-hcfs.json ${SYSTEM_LIBEXEC_DIR}/
 install -m 0755 ${DISTRO_DIR}/init-hcfs.groovy ${SYSTEM_LIBEXEC_DIR}/
 rm -rf ${SYSTEM_LIBEXEC_DIR}/*.cmd
+install -d -m 0755 ${HADOOP_DIR}/libexec/
+cp -r ${BUILD_DIR}/libexec/* ${HADOOP_DIR}/libexec/
+rm -rf ${HADOOP_DIR}/libexec/tools
 
 # hadoop jar
 install -d -m 0755 ${HADOOP_DIR}
@@ -227,6 +230,7 @@ cp ${BUILD_DIR}/share/hadoop/yarn/hadoop-yarn*.jar ${YARN_DIR}/
 chmod 644 ${HADOOP_DIR}/*.jar ${MAPREDUCE_DIR}/*.jar ${HDFS_DIR}/*.jar ${YARN_DIR}/*.jar
 
 # lib jars
+cp ${BUILD_DIR}/share/hadoop/tools/lib/*azure*.jar ${HADOOP_DIR}/
 install -d -m 0755 ${HADOOP_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/common/lib/*.jar ${HADOOP_DIR}/lib
 install -d -m 0755 ${HDFS_DIR}/lib 
@@ -245,6 +249,7 @@ cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HDFS_DIR}/
 # bin
 install -d -m 0755 ${HADOOP_DIR}/bin
 cp -a ${BUILD_DIR}/bin/fuse_dfs ${HADOOP_DIR}/bin
+cp -a ${BUILD_DIR}/bin/{kill-data-node,kill-name-node,kill-secondary-name-node} ${HADOOP_DIR}/bin
 cp -a ${BUILD_DIR}/bin/hadoop ${HADOOP_DIR}/bin/hadoop.distro
 cp -a ${BIN_DIR}/hadoop ${HADOOP_DIR}/bin
 install -d -m 0755 ${HDFS_DIR}/bin
@@ -264,7 +269,7 @@ cp -a ${BIN_DIR}/mapred ${HADOOP_DIR}/bin
 
 # sbin
 install -d -m 0755 ${HADOOP_DIR}/sbin
-cp -a ${BUILD_DIR}/sbin/{hadoop-daemon,hadoop-daemons}.sh ${HADOOP_DIR}/sbin
+cp -a ${BUILD_DIR}/sbin/{hadoop-daemon,hadoop-daemons,workers}.sh ${HADOOP_DIR}/sbin
 install -d -m 0755 ${HDFS_DIR}/sbin
 cp -a ${BUILD_DIR}/sbin/{distribute-exclude,refresh-namenodes}.sh ${HDFS_DIR}/sbin
 install -d -m 0755 ${YARN_DIR}/sbin
@@ -343,7 +348,9 @@ cp ${DISTRO_DIR}/conf.empty/mapred-site.xml $HADOOP_ETC_DIR/conf.empty
 # by default
 sed -i -e '/^[^#]/s,^,#,' ${BUILD_DIR}/etc/hadoop/hadoop-env.sh
 cp -r ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
-rm -rf $HADOOP_ETC_DIR/conf.empty/*.cmd
+#rm -rf $HADOOP_ETC_DIR/conf.empty/*.cmd
+install -d -m 0755 $HADOOP_DIR/conf
+install -d -m 0755 $HADOOP_DIR/etc/hadoop
 
 # docs
 install -d -m 0755 ${DOC_DIR}

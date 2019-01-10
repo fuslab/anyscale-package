@@ -706,6 +706,7 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-env.sh
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-log4j.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-site.xml
+%config(noreplace) %{etc_hadoop}/conf.empty
 %config(noreplace) %{component_install_dir}/etc/default/hadoop
 %{component_install_dir}/etc/bash_completion.d/hadoop
 %{lib_hadoop}/*.jar
@@ -713,14 +714,15 @@ fi
 %{lib_hadoop}/sbin
 %{lib_hadoop}/bin
 %{lib_hadoop}/etc
-%{lib_hadoop}/libexec/hadoop-config.sh
-%{lib_hadoop}/libexec/hadoop-layout.sh
+#%{lib_hadoop}/libexec/hadoop-config.sh
+#%{lib_hadoop}/libexec/hadoop-layout.sh
+%{lib_hadoop}/libexec
 # %{lib_hadoop}/libexec/kms-config.sh
 %{bin_hadoop}/hadoop
 %{man_hadoop}/man1/hadoop.1.*
-%{man_hadoop}/man1/yarn.1.*
-%{man_hadoop}/man1/hdfs.1.*
-%{man_hadoop}/man1/mapred.1.*
+#%{man_hadoop}/man1/yarn.1.*
+#%{man_hadoop}/man1/hdfs.1.*
+#%{man_hadoop}/man1/mapred.1.*
 
 # Shouldn't the following be moved to hadoop-hdfs?
 %exclude %{lib_hadoop}/bin/fuse_dfs
