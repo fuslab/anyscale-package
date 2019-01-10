@@ -14,13 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+echo "-------------- Flink-do-component-build-started -----------"
+
 set -ex
 
-
-#load versions
 . `dirname $0`/bigtop.bom
 
-# Use Maven to build Flink from source
-mvn install $FLINK_BUILD_OPTS -Drat.skip=true -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@"
-cd flink-dist
-mvn install $FLINK_BUILD_OPTS -Drat.skip=true -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@"
+mvn -T 4  clean package -DskipTests
+
+rm -fr build && mkdir build && cp -R flink-dist/target/flink-$FLINK_VERSION-bin/flink-$FLINK_VERSION/* build/
+
+# save components`s .bin package
+tar -zcvf Flink-$FLINK_VERSION-bin.tar.gz build/
+mv Flink-$FLINK_VERSION-bin.tar.gz ../../../tar/
+
+echo "-------------- Flink-do-component-build-completed --------------"

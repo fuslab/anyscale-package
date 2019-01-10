@@ -13,47 +13,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-%define flink_name flink
-%define lib_flink /usr/lib/%{flink_name}
-%define bin_flink /usr/bin
-%define etc_flink /etc/%{flink_name}
-%define config_flink %{etc_flink}/conf
-%define man_dir %{_mandir}
-%define flink_services flink-jobmanager flink-taskmanager
-%define var_log_flink /var/log/%{flink_name}
-%define build_target_flink flink-dist/target/%{flink_name}-%{flink_version}-bin/%{flink_name}-%{flink_version}/
+# Set the following parameters
+%define stack_name %{soft_stack_name}
+%define stack_version %{soft_stack_version}
+
+%define stack_home /usr/%{stack_name}/%{stack_version}
+%define component_name flink
+%define component_install_dir %{stack_home}/%{component_name}
 
 
-%if  %{!?suse_version:1}0
-%define doc_flink %{_docdir}/%{flink_name}-%{flink_version}
-%define alternatives_cmd alternatives
-%define build_flink %{_builddir}/%{flink_name}-%{flink_version}/flink-dist/target/%{flink_name}-%{flink_version}-bin/%{flink_name}-%{flink_version}/
-%global initd_dir %{_sysconfdir}/rc.d/init.d
-%else
-%define doc_flink %{_docdir}/%{flink_name}-%{flink_version}
-%define alternatives_cmd update-alternatives
-%global initd_dir %{_sysconfdir}/rc.d
-%endif
+%define etc_dir /etc/%{component_name}
+%define config_dir %{etc_dir}/conf
 
-Name: %{flink_name}
+
+Name: %{component_name}%{soft_package_version}
 Version: %{flink_version}
 Release: %{flink_release}
 Summary: Apache Flink is an open source platform for distributed stream and batch data processing.
-License: ASL 2.0
-URL: http://flink.apache.org/
+URL: http://www.fusionlab.cn
 Group: Development/Libraries
-Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
-Source0: flink-%{flink_base_version}.tar.gz
-Source1: do-component-build
-Source2: install_flink.sh
-Source3: init.d.tmpl
-Source4: flink-jobmanager.svc
-Source5: flink-taskmanager.svc
-Source6: bigtop.bom
-#BIGTOP_PATCH_FILES
-Requires: bigtop-utils >= 0.7
-Requires(preun): /sbin/service
+Buildroot: %(mktemp -ud %{_tmppath}/%{component_name}-%{version}-%{release}-XXXXXX)
+License: ASL 2.0
+Source0: %{component_name}-%{flink_base_version}-src.tar.gz
+Source1: bigtop.bom
+Source2: do-component-build
+Source3: install.sh
+Source4: init.d.tmpl
+Source5: flink-jobmanager.svc
+Source6: flink-taskmanager.svc
+Requires(pre): jdp-select
+AutoReq: no
+
 
 %description
 Apache Flink is an open source platform for distributed stream and batch data processing.
@@ -74,100 +65,55 @@ Some of the key features of Apache Flink includes.
     * Fault-tolerance via Lightweight Distributed Snapshots
     * Hadoop-native YARN & HDFS implementation
 
-%package jobmanager
-Summary: Provides the Apache Flink Job Manager service.
-Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
-
-%description jobmanager
-Apache Flink Job Manager service.
-
-%if  %{?suse_version:1}0
-# Required for init scripts
-Requires: insserv
-%else
-# Required for init scripts
-Requires: /lib/lsb/init-functions
-%endif
-
-%package taskmanager
-Summary: Provides the Apache Flink Task Manager service.
-Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
-
-%description taskmanager
-Apache Flink Task Manager service.
-
-%if  %{?suse_version:1}0
-# Required for init scripts
-Requires: insserv
-%else
-# Required for init scripts
-Requires: /lib/lsb/init-functions
-%endif
-
-##############################################
 
 %prep
-%setup -n %{name}-%{flink_base_version}
-#BIGTOP_PATCH_COMMANDS
+%setup -n %{component_name}-%{flink_base_version}-src
+
 
 %build
-bash $RPM_SOURCE_DIR/do-component-build
+bash %{SOURCE2}
 
-
-
-# Init.d scripts
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
 
-sh -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --source-dir=$RPM_SOURCE_DIR --build-dir=`pwd`/%{build_target_flink}
+bash $RPM_SOURCE_DIR/install.sh \
+  --build-dir=`pwd`/build         \
+  --source-dir=$RPM_SOURCE_DIR \
+  --prefix=$RPM_BUILD_ROOT  \
+  --stack-home=%{stack_home}  \
+  --component-name=%{component_name}
 
-for service in %{flink_services}
-do
-    # Install init script
-    init_file=$RPM_BUILD_ROOT/%{initd_dir}/${service}
-    bash %{SOURCE3} $RPM_SOURCE_DIR/${service}.svc rpm $init_file
-done
 
 %pre
-getent group flink >/dev/null || groupadd -r flink
-getent passwd flink >/dev/null || useradd -c "Flink" -s /sbin/nologin -g flink -r -d %{lib_flink} flink 2> /dev/null || :
+
 
 %post
-%{alternatives_cmd} --install %{config_flink} %{flink_name}-conf %{config_flink}.dist 30
+install -d -m 0755 $PREFIX/%{config_dir}
+cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/conf/
+/usr/bin/jdp-select set %{component_name} %{stack_version}
 
-###### FILES ###########
+
+%preun
+
 
 %files
 %defattr(-,root,root,755)
-%config(noreplace) %{config_flink}.dist
 
-%dir %{_sysconfdir}/%{flink_name}
-#%doc %{doc_flink}
-%attr(0755,flink,flink) %{var_log_flink}
-%attr(0767,flink,flink) /var/log/flink-cli
-%{lib_flink}
-%{bin_flink}/flink
+%attr(0755,root,root) %{component_install_dir}
 
-%define service_macro() \
-%files %1 \
-%config(noreplace) %{initd_dir}/%{name}-%1 \
-%post %1 \
-chkconfig --add %{name}-%1 \
-%preun %1 \
-/sbin/service ${name}-%1 status > /dev/null 2>&1 \
-if [ "$?" -eq 0 ]; then \
-  service ${name}-%1 stop > /dev/null 2>&1 \
-  chkconfig --del %{name}-%1 \
-fi \
-%postun %1 \
-if [ "$?" -ge 1 ]; then \
-   service %{name}-%1 condrestart > /dev/null 2>&1 || : \
-fi
-%service_macro jobmanager 
-%service_macro taskmanager
+%attr(0755,root,root) %{stack_home}/%{etc_dir}/conf.dist/
+
+%attr(0755,root,root) %{component_install_dir}/bin/
+%attr(0755,root,root) %{component_install_dir}/examples/
+%attr(0755,root,root) %{component_install_dir}/lib/
+%attr(0755,root,root) %{component_install_dir}/licenses/
+%attr(0755,root,root) %{component_install_dir}/opt/
+
+%attr(0644,root,root) %{component_install_dir}/LICENSE
+%attr(0644,root,root) %{component_install_dir}/NOTICE
+%attr(0644,root,root) %{component_install_dir}/README.txt
+
+%{component_install_dir}/log
+%{component_install_dir}/run
+%{component_install_dir}/conf

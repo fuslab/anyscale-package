@@ -86,8 +86,8 @@ bigtop {
     'scala' { version = '2.11.8'; version_base = version }
   }
   apache {
-    APACHE_MIRROR = "http://172.24.4.238/dist/3.1.0.0"
-    APACHE_ARCHIVE = "http://172.24.4.238/dist/3.1.0.0"
+    APACHE_MIRROR = "http://172.24.4.238/dist/3.2.0.0"
+    APACHE_ARCHIVE = "http://172.24.4.238/dist/3.2.0.0"
   }
   git { 
     user = "jdp-dev"
@@ -292,9 +292,9 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
-    'spark' {
-      name    = 'spark'
-      pkg     = 'spark-core'
+    'spark2' {
+      name    = 'spark2'
+      pkg     = name
       relNotes = 'Apache Spark'
       version { 
         base = '2.4.0'; 
