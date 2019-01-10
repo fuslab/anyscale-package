@@ -731,14 +731,15 @@ fi
 
 %files httpfs
 %defattr(-,root,root)
-%config(noreplace) %{etc_httpfs}
+%config(noreplace) %{etc_httpfs}/conf.empty
+%config(noreplace) %{component_install_dir}/etc/%{component_name}-httpfs/tomcat-deployment.dist
 %config(noreplace) %{component_install_dir}/etc/default/%{component_name}-httpfs
 #%{lib_hadoop}/libexec/httpfs-config.sh
-%{component_install_dir}/%{component_name}-httpfs/%{initd_dir}/%{component_name}-httpfs
 %{lib_httpfs}
-%attr(0775,httpfs,httpfs) %{run_httpfs}
-%attr(0775,httpfs,httpfs) %{log_httpfs}
+#%attr(0775,httpfs,httpfs) %{run_httpfs}
+#%attr(0775,httpfs,httpfs) %{log_httpfs}
 %attr(0775,httpfs,httpfs) %{state_httpfs}
+%exclude %{lib_httpfs}/%{initd_dir}/%{component_name}-httpfs
 
 %files httpfs-server
 %defattr(-,root,root)

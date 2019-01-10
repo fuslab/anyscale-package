@@ -35,7 +35,7 @@ OPTS=$(getopt \
   -n $0 \
   -o '' \
   -l 'prefix:' \
-  -L 'stack-home:' \
+  -l 'stack-home:' \
   -l 'distro-dir:' \
   -l 'build-dir:' \
   -l 'native-build-string:' \
@@ -142,12 +142,12 @@ for var in PREFIX BUILD_DIR; do
   fi
 done
 
-HADOOP_DIR=${HADOOP_DIR:-$STACK_HOME/hadoop}
-HDFS_DIR=${HDFS_DIR:-$STACK_HOME/hadoop-hdfs}
-YARN_DIR=${YARN_DIR:-$STACK_HOME/hadoop-yarn}
-MAPREDUCE_DIR=${MAPREDUCE_DIR:-$STACK_HOME/hadoop-mapreduce}
-CLIENT_DIR=${CLIENT_DIR:-$STACK_HOME/hadoop/client}
-HTTPFS_DIR=${HTTPFS_DIR:-$STACK_HOME/hadoop-httpfs}
+HADOOP_DIR=${HADOOP_DIR:-$PREFIX/$STACK_HOME/hadoop}
+HDFS_DIR=${HDFS_DIR:-$PREFIX/$STACK_HOME/hadoop-hdfs}
+YARN_DIR=${YARN_DIR:-$PREFIX/$STACK_HOME/hadoop-yarn}
+MAPREDUCE_DIR=${MAPREDUCE_DIR:-$PREFIX/$STACK_HOME/hadoop-mapreduce}
+CLIENT_DIR=${CLIENT_DIR:-$PREFIX/$STACK_HOME/hadoop/client}
+HTTPFS_DIR=${HTTPFS_DIR:-$PREFIX/$STACK_HOME/hadoop-httpfs}
 SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-$PREFIX/$STACK_HOME/usr/lib}
 BIN_DIR=${BIN_DIR:-$PREFIX/$STACK_HOME/usr/bin}
 DOC_DIR=${DOC_DIR:-$PREFIX/$STACK_HOME/usr/share/doc/hadoop}
@@ -174,14 +174,31 @@ for component in $HADOOP_DIR/bin/hadoop $HDFS_DIR/bin/hdfs $YARN_DIR/bin/yarn $M
 
 #!/bin/bash
 
-export HADOOP_HOME=${HADOOP_HOME:-$STACK_HOME/hadoop}
-export HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME:-$STACK_HOME/hadoop-mapreduce}
-export HADOOP_YARN_HOME=${HADOOP_YARN_HOME:-$STACK_HOME/hadoop-yarn}
-export HADOOP_LIBEXEC_DIR=${HADOOP_HOME}/libexec
-export JDP_VERSION=${JDP_VERSION:-3.1.0.0-108}
-export HADOOP_OPTS="${HADOOP_OPTS} -Djdp.version=${JDP_VERSION}"
+export HADOOP_HOME=\${HADOOP_HOME:-$STACK_HOME/hadoop}
+export HADOOP_MAPRED_HOME=\${HADOOP_MAPRED_HOME:-$STACK_HOME/hadoop-mapreduce}
+export HADOOP_YARN_HOME=\${HADOOP_YARN_HOME:-$STACK_HOME/hadoop-yarn}
+export HADOOP_LIBEXEC_DIR=\${HADOOP_HOME}/libexec
+export JDP_VERSION=\${JDP_VERSION:-3.1.0.0-108}
+export HADOOP_OPTS="\${HADOOP_OPTS} -Djdp.version=\${JDP_VERSION}"
 
-exec ${component#${PREFIX}} "\$@"
+exec ${component#${PREFIX}}.distro "\$@"
+EOF
+  chmod 755 $wrapper
+done
+
+# Make sbin wrappers
+for component in  ${HTTPFS_DIR}/sbin/httpfs.sh ; do
+  wrapper=$BIN_DIR/${component#*/sbin/}
+  cat > $wrapper <<EOF
+
+#!/bin/bash
+
+export HADOOP_HOME=\${HADOOP_HOME:-$STACK_HOME/hadoop}
+export HADOOP_LIBEXEC_DIR=\${HADOOP_HOME}/libexec
+export CATALINA_BASE=/etc/hadoop-httpfs/tomcat-deployment
+export HTTPFS_CONFIG=/etc/hadoop-httpfs/conf
+
+exec ${component#${PREFIX}}.distro "\$@"
 EOF
   chmod 755 $wrapper
 done
@@ -217,6 +234,10 @@ cp ${BUILD_DIR}/share/hadoop/hdfs/lib/*.jar ${HDFS_DIR}/lib
 install -d -m 0755 ${YARN_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/yarn/lib/*.jar ${YARN_DIR}/lib
 chmod 644 ${HADOOP_DIR}/lib/*.jar ${HDFS_DIR}/lib/*.jar ${YARN_DIR}/lib/*.jar
+install -d -m 0755 ${CLIENT_DIR}/lib
+cp ${BUILD_DIR}/share/hadoop/tools/lib/*azure*.jar ${CLIENT_DIR}/lib
+install -d -m 0755 ${CLIENT_DIR}/shaded
+cp ${BUILD_DIR}/share/hadoop/client/*.jar ${CLIENT_DIR}/shaded
 
 # Install webapps
 cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HDFS_DIR}/
@@ -337,43 +358,11 @@ done
 
 # HTTPFS
 install -d -m 0755 ${HTTPFS_DIR}/sbin
+install -d -m 0755 $PREFIX/$STACK_HOME/etc/hadoop-httpfs/tomcat-deployment.dist
 install -d -m 0755 ${HTTPFS_DIR}/etc/rc.d/init.d
-cp ${BUILD_DIR}/sbin/httpfs.sh ${HTTPFS_DIR}/sbin/
-#???cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/webapps ${HTTPFS_DIR}/webapps
-install -d -m 0755 ${PREFIX}/var/lib/hadoop-httpfs
+cp ${BUILD_DIR}/sbin/httpfs.sh ${HTTPFS_DIR}/sbin/httpfs.sh.distro
+cp ${BIN_DIR}/httpfs.sh ${HTTPFS_DIR}/sbin
 install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty
-
-install -m 0755 ${DISTRO_DIR}/httpfs-tomcat-deployment.sh ${HTTPFS_DIR}/tomcat-deployment.sh
-
-HTTP_DIRECTORY=$HTTPFS_ETC_DIR/tomcat-conf.dist
-HTTPS_DIRECTORY=$HTTPFS_ETC_DIR/tomcat-conf.https
-
-install -d -m 0755 ${HTTP_DIRECTORY}
-#??cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/conf ${HTTP_DIRECTORY}
-#?? chmod 644 ${HTTP_DIRECTORY}/conf/*
-install -d -m 0755 ${HTTP_DIRECTORY}/WEB-INF
-#??mv ${HTTPFS_DIR}/webapps/webhdfs/WEB-INF/*.xml ${HTTP_DIRECTORY}/WEB-INF/
-
-cp -r ${HTTP_DIRECTORY} ${HTTPS_DIRECTORY}
-#??mv ${HTTPS_DIRECTORY}/conf/ssl-server.xml ${HTTPS_DIRECTORY}/conf/server.xml
-#?? rm ${HTTP_DIRECTORY}/conf/ssl-server.xml
-
-mv $HADOOP_ETC_DIR/conf.empty/httpfs* $HTTPFS_ETC_DIR/conf.empty
-sed -i -e '/<\/configuration>/i\
-  <!-- HUE proxy user setting -->\
-  <property>\
-    <name>httpfs.proxyuser.hue.hosts</name>\
-    <value>*</value>\
-  </property>\
-  <property>\
-    <name>httpfs.proxyuser.hue.groups</name>\
-    <value>*</value>\
-  </property>\
-\
-  <property>\
-    <name>httpfs.hadoop.config.dir</name>\
-    <value>/etc/hadoop/conf</value>\
-  </property>' $HTTPFS_ETC_DIR/conf.empty/httpfs-site.xml
 
 # Make the pseudo-distributed config
 for conf in conf.pseudo ; do
@@ -430,7 +419,3 @@ for file in `cat ${BUILD_DIR}/hadoop-client.list` ; do
   done
   exit 1
 done
-install -d -m 0755 ${CLIENT_DIR}/lib
-cp ${BUILD_DIR}/share/hadoop/tools/lib/*azure*.jar ${CLIENT_DIR}/lib
-install -d -m 0755 ${CLIENT_DIR}/shaded
-cp ${BUILD_DIR}/share/hadoop/client/*.jar ${CLIENT_DIR}/shaded
