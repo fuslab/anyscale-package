@@ -14,23 +14,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+echo "-------------- Spark2-do-component-build-started -----------"
+
 set -ex
 
 . `dirname $0`/bigtop.bom
 
-# BIGTOP-2607
+#   BIGTOP-2607
+#    delete config
+#    <recompileMode>incremental</recompileMode>
+#    <useZincServer>true</useZincServer>
 sed -i -e /useZincServer/d -e /recompileMode/d pom.xml
+export MAVEN_OPTS="-Xmx4g -XX:ReservedCodeCacheSize=1024m"
 
-BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${HOME} \
-            -Drepo.maven.org=$IVY_MIRROR_PROP \
-            -Dreactor.repo=file://${HOME}/.m2/repository \
-            -Dhadoop.version=$HADOOP_VERSION \
-            -Dyarn.version=$HADOOP_VERSION \
+echo "AAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+echo ${HOME}
+echo $IVY_MIRROR_PROP
+echo $HADOOP_VERSION
+echo $SPARK_BUILD_OPTS
+
+BUILD_OPTS="
             -Dprotobuf.version=2.5.0 \
             -DrecompileMode=all \
-            -Pyarn -Phadoop-2.7 \
-            -Phive -Phive-thriftserver \
-            $SPARK_BUILD_OPTS"
+            -Psparkr \
+            -Pyarn \
+            -Dyarn.version=3.1.1 \
+            -Phadoop-3.1 \
+            -Dhadoop.version=3.1.1 \
+            -Phive \
+            -Phive-thriftserver"
+
+echo $BUILD_OPTS
+echo "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 
 ./dev/make-distribution.sh $BUILD_OPTS -DskipTests
 
@@ -45,3 +60,4 @@ SPARK_SKIP_TESTS=$([ "$SPARK_RUN_TESTS" = "true" ] && echo false || echo true)
 # be run after Spark has already been packaged.
 # See http://spark.apache.org/docs/latest/building-spark.html#spark-tests-in-maven
 mvn $BUILD_OPTS install -DskipTests=$SPARK_SKIP_TESTS
+#build/mvn -DskipTests clean package
