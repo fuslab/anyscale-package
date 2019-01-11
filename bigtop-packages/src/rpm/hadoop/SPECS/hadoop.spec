@@ -184,7 +184,7 @@ Source29: hadoop-yarn-timelineserver.svc
 #BIGTOP_PATCH_FILES
 Buildroot: %{_tmppath}/%{component_name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
-Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, zookeeper >= 3.4.0
+Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, zookeeper%{soft_package_version} >= 3.4.0, jdp-select >= %{soft_package_version}
 Requires: psmisc, %{netcat_package}
 # Sadly, Sun/Oracle JDK in RPM form doesn't provide libjvm.so, which means we have
 # to set AutoReq to no in order to minimize confusion. Not ideal, but seems to work.
@@ -202,7 +202,7 @@ Requires: sh-utils, insserv
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 BuildRequires: pkgconfig, fuse-libs, redhat-rpm-config, lzo-devel, openssl-devel
 # Required for init scripts
-Requires: sh-utils, /lib/lsb/init-functions
+Requires: sh-utils, redhat-lsb
 %endif
 
 %if  0%{?mgaversion}
@@ -235,7 +235,7 @@ located.
 %package hdfs
 Summary: The Hadoop Distributed File System
 Group: System/Daemons
-Requires: %{component_name} = %{version}-%{release}, bigtop-groovy, bigtop-jsvc
+Requires: %{component_name}%{soft_package_version} = %{version}-%{release}, bigtop-jsvc, libtirpc-devel
 
 %description hdfs
 Hadoop Distributed File System (HDFS) is the primary storage system used by
@@ -246,7 +246,7 @@ computations.
 %package yarn
 Summary: The Hadoop NextGen MapReduce (YARN)
 Group: System/Daemons
-Requires: %{component_name} = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version} = %{version}-%{release}
 
 %description yarn
 YARN (Hadoop NextGen MapReduce) is a general purpose data-computation framework.
@@ -267,7 +267,7 @@ execute and monitor the tasks.
 %package mapreduce
 Summary: The Hadoop MapReduce (MRv2)
 Group: System/Daemons
-Requires: %{component_name}-yarn = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-yarn = %{version}-%{release}
 
 %description mapreduce
 Hadoop MapReduce is a programming model and software framework for writing applications
@@ -277,9 +277,9 @@ that rapidly process vast amounts of data in parallel on large clusters of compu
 %package hdfs-namenode
 Summary: The Hadoop namenode manages the block locations of HDFS files
 Group: System/Daemons
-Requires: %{component_name}-hdfs = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name}-hdfs = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-hdfs = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version} = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version}-hdfs = %{version}-%{release}
 
 %description hdfs-namenode
 The Hadoop Distributed Filesystem (HDFS) requires one unique server, the
@@ -289,9 +289,9 @@ namenode, which manages the block locations of files on the filesystem.
 %package hdfs-secondarynamenode
 Summary: Hadoop Secondary namenode
 Group: System/Daemons
-Requires: %{component_name}-hdfs = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name}-hdfs = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-hdfs = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version} = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version}-hdfs = %{version}-%{release}
 
 %description hdfs-secondarynamenode
 The Secondary Name Node periodically compacts the Name Node EditLog
@@ -301,9 +301,9 @@ do not incur unnecessary downtime.
 %package hdfs-zkfc
 Summary: Hadoop HDFS failover controller
 Group: System/Daemons
-Requires: %{component_name}-hdfs = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name}-hdfs = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-hdfs = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version} = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version}-hdfs = %{version}-%{release}
 
 %description hdfs-zkfc
 The Hadoop HDFS failover controller is a ZooKeeper client which also
@@ -315,8 +315,8 @@ election.
 %package hdfs-journalnode
 Summary: Hadoop HDFS JournalNode
 Group: System/Daemons
-Requires: %{component_name}-hdfs = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-hdfs = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version} = %{version}-%{release}
 
 %description hdfs-journalnode
 The HDFS JournalNode is responsible for persisting NameNode edit logs.
@@ -326,9 +326,9 @@ separate machines in the cluster.
 %package hdfs-datanode
 Summary: Hadoop Data Node
 Group: System/Daemons
-Requires: %{component_name}-hdfs = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name}-hdfs = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-hdfs = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version} = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version}-hdfs = %{version}-%{release}
 
 %description hdfs-datanode
 The Data Nodes in the Hadoop Cluster are responsible for serving up
@@ -338,9 +338,6 @@ blocks of data over the network to Hadoop Distributed Filesystem
 %package httpfs-server
 Summary: HTTPFS-SERVER for Hadoop
 Group: System/Daemons
-Requires: %{component_name}-hdfs = %{version}-%{release}, bigtop-tomcat
-Requires(pre): %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name}-hdfs = %{version}-%{release}
 
 %description httpfs-server
 The server providing HTTP-SERVER REST API support for the complete FileSystem/FileContext
@@ -349,9 +346,10 @@ interface in HDFS.
 %package httpfs
 Summary: HTTPFS for Hadoop
 Group: System/Daemons
-Requires: %{component_name}-hdfs = %{version}-%{release}, bigtop-tomcat
-Requires(pre): %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name}-hdfs = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-hdfs = %{version}-%{release}, bigtop-tomcat
+Requires(pre): %{component_name}%{soft_package_version} = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version}-hdfs = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version}-httpfs-server = %{version}-%{release}
 
 %description httpfs
 The server providing HTTP REST API support for the complete FileSystem/FileContext
@@ -360,9 +358,9 @@ interface in HDFS.
 %package yarn-resourcemanager
 Summary: YARN Resource Manager
 Group: System/Daemons
-Requires: %{component_name}-yarn = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name}-yarn = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-yarn = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version} = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version}-yarn = %{version}-%{release}
 
 %description yarn-resourcemanager
 The resource manager manages the global assignment of compute resources to applications
@@ -370,9 +368,9 @@ The resource manager manages the global assignment of compute resources to appli
 %package yarn-nodemanager
 Summary: YARN Node Manager
 Group: System/Daemons
-Requires: %{component_name}-yarn = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name}-yarn = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-yarn = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version} = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version}-yarn = %{version}-%{release}
 
 %description yarn-nodemanager
 The NodeManager is the per-machine framework agent who is responsible for
@@ -382,9 +380,9 @@ reporting the same to the ResourceManager/Scheduler.
 %package yarn-proxyserver
 Summary: YARN Web Proxy
 Group: System/Daemons
-Requires: %{component_name}-yarn = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name}-yarn = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-yarn = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version} = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version}-yarn = %{version}-%{release}
 
 %description yarn-proxyserver
 The web proxy server sits in front of the YARN application master web UI.
@@ -392,9 +390,9 @@ The web proxy server sits in front of the YARN application master web UI.
 %package yarn-timelineserver
 Summary: YARN Timeline Server
 Group: System/Daemons
-Requires: %{component_name}-yarn = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name}-yarn = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-yarn = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version} = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version}-yarn = %{version}-%{release}
 
 %description yarn-timelineserver
 Storage and retrieval of applications' current as well as historic information in a generic fashion is solved in YARN through the Timeline Server.
@@ -402,9 +400,9 @@ Storage and retrieval of applications' current as well as historic information i
 %package yarn-timelinereader
 Summary: YARN Timeline Reader
 Group: System/Daemons
-Requires: %{component_name}-yarn = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name}-yarn = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-yarn = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version} = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version}-yarn = %{version}-%{release}
 
 %description yarn-timelinereader
 YARN Timeline Service V2, The timeline readers are separate daemons separate from the timeline collectors, and they are dedicated to serving queries via REST API.
@@ -412,9 +410,9 @@ YARN Timeline Service V2, The timeline readers are separate daemons separate fro
 %package yarn-registrydns
 Summary: YARN Registry DNS
 Group: System/Daemons
-Requires: %{component_name}-yarn = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name}-yarn = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-yarn = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version} = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version}-yarn = %{version}-%{release}
 
 %description yarn-registrydns
 The Registry DNS Server provides a standard DNS interface to the information posted into the YARN Registry by deployed applications.
@@ -422,10 +420,10 @@ The Registry DNS Server provides a standard DNS interface to the information pos
 %package mapreduce-historyserver
 Summary: MapReduce History Server
 Group: System/Daemons
-Requires: %{component_name}-mapreduce = %{version}-%{release}
-Requires: %{component_name}-hdfs = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name}-mapreduce = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-mapreduce = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-hdfs = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version} = %{version}-%{release}
+Requires(pre): %{component_name}%{soft_package_version}-mapreduce = %{version}-%{release}
 
 %description mapreduce-historyserver
 The History server keeps records of the different activities being performed on a Apache Hadoop cluster
@@ -433,10 +431,10 @@ The History server keeps records of the different activities being performed on 
 %package client
 Summary: Hadoop client side dependencies
 Group: System/Daemons
-Requires: %{component_name} = %{version}-%{release}
-Requires: %{component_name}-hdfs = %{version}-%{release}
-Requires: %{component_name}-yarn = %{version}-%{release}
-Requires: %{component_name}-mapreduce = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version} = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-hdfs = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-yarn = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-mapreduce = %{version}-%{release}
 
 %description client
 Installation of this package will provide you with all the dependencies for Hadoop clients.
@@ -444,13 +442,13 @@ Installation of this package will provide you with all the dependencies for Hado
 %package conf-pseudo
 Summary: Pseudo-distributed Hadoop configuration
 Group: System/Daemons
-Requires: %{component_name} = %{version}-%{release}
-Requires: %{component_name}-hdfs-namenode = %{version}-%{release}
-Requires: %{component_name}-hdfs-datanode = %{version}-%{release}
-Requires: %{component_name}-hdfs-secondarynamenode = %{version}-%{release}
-Requires: %{component_name}-yarn-resourcemanager = %{version}-%{release}
-Requires: %{component_name}-yarn-nodemanager = %{version}-%{release}
-Requires: %{component_name}-mapreduce-historyserver = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version} = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-hdfs-namenode = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-hdfs-datanode = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-hdfs-secondarynamenode = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-yarn-resourcemanager = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-yarn-nodemanager = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-mapreduce-historyserver = %{version}-%{release}
 
 %description conf-pseudo
 Contains configuration files for a "pseudo-distributed" Hadoop deployment.
@@ -466,7 +464,7 @@ Documentation for Hadoop
 %package libhdfs
 Summary: Hadoop Filesystem Library
 Group: Development/Libraries
-Requires: %{component_name}-hdfs = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-hdfs = %{version}-%{release}
 # TODO: reconcile libjvm
 AutoReq: no
 
@@ -476,9 +474,9 @@ Hadoop Filesystem Library
 %package hdfs-fuse
 Summary: Mountable HDFS
 Group: Development/Libraries
-Requires: %{component_name} = %{version}-%{release}
-Requires: %{component_name}-libhdfs = %{version}-%{release}
-Requires: %{component_name}-client = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version} = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-libhdfs = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version}-client = %{version}-%{release}
 Requires: fuse
 AutoReq: no
 
@@ -648,12 +646,16 @@ fi
 %config(noreplace) %{component_install_dir}/etc/security/limits.d/yarn.conf
 %{lib_hadoop}/libexec/yarn-config.sh
 %{lib_yarn}
+%{lib_yarn}/lib/service-dep.tar.gz
+%{lib_yarn}/timelineservice
+%{lib_yarn}/yarn-service-examples
 %attr(4754,root,yarn) %{lib_yarn}/bin/container-executor
 %{bin_hadoop}/yarn
-%attr(0775,yarn,hadoop) %{run_yarn}
-%attr(0775,yarn,hadoop) %{log_yarn}
+#%attr(0775,yarn,hadoop) %{run_yarn}
+#%attr(0775,yarn,hadoop) %{log_yarn}
 %attr(0755,yarn,hadoop) %{state_yarn}
 #%attr(1777,yarn,hadoop) %{state_yarn}/cache
+%exclude %{component_install_dir}/%{component_name}-yarn/%{initd_dir}/%{component_name}-yarn-*
 
 %files hdfs
 %defattr(-,root,root)
@@ -662,13 +664,14 @@ fi
 %{lib_hdfs}
 %{lib_hadoop}/libexec/hdfs-config.sh
 %{bin_hadoop}/hdfs
-%attr(0775,hdfs,hadoop) %{run_hdfs}
-%attr(0775,hdfs,hadoop) %{log_hdfs}
+#%attr(0775,hdfs,hadoop) %{run_hdfs}
+#%attr(0775,hdfs,hadoop) %{log_hdfs}
 %attr(0755,hdfs,hadoop) %{state_hdfs}
 #%attr(1777,hdfs,hadoop) %{state_hdfs}/cache
 %{lib_hadoop}/libexec/init-hdfs.sh
-%{lib_hadoop}/libexec/init-hcfs.json
-%{lib_hadoop}/libexec/init-hcfs.groovy
+#%{lib_hadoop}/libexec/init-hcfs.json
+#%{lib_hadoop}/libexec/init-hcfs.groovy
+%exclude %{component_install_dir}/%{component_name}-hdfs/%{initd_dir}/%{component_name}-hdfs-*
 
 %files mapreduce
 %defattr(-,root,root)
@@ -693,10 +696,10 @@ fi
 %files
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty/capacity-scheduler.xml
-#%config(noreplace) %{etc_hadoop}/conf.empty/configuration.xsl
+%config(noreplace) %{etc_hadoop}/conf.empty/configuration.xsl
 %config(noreplace) %{etc_hadoop}/conf.empty/container-executor.cfg
 %config(noreplace) %{etc_hadoop}/conf.empty/core-site.xml
-#%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-env.cmd
+%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-env.cmd
 %config(noreplace) %{etc_hadoop}/conf.empty/hadoop-env.sh
 %config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics2.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/hadoop-policy.xml

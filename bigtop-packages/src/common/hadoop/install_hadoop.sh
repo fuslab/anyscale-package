@@ -227,6 +227,9 @@ install -d -m 0755 ${HDFS_DIR}
 cp ${BUILD_DIR}/share/hadoop/hdfs/*.jar ${HDFS_DIR}/
 install -d -m 0755 ${YARN_DIR}
 cp ${BUILD_DIR}/share/hadoop/yarn/hadoop-yarn*.jar ${YARN_DIR}/
+cp -r ${BUILD_DIR}/share/hadoop/yarn/timelineservice ${YARN_DIR}/
+cp -r ${BUILD_DIR}/share/hadoop/yarn/yarn-service-examples ${YARN_DIR}/
+rm -rf ${YARN_DIR}/timelineservice/test
 chmod 644 ${HADOOP_DIR}/*.jar ${MAPREDUCE_DIR}/*.jar ${HDFS_DIR}/*.jar ${YARN_DIR}/*.jar
 
 # lib jars
@@ -243,8 +246,20 @@ cp ${BUILD_DIR}/share/hadoop/tools/lib/*azure*.jar ${CLIENT_DIR}/lib
 install -d -m 0755 ${CLIENT_DIR}/shaded
 cp ${BUILD_DIR}/share/hadoop/client/*.jar ${CLIENT_DIR}/shaded
 
+# lib jars in service-dep
+install -d -m 0755 ${BUILD_DIR}/service-dep
+cp ${BUILD_DIR}/share/hadoop/tools/lib/*azure*.jar ${BUILD_DIR}/service-dep
+cp ${BUILD_DIR}/share/hadoop/common/lib/*.jar ${BUILD_DIR}/service-dep
+cp ${BUILD_DIR}/share/hadoop/hdfs/lib/*.jar ${BUILD_DIR}/service-dep
+cp ${BUILD_DIR}/share/hadoop/yarn/lib/*.jar ${BUILD_DIR}/service-dep
+cp ${BUILD_DIR}/share/hadoop/yarn/*.jar ${BUILD_DIR}/service-dep
+cp ${BUILD_DIR}/share/hadoop/hdfs/*.jar ${BUILD_DIR}/service-dep
+cp ${BUILD_DIR}/share/hadoop/common/*.jar  ${BUILD_DIR}/service-dep
+(cd ${BUILD_DIR}/service-dep ; tar -zcf service-dep.tar.gz *.jar)
+
 # Install webapps
 cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HDFS_DIR}/
+#cp -ra ${BUILD_DIR}/share/hadoop/yarn/webapps ${YARN_DIR}/
 
 # bin
 install -d -m 0755 ${HADOOP_DIR}/bin
@@ -255,12 +270,15 @@ cp -a ${BIN_DIR}/hadoop ${HADOOP_DIR}/bin
 install -d -m 0755 ${HDFS_DIR}/bin
 cp -a ${BUILD_DIR}/bin/hdfs ${HDFS_DIR}/bin/hdfs.distro
 cp -a ${BIN_DIR}/hdfs ${HADOOP_DIR}/bin
+cp -a ${BIN_DIR}/hdfs ${HDFS_DIR}/bin
 install -d -m 0755 ${YARN_DIR}/bin
 cp -a ${BUILD_DIR}/bin/container-executor ${YARN_DIR}/bin
 cp -a ${BUILD_DIR}/bin/yarn ${YARN_DIR}/bin/yarn.distro
+cp -a ${BIN_DIR}/yarn ${YARN_DIR}/bin
 cp -a ${BIN_DIR}/yarn ${HADOOP_DIR}/bin
 install -d -m 0755 ${MAPREDUCE_DIR}/bin
 cp -a ${BUILD_DIR}/bin/mapred ${MAPREDUCE_DIR}/bin/mapred.distro
+cp -a ${BUILD_DIR}/bin/mapred ${YARN_DIR}/bin/mapred.distro
 cp -a ${BIN_DIR}/mapred ${MAPREDUCE_DIR}/bin
 cp -a ${BIN_DIR}/mapred ${HADOOP_DIR}/bin
 # FIXME: MAPREDUCE-3980
@@ -312,7 +330,7 @@ export HADOOP_HOME=\${HADOOP_HOME:-${HADOOP_DIR#${PREFIX}}}
 BIGTOP_DEFAULTS_DIR=\${BIGTOP_DEFAULTS_DIR-/etc/default}
 [ -n "\${BIGTOP_DEFAULTS_DIR}" -a -r \${BIGTOP_DEFAULTS_DIR}/hadoop-fuse ] && . \${BIGTOP_DEFAULTS_DIR}/hadoop-fuse
 
-export HADOOP_LIBEXEC_DIR=${SYSTEM_LIBEXEC_DIR#${PREFIX}}
+export HADOOP_LIBEXEC_DIR=\$${HADOOP_HOME}/libexec
 
 if [ "\${LD_LIBRARY_PATH}" = "" ]; then
   export JAVA_NATIVE_LIBS="libjvm.so"
@@ -350,7 +368,7 @@ sed -i -e '/^[^#]/s,^,#,' ${BUILD_DIR}/etc/hadoop/hadoop-env.sh
 cp -r ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
 #rm -rf $HADOOP_ETC_DIR/conf.empty/*.cmd
 install -d -m 0755 $HADOOP_DIR/conf
-install -d -m 0755 $HADOOP_DIR/etc/hadoop
+#install -d -m 0755 $HADOOP_DIR/etc/hadoop
 
 # docs
 install -d -m 0755 ${DOC_DIR}
@@ -393,9 +411,10 @@ cp ${BUILD_DIR}/etc/hadoop/log4j.properties $HADOOP_ETC_DIR/conf.pseudo
 
 # FIXME: Provide a convenience link for configuration (HADOOP-7939)
 install -d -m 0755 ${HADOOP_DIR}/etc
-#ln -sf ${HADOOP_ETC_DIR##${PREFIX}}/conf ${HADOOP_DIR}/etc/hadoop
+ln -sf ${HADOOP_ETC_DIR##${PREFIX}}/conf $HADOOP_DIR/etc/hadoop
 install -d -m 0755 ${YARN_DIR}/etc
-#ln -sf ${HADOOP_ETC_DIR##${PREFIX}}/conf ${YARN_DIR}/etc/hadoop
+ln -sf ${HADOOP_ETC_DIR##${PREFIX}}/conf ${YARN_DIR}/etc/hadoop
+ln -sf /etc/hadoop/conf ${YARN_DIR}/conf
 
 # Create log, var and lib
 install -d -m 0755 $PREFIX/$STACK_HOME/var/{log,run,lib}/hadoop-hdfs
@@ -429,3 +448,4 @@ done
 
 # Copy mapreduce.tar.gz to hadoop directory
 cp $BUILD_DIR/mapreduce.tar.gz $HADOOP_DIR
+cp ${BUILD_DIR}/service-dep/service-dep.tar.gz ${YARN_DIR}/lib
