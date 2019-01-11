@@ -426,3 +426,6 @@ for file in `cat ${BUILD_DIR}/hadoop-client.list` ; do
   done
   exit 1
 done
+
+# Copy mapreduce.tar.gz to hadoop directory
+cp $BUILD_DIR/mapreduce.tar.gz $HADOOP_DIR

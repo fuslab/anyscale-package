@@ -66,7 +66,7 @@
 %define state_mapreduce %{state_hadoop_dirname}/%{component_name}-mapreduce
 %define state_httpfs %{state_hadoop_dirname}/%{component_name}-httpfs
 %define bin_hadoop %{component_install_dir}/%{component_name}/bin
-%define man_hadoop %{component_install_dir}/%{component_name}/%{_mandir}
+%define man_hadoop %{component_install_dir}/%{component_name}/man
 %define doc_hadoop %{component_install_dir}/%{component_name}/%{_docdir}/%{component_name}-%{hadoop_version}
 %define httpfs_services httpfs
 %define mapreduce_services mapreduce-historyserver
@@ -692,21 +692,28 @@ fi
 
 %files
 %defattr(-,root,root)
+%config(noreplace) %{etc_hadoop}/conf.empty/capacity-scheduler.xml
+#%config(noreplace) %{etc_hadoop}/conf.empty/configuration.xsl
+%config(noreplace) %{etc_hadoop}/conf.empty/container-executor.cfg
 %config(noreplace) %{etc_hadoop}/conf.empty/core-site.xml
-#%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics.properties
-%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics2.properties
-%config(noreplace) %{etc_hadoop}/conf.empty/log4j.properties
-#%config(noreplace) %{etc_hadoop}/conf.empty/slaves
-%config(noreplace) %{etc_hadoop}/conf.empty/ssl-client.xml.example
-%config(noreplace) %{etc_hadoop}/conf.empty/ssl-server.xml.example
-%config(noreplace) %{etc_hadoop}/conf.empty/configuration.xsl
+#%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-env.cmd
 %config(noreplace) %{etc_hadoop}/conf.empty/hadoop-env.sh
+%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics2.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/hadoop-policy.xml
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-acls.xml
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-env.sh
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-log4j.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-site.xml
-%config(noreplace) %{etc_hadoop}/conf.empty
+%config(noreplace) %{etc_hadoop}/conf.empty/log4j.properties
+%config(noreplace) %{etc_hadoop}/conf.empty/mapred-env.cmd
+%config(noreplace) %{etc_hadoop}/conf.empty/mapred-env.sh
+%config(noreplace) %{etc_hadoop}/conf.empty/mapred-queues.xml.template
+%config(noreplace) %{etc_hadoop}/conf.empty/ssl-client.xml.example
+%config(noreplace) %{etc_hadoop}/conf.empty/ssl-server.xml.example
+%config(noreplace) %{etc_hadoop}/conf.empty/user_ec_policies.xml.template
+%config(noreplace) %{etc_hadoop}/conf.empty/workers
+%config(noreplace) %{etc_hadoop}/conf.empty/yarn-env.cmd
+%config(noreplace) %{etc_hadoop}/conf.empty/yarnservice-log4j.properties
 %config(noreplace) %{component_install_dir}/etc/default/hadoop
 %{component_install_dir}/etc/bash_completion.d/hadoop
 %{lib_hadoop}/*.jar
@@ -714,11 +721,17 @@ fi
 %{lib_hadoop}/sbin
 %{lib_hadoop}/bin
 %{lib_hadoop}/etc
-#%{lib_hadoop}/libexec/hadoop-config.sh
-#%{lib_hadoop}/libexec/hadoop-layout.sh
-%{lib_hadoop}/libexec
-# %{lib_hadoop}/libexec/kms-config.sh
+%{lib_hadoop}/libexec/yarn-config.cmd
+%{lib_hadoop}/libexec/mapred-config.cmd
+%{lib_hadoop}/libexec/hdfs-config.cmd
+%{lib_hadoop}/libexec/hadoop-config.cmd
+%{lib_hadoop}/libexec/hadoop-config.sh
+%{lib_hadoop}/libexec/hadoop-functions.sh
+%{lib_hadoop}/libexec/hadoop-layout.sh
+%{lib_hadoop}/libexec/shellprofile.d
+%{lib_hadoop}/mapreduce.tar.gz
 %{bin_hadoop}/hadoop
+%{component_install_dir}/%{component_name}/conf
 %{man_hadoop}/man1/hadoop.1.*
 #%{man_hadoop}/man1/yarn.1.*
 #%{man_hadoop}/man1/hdfs.1.*
