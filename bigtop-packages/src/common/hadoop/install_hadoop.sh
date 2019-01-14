@@ -259,7 +259,7 @@ cp ${BUILD_DIR}/share/hadoop/common/*.jar  ${BUILD_DIR}/service-dep
 
 # Install webapps
 cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HDFS_DIR}/
-#cp -ra ${BUILD_DIR}/share/hadoop/yarn/webapps ${YARN_DIR}/
+cp -ra ${BUILD_DIR}/share/hadoop/yarn/webapps ${YARN_DIR}/
 
 # bin
 install -d -m 0755 ${HADOOP_DIR}/bin
@@ -422,7 +422,7 @@ install -d -m 0755 $PREFIX/$STACK_HOME/var/{log,run,lib}/hadoop-yarn
 install -d -m 0755 $PREFIX/$STACK_HOME/var/{log,run,lib}/hadoop-mapreduce
 
 # Remove all source and create version-less symlinks to offer integration point with other projects
-for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} ; do
+for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${YARN_DIR}/timelineservice ${MAPREDUCE_DIR} ${HTTPFS_DIR} ; do
   (cd $DIR &&
    rm -fv *-sources.jar
    rm -fv lib/hadoop-*.jar

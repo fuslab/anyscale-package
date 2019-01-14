@@ -54,10 +54,10 @@ mkdir build
 mkdir build/src
 
 # Build artifacts
-# MAVEN_OPTS="-DskipTests -DskipTest -DskipITs"
-# mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Pyarn-ui -Psrc -Dtar ${MAVEN_OPTS} install package "$@"
-# mvn site site:stage ${MAVEN_OPTS} $@
-cp -r /ws/jdp-package/dl/hadoop-3.1.1-src/* ./
+MAVEN_OPTS="-DskipTests -DskipTest -DskipITs"
+mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Pyarn-ui -Psrc -Dtar ${MAVEN_OPTS} install package "$@"
+mvn site site:stage ${MAVEN_OPTS} $@
+#cp -r /ws/jdp-package/dl/hadoop-3.1.1-src/* ./
 
 (cd hadoop-dist/target ; cp -r hadoop-3.1.1 hadoop ; tar -zcf mapreduce.tar.gz hadoop)
 (cd build ; tar --strip-components=1 -xzf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
