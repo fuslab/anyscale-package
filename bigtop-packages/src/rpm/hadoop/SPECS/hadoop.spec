@@ -184,7 +184,7 @@ Source29: hadoop-yarn-timelineserver.svc
 #BIGTOP_PATCH_FILES
 Buildroot: %{_tmppath}/%{component_name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
-Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, zookeeper%{soft_package_version} >= 3.4.0, jdp-select >= %{soft_package_version}
+Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, zookeeper%{soft_package_version} >= 3.4.0, jdp-select >= %{stack_version}
 Requires: psmisc, %{netcat_package}
 # Sadly, Sun/Oracle JDK in RPM form doesn't provide libjvm.so, which means we have
 # to set AutoReq to no in order to minimize confusion. Not ideal, but seems to work.

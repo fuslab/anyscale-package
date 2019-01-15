@@ -229,6 +229,7 @@ install -d -m 0755 ${YARN_DIR}
 cp ${BUILD_DIR}/share/hadoop/yarn/hadoop-yarn*.jar ${YARN_DIR}/
 cp -r ${BUILD_DIR}/share/hadoop/yarn/timelineservice ${YARN_DIR}/
 cp -r ${BUILD_DIR}/share/hadoop/yarn/yarn-service-examples ${YARN_DIR}/
+cp ${BUILD_DIR}/share/hadoop/yarn/timelineservice/lib/*.jar ${YARN_DIR}/timelineservice/lib
 rm -rf ${YARN_DIR}/timelineservice/test
 chmod 644 ${HADOOP_DIR}/*.jar ${MAPREDUCE_DIR}/*.jar ${HDFS_DIR}/*.jar ${YARN_DIR}/*.jar
 
@@ -259,7 +260,7 @@ cp ${BUILD_DIR}/share/hadoop/common/*.jar  ${BUILD_DIR}/service-dep
 
 # Install webapps
 cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HDFS_DIR}/
-#cp -ra ${BUILD_DIR}/share/hadoop/yarn/webapps ${YARN_DIR}/
+cp -ra ${BUILD_DIR}/share/hadoop/yarn/webapps ${YARN_DIR}/
 
 # bin
 install -d -m 0755 ${HADOOP_DIR}/bin
@@ -367,7 +368,7 @@ cp ${DISTRO_DIR}/conf.empty/mapred-site.xml $HADOOP_ETC_DIR/conf.empty
 sed -i -e '/^[^#]/s,^,#,' ${BUILD_DIR}/etc/hadoop/hadoop-env.sh
 cp -r ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
 #rm -rf $HADOOP_ETC_DIR/conf.empty/*.cmd
-install -d -m 0755 $HADOOP_DIR/conf
+#install -d -m 0755 $HADOOP_DIR/conf
 #install -d -m 0755 $HADOOP_DIR/etc/hadoop
 
 # docs
@@ -411,10 +412,11 @@ cp ${BUILD_DIR}/etc/hadoop/log4j.properties $HADOOP_ETC_DIR/conf.pseudo
 
 # FIXME: Provide a convenience link for configuration (HADOOP-7939)
 install -d -m 0755 ${HADOOP_DIR}/etc
-ln -sf ${HADOOP_ETC_DIR##${PREFIX}}/conf $HADOOP_DIR/etc/hadoop
+ln -sf ../../hadoop/conf $HADOOP_DIR/etc/hadoop
 install -d -m 0755 ${YARN_DIR}/etc
-ln -sf ${HADOOP_ETC_DIR##${PREFIX}}/conf ${YARN_DIR}/etc/hadoop
+ln -sf ../../hadoop/conf ${YARN_DIR}/etc/hadoop
 ln -sf /etc/hadoop/conf ${YARN_DIR}/conf
+ln -sf /etc/hadoop/conf ${HADOOP_DIR}/conf
 
 # Create log, var and lib
 install -d -m 0755 $PREFIX/$STACK_HOME/var/{log,run,lib}/hadoop-hdfs
@@ -422,7 +424,7 @@ install -d -m 0755 $PREFIX/$STACK_HOME/var/{log,run,lib}/hadoop-yarn
 install -d -m 0755 $PREFIX/$STACK_HOME/var/{log,run,lib}/hadoop-mapreduce
 
 # Remove all source and create version-less symlinks to offer integration point with other projects
-for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} ; do
+for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${YARN_DIR}/timelineservice ${MAPREDUCE_DIR} ${HTTPFS_DIR} ; do
   (cd $DIR &&
    rm -fv *-sources.jar
    rm -fv lib/hadoop-*.jar
