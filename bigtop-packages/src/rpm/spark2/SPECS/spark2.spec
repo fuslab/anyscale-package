@@ -118,7 +118,7 @@ bash $RPM_SOURCE_DIR/install.sh \
 
 for service in %{spark2_services}
 do
-    init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{component_name}-${service}
+    init_file=$RPM_BUILD_ROOT/%{component_install_dir}/%{initd_dir}/%{component_name}-${service}
     bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/%{component_name}-${service}.svc rpm $init_file
 done
 
@@ -178,7 +178,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/con
 
 %define service_macro() \
 %files  %1 \
-%attr(0755,root,root)/%{component_install_dir}%{initd_dir}/%{component_name}-%1 \
+%attr(0755,root,root) %{component_install_dir}/%{initd_dir}/%{component_name}-%1 \
 %post  %1 \
 chkconfig --add %1 \
 \
