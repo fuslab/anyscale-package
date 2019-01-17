@@ -178,7 +178,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/con
 
 %define service_macro() \
 %files  %1 \
-%attr(0755,root,root) %{component_install_dir}/%{initd_dir}/%1 \
+%attr(0755,root,root)/%{component_install_dir}%{initd_dir}/%1 \
 %post  %1 \
 chkconfig --add %1 \
 \
@@ -191,8 +191,8 @@ fi \
 if [ $1 -ge 1 ]; then \
         service %1 condrestart >/dev/null 2>&1 \
 fi
-%service_macro master
-%service_macro worker
+%service_macro %{component_name}-master
+%service_macro %{component_name}-worker
 
 %{component_install_dir}/logs
 %{component_install_dir}/run
