@@ -47,9 +47,10 @@ Source6: init.d.tmpl
 Source7: spark2-history-server.svc
 Source8: spark2-thriftserver.svc
 Source9: bigtop.bom
-Requires: bigtop-utils >= 0.7, hadoop-client, hadoop-yarn
-Requires(pre): jdp-select
-AutoReq: no
+Requires: bigtop-utils >= 0.7
+Requires(pre):  hadoop%{soft_package_version}-client
+Requires(pre):  hadoop%{soft_package_version}-yarn
+Requires(pre):  jdp-select
 
 
 %description 
@@ -62,7 +63,7 @@ Spark2 runs on top of the Apache Mesos cluster manager.
 %package master
 Summary: Server for Spark2 master
 Group: Development/Libraries
-Requires: %{component_name} = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}
 
 %description  master
 Server for Spark2 master
@@ -71,7 +72,7 @@ Server for Spark2 master
 %package  worker
 Summary: Server for Spark2 worker
 Group: Development/Libraries
-Requires: %{component_name} = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}
 
 %description  worker
 Server for Spark2 worker
@@ -80,7 +81,7 @@ Server for Spark2 worker
 %package  python
 Summary: Python client for Spark2
 Group: Development/Libraries
-Requires: %{component_name} = %{version}-%{release}, python
+Requires: %{name} = %{version}-%{release}, python
 
 %description  python
 Includes PySpark, an interactive Python shell for Spark2, and related libraries
@@ -104,8 +105,6 @@ bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-%__install -d -m 0755 $RPM_BUILD_ROOT%{initd_dir}
-%__install -d -m 0755 $RPM_BUILD_ROOT%/var/lib/%{component_name}
 
 bash $RPM_SOURCE_DIR/install.sh \
   --build-dir=`pwd`/dist         \
@@ -118,7 +117,7 @@ bash $RPM_SOURCE_DIR/install.sh \
 
 for service in %{spark2_services}
 do
-    init_file=$RPM_BUILD_ROOT/%{component_install_dir}/%{initd_dir}/%{component_name}-${service}
+    init_file=$RPM_BUILD_ROOT/%{stack_home}/%{initd_dir}/%{component_name}-${service}
     bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/%{component_name}-${service}.svc rpm $init_file
 done
 
@@ -139,7 +138,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/con
 %files
 %defattr(-,root,root,755)
 
-%attr(0755,root,root) %{component_install_dir}/
+#%attr(0755,root,root) %{component_install_dir}/
 
 %attr(0755,root,root) %{stack_home}/%{etc_dir}/conf.dist/
 
@@ -161,7 +160,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/con
 %attr(0755,root,root) %{component_install_dir}/yarn/
 
 %{component_install_dir}/conf
-#/var/lib/%{component_name}
+/var/lib/%{component_name}
 
 
 %files  python
@@ -178,7 +177,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/con
 
 %define service_macro() \
 %files  %1 \
-%attr(0755,root,root) %{component_install_dir}/%{initd_dir}/%{component_name}-%1 \
+%attr(0755,root,root) %{stack_home}/%{initd_dir}/%{component_name}-%1 \
 %post  %1 \
 chkconfig --add %1 \
 \

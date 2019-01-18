@@ -118,6 +118,7 @@ install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/python
 cp -a ${BUILD_DIR}/R/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/R/
 cp -a ${BUILD_DIR}/yarn/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/aux/
 cp -a ${BUILD_DIR}/bin/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/
+rm -fr $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/*.cmd
 cp -a ${BUILD_DIR}/data/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/data/
 cp -a ${BUILD_DIR}/examples/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/examples/
 cp -a ${BUILD_DIR}/jars/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/jars/
@@ -127,9 +128,14 @@ cp -a ${BUILD_DIR}/python/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/python/
 
 cp -a ${BUILD_DIR}/{LICENSE,NOTICE,RELEASE,README.md} ${PREFIX}/${LIB_DIR}/
 
+install -d -m 0755 $PREFIX/var/lib/$COMPONENT_NAME
+install -d -m 0755 $PREFIX/var/log/$COMPONENT_NAME
+install -d -m 0755 $PREFIX/var/run/$COMPONENT_NAME
 ln -s /var/log/$COMPONENT_NAME $PREFIX/$STACK_HOME/$COMPONENT_NAME/logs
 ln -s /var/run/$COMPONENT_NAME $PREFIX/$STACK_HOME/$COMPONENT_NAME/run
 ln -s /etc/$COMPONENT_NAME/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/conf
+
+
 
 cat ${BUILD_DIR}/conf/spark-env.sh.template >> $PREFIX/$CONF_DIR/spark-env.sh
 echo "
@@ -142,4 +148,3 @@ echo "
 spark.driver.extraJavaOptions -Dhdp.version=$STACK_VERSION
 spark.yarn.am.extraJavaOptions -Dhdp.version=$STACK_VERSION
 " >> $PREFIX/$CONF_DIR/spark-defaults.conf
-

@@ -20,10 +20,10 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-./dev/make-distribution.sh --name jdp-3.2.0 --pip --tgz  -Psparkr -Pyarn  -Dyarn.version=3.1.1 -Phive -Phive-thriftserver -Phadoop-3.1 -Dhadoop.version=3.1.0 -X
+./dev/make-distribution.sh --name jdp-3.1.0 --pip --tgz  -Psparkr -Pyarn  -Dyarn.version=3.1.1 -Phive -Phive-thriftserver -Phadoop-3.1 -Dhadoop.version=3.1.0 -X
 
-tar -zxvf spark-2.4.0-bin-jdp-3.2.0.tgz
-rm -fr dist  && mv spark-2.4.0-bin-jdp-3.2.0 dist
-mv spark-2.4.0-bin-jdp-3.2.0.tgz ../../../tar/
+tar -zxvf spark-2.4.0-bin-jdp-3.1.0.tgz
+rm -fr dist  && mv spark-2.4.0-bin-jdp-3.1.0 dist
+mv spark-2.4.0-bin-jdp-3.1.0.tgz ../../../tar/
 
 echo "-------------- Spark2-do-component-build-end -----------"
