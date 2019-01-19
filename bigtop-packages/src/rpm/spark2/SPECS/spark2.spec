@@ -161,7 +161,9 @@ cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/con
 
 %{component_install_dir}/conf
 /var/lib/%{component_name}
-
+%{component_install_dir}/logs
+%{component_install_dir}/run
+%{component_install_dir}/conf
 
 %files  python
 %defattr(-,root,root,755)
@@ -193,6 +195,3 @@ fi
 %service_macro master
 %service_macro worker
 
-%{component_install_dir}/logs
-%{component_install_dir}/run
-%{component_install_dir}/conf
