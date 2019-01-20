@@ -214,6 +214,7 @@ rm -rf ${SYSTEM_LIBEXEC_DIR}/*.cmd
 install -d -m 0755 ${HADOOP_DIR}/libexec/
 cp -r ${BUILD_DIR}/libexec/* ${HADOOP_DIR}/libexec/
 rm -rf ${HADOOP_DIR}/libexec/tools
+sed -i "s#/usr/lib#$STACK_HOME#g" ${SYSTEM_LIBEXEC_DIR}/hadoop-layout.sh
 
 # hadoop jar
 install -d -m 0755 ${HADOOP_DIR}
