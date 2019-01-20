@@ -14,18 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-echo "-------------- Flink-do-component-build-started -----------"
+echo "-------------- Spark2-do-component-build-started -----------"
 
 set -ex
 
 . `dirname $0`/bigtop.bom
 
-mvn -T 4  clean package -DskipTests
+./dev/make-distribution.sh --name jdp-3.1.0 --pip --tgz  -Psparkr -Pyarn  -Dyarn.version=3.1.1 -Phive -Phive-thriftserver -Phadoop-3.1 -Dhadoop.version=3.1.0 -X
 
-rm -fr build && mkdir build && cp -R flink-dist/target/flink-$FLINK_VERSION-bin/flink-$FLINK_VERSION/* build/
+tar -zxvf spark-2.4.0-bin-jdp-3.1.0.tgz
+rm -fr dist  && mv spark-2.4.0-bin-jdp-3.1.0 dist
+mv spark-2.4.0-bin-jdp-3.1.0.tgz ../../../tar/
 
-# save components`s .bin package
-tar -zcvf Flink-$FLINK_VERSION-bin.tar.gz build/
-mv Flink-$FLINK_VERSION-bin.tar.gz ../../../tar/
-
-echo "-------------- Flink-do-component-build-completed --------------"
+echo "-------------- Spark2-do-component-build-end -----------"

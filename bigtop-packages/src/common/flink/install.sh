@@ -26,10 +26,9 @@ usage: $0 <options>
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --lib-dir=DIR               path to install flink home [/usr/lib/flink]
-     --installed-lib-dir=DIR     path where lib-dir will end up on target system
-     --bin-dir=DIR               path to install bins [/usr/bin]
-     ... [ see source for more similar options ]
+     --lib-dir=DIR               path to install flink home [/usr/[stack_name]/[stack_version]/flink/lib]
+     --stack-home=DIR            path to install dirs [/usr/[stack_name]/[stack_version]/flink]
+     --component-name=NAME       component-name
   "
   exit 1
 }
@@ -39,9 +38,9 @@ OPTS=$(getopt \
   -o '' \
   -l 'prefix:' \
   -l 'lib-dir:' \
-  -l 'installed-lib-dir:' \
-  -l 'bin-dir:' \
   -l 'source-dir:' \
+  -l 'stack-home:' \
+  -l 'component-name:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -63,11 +62,11 @@ while true ; do
         --lib-dir)
         LIB_DIR=$2 ; shift 2
         ;;
-        --installed-lib-dir)
-        INSTALLED_LIB_DIR=$2 ; shift 2
+        --stack-home)
+        STACK_HOME=$2 ; shift 2
         ;;
-        --bin-dir)
-        BIN_DIR=$2 ; shift 2
+        --component-name)
+        COMPONENT_NAME=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -87,57 +86,31 @@ for var in PREFIX BUILD_DIR SOURCE_DIR ; do
   fi
 done
 
-# load bigtop component versions
 if [ -f "$SOURCE_DIR/bigtop.bom" ]; then
   . $SOURCE_DIR/bigtop.bom
 fi
 
-
-LIB_DIR=${LIB_DIR:-/usr/lib/flink}
-INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/flink}
-BIN_DIR=${BIN_DIR:-/usr/bin}
-CONF_DIR=${CONF_DIR:-/etc/flink/conf.dist}
-
+LIB_DIR=${LIB_DIR:-$STACK_HOME/$COMPONENT_NAME}
 install -d -m 0755 $PREFIX/$LIB_DIR
-install -d -m 0755 $PREFIX/$LIB_DIR/bin
-install -d -m 0755 $PREFIX/$LIB_DIR/lib
-install -d -m 0755 $PREFIX/$LIB_DIR/examples
-install -d -m 0755 $PREFIX/$LIB_DIR/resources
+
+CONF_DIR=${CONF_DIR:-$STACK_HOME/etc/$COMPONENT_NAME/conf.dist}
 install -d -m 0755 $PREFIX/$CONF_DIR
-install -d -m 0755 $PREFIX/var/log/flink
-install -d -m 0755 $PREFIX/var/log/flink-cli
-install -d -m 0755 $PREFIX/var/run/flink
-
-cp -ra ${BUILD_DIR}/lib/* $PREFIX/${LIB_DIR}/lib/
-cp -a ${BUILD_DIR}/bin/* $PREFIX/${LIB_DIR}/bin/
-# delete Windows start scripts
-rm -rf $PREFIX/${LIB_DIR}/bin/*.cmd
-# remove log directory
-rm -rf  $PREFIX/${LIB_DIR}/log
-
-# Copy the configuration files
 cp -a ${BUILD_DIR}/conf/* $PREFIX/$CONF_DIR
-ln -s /etc/flink/conf $PREFIX/$LIB_DIR/conf
 
-cp -ra ${BUILD_DIR}/examples/* $PREFIX/${LIB_DIR}/examples/
-cp -ra ${BUILD_DIR}/resources/* $PREFIX/${LIB_DIR}/resources/
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/examples
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/lib
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/licenses
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/opt
 
-cp ${BUILD_DIR}/{LICENSE,NOTICE,README.txt} ${PREFIX}/${LIB_DIR}/
+cp -a ${BUILD_DIR}/bin/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/
+cp -a ${BUILD_DIR}/examples/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/examples/
+cp -a ${BUILD_DIR}/lib/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/lib/
+cp -a ${BUILD_DIR}/licenses/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/licenses/
+cp -a ${BUILD_DIR}/opt/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/opt/
 
-# Copy in the /usr/bin/flink wrapper
-install -d -m 0755 $PREFIX/$BIN_DIR
-cat > $PREFIX/$BIN_DIR/flink <<EOF
-#!/bin/bash
+cp -a ${BUILD_DIR}/{LICENSE,NOTICE,README.txt} ${PREFIX}/${LIB_DIR}/
 
-# Autodetect JAVA_HOME if not defined
-. /usr/lib/bigtop-utils/bigtop-detect-javahome
-
-export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
-export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/hadoop/conf}
-export FLINK_HOME=\${FLINK_HOME:-$INSTALLED_LIB_DIR}
-export FLINK_CONF_DIR=\${FLINK_CONF_DIR:-$CONF_DIR}
-export FLINK_LOG_DIR=\${FLINK_LOG_DIR:-/var/log/flink-cli}
-
-exec $INSTALLED_LIB_DIR/bin/flink "\$@"
-EOF
-chmod 755 $PREFIX/$BIN_DIR/flink
+ln -s /var/log/$COMPONENT_NAME $PREFIX/$STACK_HOME/$COMPONENT_NAME/log
+ln -s /var/run/$COMPONENT_NAME $PREFIX/$STACK_HOME/$COMPONENT_NAME/run
+ln -s /etc/$COMPONENT_NAME/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/conf
