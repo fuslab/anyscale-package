@@ -47,7 +47,6 @@ Source6: init.d.tmpl
 Source7: spark2-history-server.svc
 Source8: spark2-thriftserver.svc
 Source9: bigtop.bom
-Requires: bigtop-utils >= 0.7
 Requires(pre):  hadoop%{soft_package_version}-client
 Requires(pre):  hadoop%{soft_package_version}-yarn
 Requires(pre):  jdp-select
@@ -138,8 +137,6 @@ cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/con
 %files
 %defattr(-,root,root,755)
 
-#%attr(0755,root,root) %{component_install_dir}/
-
 %attr(0755,root,root) %{stack_home}/%{etc_dir}/conf.dist/
 
 %attr(0755,root,root) %{component_install_dir}/LICENSE
@@ -159,7 +156,6 @@ cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/con
 %attr(0755,root,root) %{component_install_dir}/work/
 %attr(0755,root,root) %{component_install_dir}/yarn/
 
-%{component_install_dir}/conf
 /var/lib/%{component_name}
 %{component_install_dir}/logs
 %{component_install_dir}/run
