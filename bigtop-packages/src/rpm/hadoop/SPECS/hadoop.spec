@@ -608,7 +608,9 @@ getent group mapred >/dev/null   || groupadd -r mapred
 getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapred -G hadoop --home %{state_mapreduce} mapred
 
 %post
-%{alternatives_cmd} --install %{config_hadoop} %{component_name}-conf %{etc_hadoop}/conf.empty 10
+#%{alternatives_cmd} --install %{config_hadoop} %{component_name}-conf %{etc_hadoop}/conf.empty 10
+cp -r %{stack_home}/etc/%{component_name}/conf.empty /etc/%{component_name}/conf
+/usr/bin/jdp-select set %{component_name}-client %{stack_version}
 
 %post httpfs
 %{alternatives_cmd} --install %{config_httpfs} %{component_name}-httpfs-conf %{etc_httpfs}/conf.empty 10
