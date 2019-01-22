@@ -20,10 +20,6 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-
-
-
-
 mvn -T 4 clean package -DskipTests
 
 rm -fr dist && mkdir dist
