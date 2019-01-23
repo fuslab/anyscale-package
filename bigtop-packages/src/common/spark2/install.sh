@@ -111,28 +111,42 @@ install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/examples
 install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/jars
 install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/licenses
 install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/sbin
-install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/work
 install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/yarn
 install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/python
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/shuffle
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/standalone-metastore
 
 cp -a ${BUILD_DIR}/R/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/R/
 cp -a ${BUILD_DIR}/yarn/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/aux/
+
 cp -a ${BUILD_DIR}/bin/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/
 rm -fr $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/*.cmd
+
 cp -a ${BUILD_DIR}/data/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/data/
+rm -fr $PREFIX/$STACK_HOME/$COMPONENT_NAME/data/mllib/images/partitioned
+
 cp -a ${BUILD_DIR}/examples/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/examples/
 cp -a ${BUILD_DIR}/jars/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/jars/
 cp -a ${BUILD_DIR}/sbin/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/sbin/
 cp -a ${BUILD_DIR}/licenses/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/licenses/
+
 cp -a ${BUILD_DIR}/python/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/python/
+rm -fr $PREFIX/$STACK_HOME/$COMPONENT_NAME/python/dist
+rm -fr $PREFIX/$STACK_HOME/$COMPONENT_NAME/python/pip-*
+rm -fr $PREFIX/$STACK_HOME/$COMPONENT_NAME/python/wheel-*
+rm -fr $PREFIX/$STACK_HOME/$COMPONENT_NAME/python/test_coverage
+
+cp -a ${BUILD_DIR}/yarn/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/shuffle/
+cp -a ${BUILD_DIR}/standalone-metastore/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/standalone-metastore/
 
 cp -a ${BUILD_DIR}/{LICENSE,NOTICE,RELEASE,README.md} ${PREFIX}/${LIB_DIR}/
+
 
 install -d -m 0755 $PREFIX/var/lib/$COMPONENT_NAME
 install -d -m 0755 $PREFIX/var/log/$COMPONENT_NAME
 install -d -m 0755 $PREFIX/var/run/$COMPONENT_NAME
 ln -s /var/log/$COMPONENT_NAME $PREFIX/$STACK_HOME/$COMPONENT_NAME/logs
-ln -s /var/run/$COMPONENT_NAME $PREFIX/$STACK_HOME/$COMPONENT_NAME/run
+ln -s /var/run/$COMPONENT_NAME/work $PREFIX/$STACK_HOME/$COMPONENT_NAME/work
 ln -s /etc/$COMPONENT_NAME/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/conf
 
 

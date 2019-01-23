@@ -153,12 +153,13 @@ cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/con
 %attr(0755,root,root) %{component_install_dir}/jars/
 %attr(0755,root,root) %{component_install_dir}/licenses/
 %attr(0755,root,root) %{component_install_dir}/sbin/
-%attr(0755,root,root) %{component_install_dir}/work/
 %attr(0755,root,root) %{component_install_dir}/yarn/
+%attr(0755,root,root) %{component_install_dir}/shuffle/
+%attr(0755,root,root) %{component_install_dir}/standalone-metastore/
 
 /var/lib/%{component_name}
 %{component_install_dir}/logs
-%{component_install_dir}/run
+%{component_install_dir}/work
 %{component_install_dir}/conf
 
 %files  python
