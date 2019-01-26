@@ -14,21 +14,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-## http://central.maven.org/maven2/org/apache/hive/hive-standalone-metastore/3.1.1/
-
-echo "-------------- Spark2-do-component-build-started -----------"
+echo "-------------- Livy2-do-component-build-started -----------"
 
 set -ex
 
 . `dirname $0`/bigtop.bom
 
-./dev/make-distribution.sh --name jdp-3.1.0 --pip --tgz  -Psparkr -Pyarn  -Dyarn.version=3.1.0 -Phive -Phive-thriftserver -Phadoop-3.1 -Dhadoop.version=3.1.0 -X
+mvn -T 4 clean package -DskipTests
 
-tar -zxvf spark-2.4.0-bin-jdp-3.1.0.tgz
-cd spark-2.4.0-bin-jdp-3.1.0 && mkdir standalone-metastore && cd standalone-metastore &&  wget http://central.maven.org/maven2/org/apache/hive/hive-standalone-metastore/3.1.1/hive-standalone-metastore-3.1.1.jar
-cd ../../
+rm -fr dist && mkdir dist
 
-rm -fr dist  && mv spark-2.4.0-bin-jdp-3.1.0 dist
-mv spark-2.4.0-bin-jdp-3.1.0.tgz ../../../tar/
+cp DISCLAIMER LICENSE NOTICE README.md ./dist/
+mkdir -p ./dist/conf && cp -a ./conf/* ./dist/conf/
+mkdir -p ./dist/bin && cp -a ./bin/* ./dist/bin/
+mkdir -p ./dist/jars && cp -a ./server/target/jars/* ./dist/jars/
+mkdir -p ./dist/repl_2.11-jars && cp -a ./repl/scala-2.11/target/jars/* ./dist/repl_2.11-jars/
+mkdir -p ./dist/rsc-jars && cp -a ./rsc/target/jars/* ./dist/rsc-jars/
 
-echo "-------------- Spark2-do-component-build-end -----------"
+rm -fr livy2-0.5-bin && mkdir livy2-0.5-bin
+cp -a dist/* livy2-0.5-bin/
+tar -zcvf livy2-0.5.0-bin.tag.gz livy2-0.5-bin
+mv livy2-0.5.0-bin.tag.gz ../../../tar/
+
+echo "-------------- Livy2-do-component-build-end -----------"
