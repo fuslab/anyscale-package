@@ -153,12 +153,12 @@ ln -s /etc/$COMPONENT_NAME/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/conf
 
 cat ${BUILD_DIR}/conf/spark-env.sh.template >> $PREFIX/$CONF_DIR/spark-env.sh
 echo "
-export HADOOP_HOME=$STACK_HOME/$COMPONENT_NAME/hadoop
-export HADOOP_CONF_DIR=$STACK_HOME/$COMPONENT_NAME/hadoop/conf
+export HADOOP_HOME=$STACK_HOME/$STACK_VERSION/hadoop
+export HADOOP_CONF_DIR=$STACK_HOME/$STACK_VERSION/hadoop/conf
 " >> $PREFIX/$CONF_DIR/spark-env.sh
 
 cat ${BUILD_DIR}/conf/spark-defaults.conf.template >> $PREFIX/$CONF_DIR/spark-defaults.conf
 echo "
-spark.driver.extraJavaOptions -Dhdp.version=$STACK_VERSION
-spark.yarn.am.extraJavaOptions -Dhdp.version=$STACK_VERSION
+spark.driver.extraJavaOptions -Djdp.version=$STACK_VERSION
+spark.yarn.am.extraJavaOptions -Djdp.version=$STACK_VERSION
 " >> $PREFIX/$CONF_DIR/spark-defaults.conf
