@@ -22,7 +22,7 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-./dev/make-distribution.sh --name jdp-3.1.0 --pip --tgz  -Psparkr -Pyarn  -Dyarn.version=3.1.0 -Phive -Phive-thriftserver -Phadoop-3.1 -Dhadoop.version=3.1.0 -X
+./dev/make-distribution.sh --name jdp-3.1.0 --pip --tgz  -Psparkr -Pyarn  -Dyarn.version=3.1.0 -Phive -Phive-thriftserver -Phadoop-3.1 -Dhadoop.version=3.1.0
 
 tar -zxvf spark-2.4.0-bin-jdp-3.1.0.tgz
 cd spark-2.4.0-bin-jdp-3.1.0 && mkdir standalone-metastore && cd standalone-metastore &&  wget http://central.maven.org/maven2/org/apache/hive/hive-standalone-metastore/3.1.1/hive-standalone-metastore-3.1.1.jar

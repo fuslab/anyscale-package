@@ -54,7 +54,7 @@ mkdir build
 mkdir build/src
 
 # Build artifacts
-MAVEN_OPTS="-DskipTests -DskipTest -DskipITs"
+MAVEN_OPTS="-DskipTests -DskipTest -DskipITs -Dhbase.profile=2.0"
 mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Pyarn-ui -Psrc -Dtar ${MAVEN_OPTS} install package "$@"
 mvn site site:stage ${MAVEN_OPTS} $@
 #cp -r /ws/jdp-package/dl/hadoop-3.1.1-src/* ./
