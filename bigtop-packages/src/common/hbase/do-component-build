@@ -31,6 +31,7 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
 fi
 mvn -DskipTests -Dslf4j.version=1.6.1         \
     -Dhadoop-two.version=$HADOOP_VERSION      \
+    -Dhadoop.profile=3.0					            \
     -Dzookeeper.version=$ZOOKEEPER_VERSION    \
     -Dcheckstyle.skip=true                    \
     ${MAVEN_ADDITIONAL} \

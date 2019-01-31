@@ -12,6 +12,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+# Set the following parameters
+%define stack_name %{soft_stack_name}
+%define stack_version %{soft_stack_version}
+
+%define stack_home /usr/%{stack_name}/%{stack_version}
+%define component_name hbase
+%define component_install_dir %{stack_home}/%{component_name}
+
+%define etc_dir /etc/%{component_name}
+%define config_dir %{etc_dir}/conf
+
+
 %define etc_hbase_conf %{_sysconfdir}/%{name}/conf
 %define etc_hbase_conf_dist %{etc_hbase_conf}.dist
 %define hbase_home /usr/lib/%{name}
@@ -75,7 +88,7 @@
 %endif
 
 
-Name: hbase
+Name: %{component_name}%{soft_package_version}
 Version: %{hbase_version}
 Release: %{hbase_release}
 Summary: HBase is the Hadoop database. Use it when you need random, realtime read/write access to your Big Data. This project's goal is the hosting of very large tables -- billions of rows X millions of columns -- atop clusters of commodity hardware. 
@@ -83,7 +96,7 @@ URL: http://hbase.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: ASL 2.0
-Source0: %{name}-%{hbase_base_version}.tar.gz
+Source0: %{component_name}-%{hbase_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_hbase.sh
 Source3: hbase.svc
@@ -261,7 +274,7 @@ Requires: /lib/lsb/init-functions
 The Apache HBase REST gateway
 
 %prep
-%setup -n %{name}-%{hbase_base_version}
+%setup -n %{component_name}-%{hbase_base_version}-src
 
 #BIGTOP_PATCH_COMMANDS
 
