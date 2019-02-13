@@ -45,6 +45,7 @@ OPTS=$(getopt \
   -l 'bin-dir:' \
   -l 'examples-dir:' \
   -l 'conf-dir:' \
+  -l 'stack-home:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -59,6 +60,9 @@ while true ; do
         ;;
         --build-dir)
         BUILD_DIR=$2 ; shift 2
+        ;;
+        --stack-home)
+        STACK_HOME=$2 ; shift 2
         ;;
         --doc-dir)
         DOC_DIR=$2 ; shift 2
@@ -96,12 +100,12 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
-DOC_DIR=${DOC_DIR:-/usr/share/doc/hbase}
-LIB_DIR=${LIB_DIR:-/usr/lib/hbase}
+MAN_DIR=${MAN_DIR:-${STACK_HOME}/hbase/man/man1}
+DOC_DIR=${DOC_DIR:-${STACK_HOME}/doc/hbase}
+LIB_DIR=${LIB_DIR:-${STACK_HOME}/hbase}
 
-BIN_DIR=${BIN_DIR:-/usr/lib/hbase/bin}
-ETC_DIR=${ETC_DIR:-/etc/hbase}
+BIN_DIR=${BIN_DIR:-${STACK_HOME}/hbase/bin}
+ETC_DIR=${ETC_DIR:-${STACK_HOME}/etc/hbase}
 CONF_DIR=${CONF_DIR:-${ETC_DIR}/conf.dist}
 THRIFT_DIR=${THRIFT_DIR:-${LIB_DIR}/include/thrift}
 
@@ -110,17 +114,19 @@ install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$DOC_DIR
 install -d -m 0755 $PREFIX/$BIN_DIR
 install -d -m 0755 $PREFIX/$ETC_DIR
+install -d -m 0755 $PREFIX/$CONF_DIR
 install -d -m 0755 $PREFIX/$MAN_DIR
 install -d -m 0755 $PREFIX/$THRIFT_DIR
 
 cp -ra $BUILD_DIR/lib/* ${PREFIX}/${LIB_DIR}/lib/
 cp $BUILD_DIR/lib/hbase*.jar $PREFIX/$LIB_DIR
-cp -a $BUILD_DIR/docs/* $PREFIX/$DOC_DIR
+#cp -a $BUILD_DIR/docs/* $PREFIX/$DOC_DIR
 cp $BUILD_DIR/*.txt $PREFIX/$DOC_DIR/
 cp -a $BUILD_DIR/hbase-webapps $PREFIX/$LIB_DIR
 
-cp -a $BUILD_DIR/conf $PREFIX/$CONF_DIR
+cp -a $BUILD_DIR/conf/* $PREFIX/$CONF_DIR
 cp -a $BUILD_DIR/bin/* $PREFIX/$BIN_DIR
+cp -a $BUILD_DIR/bin/hbase $PREFIX/$BIN_DIR/hbase.distro
 # Purge scripts that don't work with packages
 for file in rolling-restart.sh graceful_stop.sh local-regionservers.sh \
             master-backup.sh regionservers.sh zookeepers.sh hbase-daemons.sh \
@@ -135,14 +141,14 @@ ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
 
 # Make a symlink of hbase.jar to hbase-version.jar
 pushd `pwd`
-cd $PREFIX/$LIB_DIR
+cd $PREFIX/$LIB_DIR/lib
 for i in `ls hbase*jar | grep -v tests.jar`
 do
     ln -s $i `echo $i | sed -n 's/\(.*\)\(-[0-9].*\)\(.jar\)/\1\3/p'`
 done
 popd
 
-wrapper=$PREFIX/usr/bin/hbase
+wrapper=$PREFIX/${BIN_DIR}/hbase
 mkdir -p `dirname $wrapper`
 cat > $wrapper <<EOF
 #!/bin/bash
@@ -150,19 +156,18 @@ cat > $wrapper <<EOF
 BIGTOP_DEFAULTS_DIR=\${BIGTOP_DEFAULTS_DIR-/etc/default}
 [ -n "\${BIGTOP_DEFAULTS_DIR}" -a -r \${BIGTOP_DEFAULTS_DIR}/hbase ] && . \${BIGTOP_DEFAULTS_DIR}/hbase
 
-# Autodetect JAVA_HOME if not defined
-. /usr/lib/bigtop-utils/bigtop-detect-javahome
-
-export HADOOP_CONF=\${HADOOP_CONF:-/etc/hadoop/conf}
-export ZOOKEEPER_HOME=\${ZOOKEEPER_HOME:-/usr/lib/zookeeper}
+export HBASE_HOME=${HBASE_HOME:-${STACK_HOME}/hbase}
+export HADOOP_HOME=${HADOOP_HOME:-${STACK_HOME}/hadoop}
+export HADOOP_CONF=\${HADOOP_CONF:-${HADOOP_HOME}/conf}
+export ZOOKEEPER_HOME=\${ZOOKEEPER_HOME:-${STACK_HOME}/zookeeper}
 export HBASE_CLASSPATH=\$HADOOP_CONF:\$HADOOP_HOME/*:\$HADOOP_HOME/lib/*:\$ZOOKEEPER_HOME/*:\$HBASE_CLASSPATH
+export JDP_VERSION=\${JDP_VERSION:-3.1.0.0-108}
+export HBASE_OPTS="-Djdp.version=\${JDP_VERSION} \${HBASE_OPTS}"
 
-exec /usr/lib/hbase/bin/hbase "\$@"
+exec ${STACK_HOME}/hbase/bin/hbase.distro "\$@"
 EOF
 chmod 755 $wrapper
 
-install -d -m 0755 $PREFIX/usr/bin
-
-rm -f $PREFIX/$CONF_DIR/*.cmd
-rm -f $PREFIX/$BIN_DIR/*.cmd
-
+#rm -f $PREFIX/$CONF_DIR/*.cmd
+#rm -f $PREFIX/$BIN_DIR/*.cmd
+rm -f $PREFIX/${STACK_HOME}/hbase/*.jar
