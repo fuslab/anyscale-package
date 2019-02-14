@@ -107,7 +107,7 @@ Source7: regionserver-init.d.tpl
 #BIGTOP_PATCH_FILES
 BuildArch: noarch
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
-Requires: hadoop-client, zookeeper >= 3.3.1, bigtop-utils >= 0.7
+Requires: hadoop%{soft_package_version}, zookeeper%{soft_package_version} >= 3.4.0, jdp-select >= %{stack_version}
 
 %if  0%{?mgaversion}
 Requires: bsh-utils
