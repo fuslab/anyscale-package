@@ -57,8 +57,8 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
-%define doc_hbase %{stack_home}/%{_docdir}/%{component_name}
-%global initd_dir %{stack_home}/%{_sysconfdir}/rc.d
+%define doc_hbase %{stack_home}/%{component_name}/doc
+%global initd_dir %{stack_home}/%{component_name}/%{_sysconfdir}/rc.d
 %define alternatives_cmd update-alternatives
 
 %else
@@ -81,8 +81,8 @@
 %endif
 
 
-%define doc_hbase %{stack_home}/%{_docdir}/%{component_name}-%{hbase_version}
-%global initd_dir %{stack_home}/%{_sysconfdir}/rc.d/init.d
+%define doc_hbase %{stack_home}/%{component_name}/doc
+%global initd_dir %{stack_home}/%{component_name}/%{_sysconfdir}/rc.d/init.d
 %define alternatives_cmd alternatives
 
 %endif
@@ -333,19 +333,19 @@ done
 rm -f $RPM_BUILD_ROOT/%{lib_hbase}/{hadoop,zookeeper,slf4j-log4j12-}*.jar
 ln -f -s %{zookeeper_home}/zookeeper.jar $RPM_BUILD_ROOT/%{lib_hbase}
 
-ln -f -s %{hadoop_home}/client/hadoop-annotations.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-common.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-hdfs.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-mapreduce-client-app.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-mapreduce-client-jobclient.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-mapreduce-client-shuffle.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-yarn-client.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-yarn-server-common.jar $RPM_BUILD_ROOT/%{lib_hbase}
+#ln -f -s %{hadoop_home}/client/hadoop-annotations.jar $RPM_BUILD_ROOT/%{lib_hbase}
+#ln -f -s %{hadoop_home}/client/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_hbase}
+#ln -f -s %{hadoop_home}/client/hadoop-common.jar $RPM_BUILD_ROOT/%{lib_hbase}
+#ln -f -s %{hadoop_home}/client/hadoop-hdfs.jar $RPM_BUILD_ROOT/%{lib_hbase}
+#ln -f -s %{hadoop_home}/client/hadoop-mapreduce-client-app.jar $RPM_BUILD_ROOT/%{lib_hbase}
+#ln -f -s %{hadoop_home}/client/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{lib_hbase}
+#ln -f -s %{hadoop_home}/client/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_hbase}
+#ln -f -s %{hadoop_home}/client/hadoop-mapreduce-client-jobclient.jar $RPM_BUILD_ROOT/%{lib_hbase}
+#ln -f -s %{hadoop_home}/client/hadoop-mapreduce-client-shuffle.jar $RPM_BUILD_ROOT/%{lib_hbase}
+#ln -f -s %{hadoop_home}/client/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{lib_hbase}
+#ln -f -s %{hadoop_home}/client/hadoop-yarn-client.jar $RPM_BUILD_ROOT/%{lib_hbase}
+#ln -f -s %{hadoop_home}/client/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{lib_hbase}
+#ln -f -s %{hadoop_home}/client/hadoop-yarn-server-common.jar $RPM_BUILD_ROOT/%{lib_hbase}
 
 %pre
 getent group hbase 2>/dev/null >/dev/null || /usr/sbin/groupadd -r hbase
@@ -368,6 +368,7 @@ fi
 %{logs_hbase}
 %{pids_hbase}
 %{man_dir}
+%dir %{initd_dir}
 #%dir %{_localstatedir}/log/hbase
 #%dir %{_localstatedir}/run/hbase
 #%dir %{_localstatedir}/lib/hbase

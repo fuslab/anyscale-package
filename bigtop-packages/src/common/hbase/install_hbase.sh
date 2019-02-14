@@ -168,6 +168,4 @@ exec ${STACK_HOME}/hbase/bin/hbase.distro "\$@"
 EOF
 chmod 755 $wrapper
 
-#rm -f $PREFIX/$CONF_DIR/*.cmd
-#rm -f $PREFIX/$BIN_DIR/*.cmd
 rm -f $PREFIX/${STACK_HOME}/hbase/*.jar
