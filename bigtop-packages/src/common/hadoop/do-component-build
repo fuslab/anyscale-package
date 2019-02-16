@@ -57,9 +57,8 @@ mkdir build/src
 MAVEN_OPTS="-DskipTests -DskipTest -DskipITs -Dhbase.profile=2.0"
 mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Pyarn-ui -Psrc -Dtar ${MAVEN_OPTS} install package "$@"
 mvn site site:stage ${MAVEN_OPTS} $@
-#cp -r /ws/jdp-package/dl/hadoop-3.1.1-src/* ./
 
-(cd hadoop-dist/target ; cp -r hadoop-3.1.1 hadoop ; tar -zcf mapreduce.tar.gz hadoop)
+(cd hadoop-dist/target ; cp -r hadoop-${HADOOP_VERSION} hadoop ; tar -zcf mapreduce.tar.gz hadoop)
 (cd build ; tar --strip-components=1 -xzf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
 (cd build/src ; tar --strip-components=1 -xzf  ../../hadoop-dist/target/hadoop-${HADOOP_VERSION}-src.tar.gz)
 

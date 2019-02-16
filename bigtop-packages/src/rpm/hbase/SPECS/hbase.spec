@@ -131,8 +131,8 @@ HBase is an open-source, distributed, column-oriented store modeled after Google
 %package master
 Summary: The Hadoop HBase master Server.
 Group: System/Daemons
-Requires: %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version} = %{version}
+Requires(pre): %{component_name}%{soft_package_version} = %{version}
 
 %if  %{?suse_version:1}0
 # Required for init scripts
@@ -157,8 +157,8 @@ HMaster is the "master server" for a HBase. There is only one HMaster for a sing
 %package regionserver
 Summary: The Hadoop HBase RegionServer server.
 Group: System/Daemons
-Requires: %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version} = %{version}
+Requires(pre):  %{component_name}%{soft_package_version} = %{version}
 
 %if  %{?suse_version:1}0
 # Required for init scripts
@@ -184,8 +184,8 @@ HRegionServer makes a set of HRegions available to clients. It checks in with th
 %package thrift
 Summary: The Hadoop HBase Thrift Interface
 Group: System/Daemons
-Requires: %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version} = %{version}
+Requires(pre): %{component_name}%{soft_package_version} = %{version}
 
 %if  %{?suse_version:1}0
 # Required for init scripts
@@ -212,8 +212,8 @@ ThriftServer - this class starts up a Thrift server which implements the Hbase A
 %package thrift2
 Summary: The Hadoop HBase Thrift2 Interface
 Group: System/Daemons
-Requires: %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version} = %{version}
+Requires(pre): %{component_name}%{soft_package_version} = %{version}
 
 %if  %{?suse_version:1}0
 # Required for init scripts
@@ -249,8 +249,8 @@ Documentation for Hbase
 %package rest
 Summary: The Apache HBase REST gateway
 Group: System/Daemons
-Requires: %{component_name} = %{version}-%{release}
-Requires(pre): %{component_name} = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version} = %{version}
+Requires(pre): %{component_name}%{soft_package_version} = %{version}
 
 %if  %{?suse_version:1}0
 # Required for init scripts
@@ -369,17 +369,15 @@ fi
 %{pids_hbase}
 %{man_dir}
 %dir %{initd_dir}
-#%dir %{_localstatedir}/log/hbase
-#%dir %{_localstatedir}/run/hbase
-#%dir %{_localstatedir}/lib/hbase
+
 
 %defattr(-,root,root)
 %config(noreplace) %{stack_home}/%{_sysconfdir}/default/hbase
 %config(noreplace) %{stack_home}/etc/security/limits.d/hbase.nofiles.conf
 %{hbase_home}
-#%{hbase_home}/hbase-*.jar
 %{webapps_hbase}
 %config(noreplace) %{etc_hbase_conf_dist}
+%exclude %{initd_dir}/hbase-*
 
 %files doc
 %defattr(-,root,root)

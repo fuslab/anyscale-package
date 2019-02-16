@@ -246,7 +246,7 @@ computations.
 %package yarn
 Summary: The Hadoop NextGen MapReduce (YARN)
 Group: System/Daemons
-Requires: %{component_name}%{soft_package_version} = %{version}-%{release}
+Requires: %{component_name}%{soft_package_version} = %{version}-%{release} hbase%{soft_package_version}
 
 %description yarn
 YARN (Hadoop NextGen MapReduce) is a general purpose data-computation framework.
@@ -666,13 +666,8 @@ fi
 %{lib_hdfs}
 %{lib_hadoop}/libexec/hdfs-config.sh
 %{bin_hadoop}/hdfs
-#%attr(0775,hdfs,hadoop) %{run_hdfs}
-#%attr(0775,hdfs,hadoop) %{log_hdfs}
 %attr(0755,hdfs,hadoop) %{state_hdfs}
-#%attr(1777,hdfs,hadoop) %{state_hdfs}/cache
 %{lib_hadoop}/libexec/init-hdfs.sh
-#%{lib_hadoop}/libexec/init-hcfs.json
-#%{lib_hadoop}/libexec/init-hcfs.groovy
 %exclude %{component_install_dir}/%{component_name}-hdfs/%{initd_dir}/%{component_name}-hdfs-*
 
 %files mapreduce
