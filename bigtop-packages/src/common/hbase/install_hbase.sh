@@ -137,7 +137,7 @@ done
 cp $BUILD_DIR/../hbase-thrift/src/main/resources/org/apache/hadoop/hbase/thrift/Hbase.thrift $PREFIX/$THRIFT_DIR/hbase1.thrift
 cp $BUILD_DIR/../hbase-thrift/src/main/resources/org/apache/hadoop/hbase/thrift2/hbase.thrift $PREFIX/$THRIFT_DIR/hbase2.thrift
 
-ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
+ln -s /etc/hbase/conf $PREFIX/$LIB_DIR/conf
 
 # Make a symlink of hbase.jar to hbase-version.jar
 pushd `pwd`

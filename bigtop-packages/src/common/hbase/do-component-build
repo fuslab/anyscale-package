@@ -29,19 +29,14 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
   sed -i 's|<jruby.version>.*</jruby.version>|<jruby.version>1.7.23</jruby.version>|' pom.xml
   sed  -i "s|<version>1.5.0-alpha.6</version>|<version>1.5.0-alpha.11</version>|" pom.xml
 fi
-# mvn -DskipTests -Dslf4j.version=1.6.1         \
-#     -Dhadoop-two.version=$HADOOP_VERSION      \
-#     -Dhadoop.profile=3.0					            \
-#     -Dzookeeper.version=$ZOOKEEPER_VERSION    \
-#     -Dcheckstyle.skip=true                    \
-#     ${MAVEN_ADDITIONAL} \
-#     clean site install assembly:single "$@"
+
+# mvn -DskipTests -Dcheckstyle.skip=true -Dhadoop.profile=3.0 clean package assembly:single   
 
 cd ..
-rm -rf hbase-2.1.2-src
-cp -r /ws/jdp-package/dl/hbase-2.1.2-src .
-cd hbase-2.1.2-src
+rm -rf hbase-${HBASE_VERSION}-src
+cp -r /ws/jdp-package/dl/hbase-${HBASE_VERSION}-src .
+cd hbase-${HBASE_VERSION}-src
 
 rm -rf build
 mkdir build
-tar -C build --strip-components=1 -xzf hbase-assembly/target/hbase-2.1.2-bin.tar.gz
+tar -C build --strip-components=1 -xzf hbase-assembly/target/hbase-${HBASE_VERSION}-bin.tar.gz
