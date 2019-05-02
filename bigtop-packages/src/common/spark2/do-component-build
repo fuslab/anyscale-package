@@ -22,11 +22,8 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-#./dev/make-distribution.sh --name jdp-spark --tgz --pip \
-# --r \
-#-Psparkr -Phadoop-3.1 -Phive -Phive-thriftserver -Pmesos -Pyarn -Pkubernetes -DskipTests
-
-cp -r /ws/jdp-package/dl/spark2-2.4.0-src/* ./
+./dev/make-distribution.sh --name jdp-spark --tgz --pip \
+-Psparkr -Phadoop-3.1 -Phive -Phive-thriftserver -Pyarn -DskipTests
 
 tar -zxvf spark-2.4.0-bin-jdp-spark.tgz
 cd spark-2.4.0-bin-jdp-spark && mkdir standalone-metastore && cd standalone-metastore &&  wget http://central.maven.org/maven2/org/apache/hive/hive-standalone-metastore/3.1.1/hive-standalone-metastore-3.1.1.jar
