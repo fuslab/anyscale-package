@@ -153,8 +153,8 @@ ln -s /etc/$COMPONENT_NAME/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/conf
 
 cat ${BUILD_DIR}/conf/spark-env.sh.template >> $PREFIX/$CONF_DIR/spark-env.sh
 echo "
-export HADOOP_HOME=$STACK_HOME/$STACK_VERSION/hadoop
-export HADOOP_CONF_DIR=$STACK_HOME/$STACK_VERSION/hadoop/conf
+export HADOOP_HOME=$STACK_HOME/hadoop
+export HADOOP_CONF_DIR=$STACK_HOME/hadoop/conf
 " >> $PREFIX/$CONF_DIR/spark-env.sh
 
 cat ${BUILD_DIR}/conf/spark-defaults.conf.template >> $PREFIX/$CONF_DIR/spark-defaults.conf

@@ -68,7 +68,8 @@ class bigtop_toolchain::packages {
         "apr-devel",
         "bison",
         "perl-Env",
-        "libffi-devel"
+        "libffi-devel",
+        "R"
       ]
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
