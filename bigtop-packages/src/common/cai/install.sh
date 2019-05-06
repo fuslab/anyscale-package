@@ -26,9 +26,10 @@ usage: $0 <options>
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --lib-dir=DIR               path to install clickhouse home [/usr/[stack_name]/[stack_version]/clickhouse/lib]
-     --stack-home=DIR            path to install dirs [/usr/[stack_name]/[stack_version]/clickhouse]
-     --component-name=NAME       component-name
+     --lib-dir=DIR               path to install cai home [/usr/[stack_name]/[stack_version]/cai/lib]
+     --stack-home=DIR            path to install dirs [/usr/[stack_name]/[stack_version]/cai]
+     --stack-version=NAME        stack version 
+     --component-name=NAME       component name
   "
   exit 1
 }
@@ -40,6 +41,7 @@ OPTS=$(getopt \
   -l 'lib-dir:' \
   -l 'source-dir:' \
   -l 'stack-home:' \
+  -l 'stack-version:' \
   -l 'component-name:' \
   -l 'build-dir:' -- "$@")
 
@@ -64,6 +66,9 @@ while true ; do
         ;;
         --stack-home)
         STACK_HOME=$2 ; shift 2
+        ;;
+        --stack-version)
+        STACK_VERSION=$2 ; shift 2
         ;;
         --component-name)
         COMPONENT_NAME=$2 ; shift 2
@@ -90,32 +95,10 @@ if [ -f "$SOURCE_DIR/bigtop.bom" ]; then
   . $SOURCE_DIR/bigtop.bom
 fi
 
-# Generate configuration and directory
-LIB_DIR=${LIB_DIR:-$STACK_HOME/$COMPONENT_NAME}
-install -d -m 0755 $PREFIX/$LIB_DIR
-
-CONF_DIR=${CONF_DIR:-$STACK_HOME/etc/${COMPONENT_NAME}-server/conf.dist}
-install -d -m 0755 $PREFIX/$CONF_DIR
-cp -a ${BUILD_DIR}/dbms/programs/server/config.xml $PREFIX/$CONF_DIR
-cp -a ${BUILD_DIR}/dbms/programs/server/users.xml $PREFIX/$CONF_DIR
-
 # create folders structure to be distributed
 INSTALL_DIR=$PREFIX/$STACK_HOME/$COMPONENT_NAME
+install -d -m 0755 $INSTALL_DIR
 
-# cmake install clickhouse to buildroot
-export CMAKE=cmake3
-
-cd build
-DAEMONS="clickhouse clickhouse-test clickhouse-compressor clickhouse-client clickhouse-server"
-for daemon in $DAEMONS; do \
-        DESTDIR=$PREFIX $CMAKE -DCOMPONENT=$daemon -P cmake_install.cmake; \
-done
-cd ..
-
+# generate cai install package
 echo `pwd`
-cp -a $STACK_HOME/$COMPONENT_NAME/* $INSTALL_DIR/
-
-# create symlink 
-ln -s /var/log/${COMPONENT_NAME}-server $PREFIX/$STACK_HOME/$COMPONENT_NAME/logs
-ln -s /var/run/${COMPONENT_NAME}-server $PREFIX/$STACK_HOME/$COMPONENT_NAME/run
-ln -s /etc/${COMPONENT_NAME}-server/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/conf
+cp -a $BUILD_DIR/build/* $INSTALL_DIR/
