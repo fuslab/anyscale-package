@@ -14,22 +14,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-## http://central.maven.org/maven2/org/apache/hive/hive-standalone-metastore/3.1.1/
-
-echo "-------------- Spark2-do-component-build-started -----------"
-
 set -ex
+
+echo "-------------- FusionDB-do-component-build-started -----------"
+
+base_path=`pwd`
+
+echo "current path: ${base_path}"
 
 . `dirname $0`/bigtop.bom
 
-./dev/make-distribution.sh --name jdp-spark --tgz --pip \
--Psparkr -Phadoop-3.1 -Phive -Phive-thriftserver -Pyarn -DskipTests
+# Generate build  
+rm -rf build
+mkdir -p build/assembly
 
-tar -zxvf spark-2.4.0-bin-jdp-spark.tgz
-cd spark-2.4.0-bin-jdp-spark && mkdir standalone-metastore && cd standalone-metastore &&  wget http://central.maven.org/maven2/org/apache/hive/hive-standalone-metastore/3.1.1/hive-standalone-metastore-3.1.1.jar
-cd ../../
+# Build FusionDB
+mvn clean package -DskipTests
 
-rm -fr dist  && mv spark-2.4.0-bin-jdp-spark dist
-mv spark-2.4.0-bin-jdp-spark.tgz ../../../tar/
+# Generate binary package
+cp -a target/fusiondb-fql_2.11_2.4.0_0.1.0-SNAPSHOT-with-dependencies.jar build/assembly/
+cp -a sbin build/
+cp -a bin build/
 
-echo "-------------- Spark2-do-component-build-end -----------"
+echo "-------------- FusionDB-do-component-build-completed --------------"

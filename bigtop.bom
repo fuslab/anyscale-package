@@ -671,6 +671,46 @@ bigtop {
         archive = "${apache.APACHE_ARCHIVE}/${download_path}" 
       }
     }
-        
+       
+    'fusiondb' {
+      name    = 'fusiondb'
+      pkg     = name
+      relNotes = 'Fusiondb ASF'
+      version { 
+        base = '0.1.0';
+        pkg = base;
+        release = 1 
+      }
+      tarball { 
+        source      = "$name-${version.base}-src.tar.gz"
+        destination = source 
+      }
+      url { 
+        download_path = "/$name/${version.base}/"
+        site = "${apache.APACHE_MIRROR}/${download_path}"
+        archive = "${apache.APACHE_ARCHIVE}/${download_path}" 
+      }
+    }
+
+    'cai' {
+      name    = 'cai'
+      pkg     = name
+      relNotes = 'CAI ASF'
+      version { 
+        base = '0.1.0';
+        pkg = base;
+        release = 1 
+      }
+      tarball { 
+        source      = "$name-${version.base}-src.tar.gz"
+        destination = source 
+      }
+      url { 
+        download_path = "/$name/${version.base}/"
+        site = "${apache.APACHE_MIRROR}/${download_path}"
+        archive = "${apache.APACHE_ARCHIVE}/${download_path}" 
+      }
+    }
+
   }
 }
