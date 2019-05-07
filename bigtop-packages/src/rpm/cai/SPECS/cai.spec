@@ -66,6 +66,7 @@ bash $RPM_SOURCE_DIR/install.sh \
 
 
 %post
+install -d -m 0755 /var/log/docker
 /usr/bin/jdp-select set %{component_name} %{stack_version}
 
 
