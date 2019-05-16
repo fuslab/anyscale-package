@@ -30,12 +30,7 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
   sed  -i "s|<version>1.5.0-alpha.6</version>|<version>1.5.0-alpha.11</version>|" pom.xml
 fi
 
-# mvn -DskipTests -Dcheckstyle.skip=true -Dhadoop.profile=3.0 clean package assembly:single   
-
-cd ..
-rm -rf hbase-${HBASE_VERSION}-src
-cp -r /ws/jdp-package/dl/hbase-${HBASE_VERSION}-src .
-cd hbase-${HBASE_VERSION}-src
+mvn -DskipTests -Dcheckstyle.skip=true -Dhadoop.profile=3.0 clean package assembly:single   
 
 rm -rf build
 mkdir build

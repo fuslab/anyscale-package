@@ -25,11 +25,9 @@ set -ex
 ./dev/make-distribution.sh --name jdp-spark --tgz --pip \
 -Psparkr -Phadoop-3.1 -Phive -Phive-thriftserver -Pyarn -DskipTests
 
-tar -zxvf spark-2.4.0-bin-jdp-spark.tgz
-cd spark-2.4.0-bin-jdp-spark && mkdir standalone-metastore && cd standalone-metastore &&  wget http://central.maven.org/maven2/org/apache/hive/hive-standalone-metastore/3.1.1/hive-standalone-metastore-3.1.1.jar
-cd ../../
+tar -zxvf spark-${SPARK2_VERSION}-bin-jdp-spark.tgz
 
-rm -fr dist  && mv spark-2.4.0-bin-jdp-spark dist
-mv spark-2.4.0-bin-jdp-spark.tgz ../../../tar/
+rm -fr dist  && mv spark-${SPARK2_VERSION}-bin-jdp-spark dist
+mv spark-${SPARK2_VERSION}-bin-jdp-spark.tgz ../../../tar/
 
 echo "-------------- Spark2-do-component-build-end -----------"
