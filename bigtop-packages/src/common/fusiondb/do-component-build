@@ -32,7 +32,7 @@ mkdir -p build/assembly
 mvn clean package -DskipTests
 
 # Generate binary package
-cp -a target/fusiondb-fql_2.11_${SPARK2_VERSION}_${SPARK2_VERSION}-SNAPSHOT-with-dependencies.jar build/assembly/
+cp -a target/fusiondb-fql_2.11_${SPARK2_VERSION}_${FUSIONDB_VERSION}-SNAPSHOT-with-dependencies.jar build/assembly/
 cp -a sbin build/
 cp -a bin build/
 
