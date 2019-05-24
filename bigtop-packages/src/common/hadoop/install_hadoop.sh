@@ -178,7 +178,7 @@ export HADOOP_HOME=\${HADOOP_HOME:-$STACK_HOME/hadoop}
 export HADOOP_MAPRED_HOME=\${HADOOP_MAPRED_HOME:-$STACK_HOME/hadoop-mapreduce}
 export HADOOP_YARN_HOME=\${HADOOP_YARN_HOME:-$STACK_HOME/hadoop-yarn}
 export HADOOP_LIBEXEC_DIR=\${HADOOP_HOME}/libexec
-export JDP_VERSION=\${JDP_VERSION:-3.1.0.0-108}
+export JDP_VERSION=\${JDP_VERSION:-3.2.0.0-108}
 export HADOOP_OPTS="\${HADOOP_OPTS} -Djdp.version=\${JDP_VERSION}"
 
 exec ${component#${PREFIX}}.distro "\$@"
