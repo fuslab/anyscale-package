@@ -42,7 +42,7 @@ Source3: install.sh
 Source4: init.d.tmpl
 Source5: flink-jobmanager.svc
 Source6: flink-taskmanager.svc
-Requires: bigtop-utils >= 0.7
+# Requires: bigtop-utils >= 0.7
 Requires(pre): jdp-select
 AutoReq: no
 
