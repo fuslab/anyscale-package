@@ -13,15 +13,21 @@
 # See the License for the specific language governing permissions and
 %undefine _missing_build_ids_terminate_build
 
-%define rdf_dir /usr/%{rdf_stack_name}/%{rdf_stack_version}
+# Set the following parameters
+%define stack_name %{soft_stack_name}
+%define stack_version %{soft_stack_version}
+
+%define stack_home /usr/%{stack_name}/%{stack_version}
 %define component_name ranger
+%define component_install_dir %{stack_home}/%{component_name}
+
 %define etc_ranger /etc/%{component_name}
-%define ranger_home %{rdf_dir}/%{component_name}
-%define ranger_user_home /var/lib/%{component_name}
+%define ranger_home %{stack_home}/%{component_name}
+%define ranger_user_home %{stack_home}/%{component_name}
 %define config_ranger %{etc_ranger}/conf
 %define config_ranger_dist %{config_ranger}.dist
 
-%define usr_lib_ranger %{rdf_dir}/%{component_name}
+%define usr_lib_ranger %{stack_home}/%{component_name}
 %define var_log_ranger /var/log/%{component_name}
 %define var_run_ranger /var/run/%{component_name}
 %define usr_bin /usr/bin
@@ -29,14 +35,14 @@
 %define ranger_services ranger-admin ranger-usersync ranger-tagsync ranger-kms
 %define ranger_dist build
 
-%define hadoop_home %{rdf_dir}/hadoop
-%define hive_home %{rdf_dir}/hive
-%define hive2_home %{rdf_dir}/hive2
-%define knox_home %{rdf_dir}/knox
-%define storm_home %{rdf_dir}/storm
-%define hbase_home %{rdf_dir}/hbase
-%define kafka_home %{rdf_dir}/kafka
-%define atlas_home %{rdf_dir}/atlas
+%define hadoop_home %{stack_home}/hadoop
+%define hive_home %{stack_home}/hive
+%define hive2_home %{stack_home}/hive2
+%define knox_home %{stack_home}/knox
+%define storm_home %{stack_home}/storm
+%define hbase_home %{stack_home}/hbase
+%define kafka_home %{stack_home}/kafka
+%define atlas_home %{stack_home}/atlas
 
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 %define __os_install_post \
@@ -86,7 +92,7 @@
 # like thrift so disable this
 %define _use_internal_dependency_generator 0
 
-Name: %{component_name}%{rdf_package_version}
+Name: %{component_name}%{soft_package_version}
 Version: %{ranger_base_version}
 Release: %{ranger_release}
 Summary: Ranger is a security framework for securing Hadoop data
@@ -94,7 +100,7 @@ License: Apache License v2.0
 URL: http://ranger.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{component_name}-%{version}
-Source0: %{component_name}-%{ranger_base_version}.tar.gz
+Source0: %{component_name}-%{ranger_base_version}-src.tar.gz
 Source1: do-component-build
 Source2: install_%{component_name}.sh
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
@@ -297,7 +303,7 @@ Group: System/Daemons
 Ranger ATLAS plugnin component runs within namenode to provoide enterprise security using ranger framework
 
 %prep
-%setup -q -n %{component_name}-%{ranger_base_version}
+%setup -q -n %{component_name}-%{ranger_base_version}-src
 
 %build
 bash %{SOURCE1}
@@ -313,9 +319,9 @@ bash %{SOURCE1}
 echo
 for comp in admin usersync kms tagsync hdfs-plugin yarn-plugin hive-plugin hbase-plugin knox-plugin storm-plugin kafka-plugin atlas-plugin
 do
-	env RANGER_VERSION=%{ranger_base_version} RDF_VERSION=%{rdf_stack_version}  RDF_DIR=%{rdf_dir} /bin/bash %{SOURCE2} \
+	env RANGER_VERSION=%{ranger_base_version} JDP_VERSION=%{stack_version}  stack_home=%{stack_home} /bin/bash %{SOURCE2} \
   		--prefix=$RPM_BUILD_ROOT \
-  		--rdf-dir=%{rdf_dir} \
+  		--jdp-dir=%{stack_home} \
   		--build-dir=%{ranger_dist} \
   		--component=${comp} \
   		--doc-dir=$RPM_BUILD_ROOT/%{doc_ranger}

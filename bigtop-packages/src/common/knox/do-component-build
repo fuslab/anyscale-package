@@ -14,35 +14,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+echo "-------------- Streamline-do-component-build-started -----------"
+
 set -ex
 
-echo "-------------- ClickHouse-do-component-build-started -----------"
+. `dirname ${0}`/bigtop.bom
 
 base_path=`pwd`
 
 echo "current path: ${base_path}"
 
-. `dirname $0`/bigtop.bom
-
-# Basic environment
-export CMAKE=cmake3
-export CC=/opt/rh/devtoolset-7/root/usr/bin/gcc
-export CXX=/opt/rh/devtoolset-7/root/usr/bin/g++
-
-# Detect number of threads to run 'make' command
-export THREADS=$(grep -c ^processor /proc/cpuinfo)
-
-echo "CMAKE=$CMAKE"
-echo "CC=$CC"
-echo "CXX=$CXX"
-echo "THREADS=$THREADS"
-
-# Build clickhouse rdbms
+# Generate build  
 rm -rf build
 mkdir build
-cd build
-$CMAKE .. -DCMAKE_INSTALL_PREFIX=/usr/jdp/${STACK_HOME}/clickhouse -DCMAKE_BUILD_TYPE:STRING=Release  -DHAVE_THREE_PARAM_SCHED_SETAFFINITY=1 -DOPENSSL_SSL_LIBRARY=/usr/lib64/libssl.so -DOPENSSL_CRYPTO_LIBRARY=/usr/lib64/libcrypto.so -DOPENSSL_INCLUDE_DIR=/usr/include/openssl
-make -j $THREADS
-cd ..
 
-echo "-------------- ClickHouse-do-component-build-completed --------------"
+# "Build knox"
+# mvn -Ppackage -DskipTests=true clean install
+
+# Generate binary package
+tar -zxvf /ws/jdp-package/dl/knox-1.0.0-src/target/${KNOX_VERSION}/knox-${KNOX_VERSION}.tar.gz --strip-components 1 -C build
+
+echo "-------------- Streamline-do-component-build-completed --------------"
