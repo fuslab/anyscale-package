@@ -32,6 +32,7 @@ rm -fr build && mkdir build
 echo " doing untar tez"
 tar -C build --strip-components=1 -xzf ${base_path}/tez-dist/target/tez-$TEZ_VERSION-minimal.tar.gz
 cp ${base_path}/tez-dist/target/tez-$TEZ_VERSION.tar.gz build/lib
+mkdir build/conf
 
 # save components`s .bin package
 tar -zcvf tez-$TEZ_VERSION.tar.gz build/
