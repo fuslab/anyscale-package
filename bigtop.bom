@@ -190,7 +190,7 @@ bigtop {
         release = 1 
       }
       tarball { 
-        destination = "apache-${name}-${version.base}-src.tar.gz"
+        destination = "${name}-${version.base}-src.tar.gz"
         source      = destination 
       }
       url { 

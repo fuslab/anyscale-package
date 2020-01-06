@@ -12,105 +12,87 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%define tez_home /usr/lib/%{name}
-%define lib_tez %{tez_home}/lib
-%define man_dir %{_mandir}
+
+# Set the following parameters
+%define stack_name %{soft_stack_name}
+%define stack_version %{soft_stack_version}
+
+%define stack_home /usr/%{stack_name}/%{stack_version}
+%define component_name tez
+%define component_install_dir %{stack_home}/%{component_name}
 
 
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
-
-%define __os_install_post \
-    %{_rpmconfigdir}/brp-compress ; \
-    %{_rpmconfigdir}/brp-strip-static-archive %{__strip} ; \
-    %{_rpmconfigdir}/brp-strip-comment-note %{__strip} %{__objdump} ; \
-    /usr/lib/rpm/brp-python-bytecompile ; \
-    %{nil}
-
-%define doc_tez %{_docdir}/tez-%{tez_version}
-
-%endif
+%define etc_dir /etc/%{component_name}
+%define config_dir %{etc_dir}/conf
 
 
-%if  %{?suse_version:1}0
-
-# Only tested on openSUSE 11.4. le'ts update it for previous release when confirmed
-%if 0%{suse_version} > 1130
-%define suse_check \# Define an empty suse_check for compatibility with older sles
-%endif
-
-%define doc_tez %{_docdir}/tez
-%define alternatives_cmd update-alternatives
-%define __os_install_post \
-    %{suse_check} ; \
-    /usr/lib/rpm/brp-compress ; \
-    %{nil}
-
-%endif
-
-Name: tez
+Name: %{component_name}%{soft_package_version}
 Version: %{tez_version}
 Release: %{tez_release}
-Summary:Apache Tez is the Hadoop enhanced Map/Reduce module.
-URL: http://tez.apache.org
-Group: Development/Libraries
-Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
-License: Apache License v2.0
-Source0: apache-%{name}-%{tez_base_version}-src.tar.gz
-Source1: do-component-build
-Source2: install_tez.sh
-Source3: tez.1
-Source4: tez-site.xml
-Source5: bigtop.bom
-Source6: init.d.tmpl
+Summary: TEZ is to automate the flow of data between systems
+URL: http://www.fusionlab.cn
+Group: Applications/Engineering
 BuildArch: noarch
-Requires: hadoop hadoop-hdfs hadoop-yarn hadoop-mapreduce
+Buildroot: %(mktemp -ud %{_tmppath}/%{component_name}-%{version}-%{release}-XXXXXX)
+License: ASL 2.0
+Source0: %{component_name}-%{tez_base_version}-src.tar.gz
+Source1: bigtop.bom
+Source2: do-component-build
+Source3: install.sh
+Source4: tez-site.xml
+Source5: tez.1
+Source6: init.d.tmpl
+Requires(pre): jdp-select
+AutoReq: no
 
-%if  0%{?mgaversion}
-Requires: bsh-utils
-%else
-Requires: sh-utils
-%endif
 
+%description 
+The Apache TEZ® project is aimed at building an application framework which allows for a complex directed-acyclic-graph of tasks for processing data. 
+It is currently built atop Apache Hadoop YARN.
 
-%description
-The Apache Tez project is aimed at building an application framework
-which allows for a complex directed-acyclic-graph of tasks for
-processing data. It is currently built atop Apache Hadoop YARN
 
 %prep
-%setup -q -n apache-%{name}-%{tez_base_version}-src
+%setup -n %{component_name}-%{tez_base_version}-src
+
 
 %build
-env TEZ_VERSION=%{version} bash %{SOURCE1}
+bash %{SOURCE2}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
 
-cp %{SOURCE3} %{SOURCE4} .
-sh %{SOURCE2} \
-	--build-dir=. \
-        --doc-dir=%{doc_tez} \
-        --libexec-dir=%{libexec_tez} \
-	--prefix=$RPM_BUILD_ROOT
+bash $RPM_SOURCE_DIR/install.sh \
+  --build-dir=`pwd`/build  \
+  --source-dir=$RPM_SOURCE_DIR \
+  --prefix=$RPM_BUILD_ROOT  \
+  --stack-home=%{stack_home}  \
+  --component-name=%{component_name}
 
-%__ln_s -f /usr/lib/hadoop/hadoop-annotations.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-annotations.jar
-%__ln_s -f /usr/lib/hadoop/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-auth.jar
-%__ln_s -f /usr/lib/hadoop-mapreduce/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-mapreduce-client-common.jar
-%__ln_s -f /usr/lib/hadoop-mapreduce/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_tez}/hhadoop-mapreduce-client-core.jar
-%__ln_s -f /usr/lib/hadoop-yarn/hadoop-yarn-server-web-proxy.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-yarn-server-web-proxy.jar
 
 %pre
 
+
 %post
+install -d -m 0755 $PREFIX/%{config_dir}
+cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/conf/
+/usr/bin/jdp-select set %{component_name} %{stack_version}
+
 
 %preun
 
-#######################
-#### FILES SECTION ####
-#######################
+
 %files
-%defattr(-,root,root)
-%{tez_home}
-%doc %{doc_tez}
-%{man_dir}/man1/tez.1.*
-/etc/tez/conf/tez-site.xml
+%defattr(-,root,root,755)
+
+%attr(0755,root,root) %{component_install_dir}
+
+%attr(0755,root,root) %{stack_home}/%{etc_dir}/conf.dist/
+
+%attr(0755,root,root) %{component_install_dir}/lib/
+%attr(0755,root,root) %{component_install_dir}/man/
+%attr(0755,root,root) %{component_install_dir}/doc/
+%attr(0755,root,root) %{component_install_dir}/ui/
+
+%{component_install_dir}/logs
+%{component_install_dir}/run
+%{component_install_dir}/conf
