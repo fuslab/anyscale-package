@@ -43,6 +43,7 @@ Source4: tez-site.xml
 Source5: tez.1
 Source6: init.d.tmpl
 Requires(pre): jdp-select
+Requires: hadoop hadoop-hdfs hadoop-yarn hadoop-mapreduce
 AutoReq: no
 
 
