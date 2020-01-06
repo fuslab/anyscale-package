@@ -89,7 +89,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/con
 %attr(0755,root,root) %{stack_home}/%{etc_dir}/conf.dist/
 
 %attr(0755,root,root) %{component_install_dir}/lib/
-%attr(0755,root,root) %{component_install_dir}/man/
+%attr(0755,root,root) %{component_install_dir}/man/man1/
 %attr(0755,root,root) %{component_install_dir}/doc/
 %attr(0755,root,root) %{component_install_dir}/ui/
 

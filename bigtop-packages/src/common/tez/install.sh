@@ -101,10 +101,12 @@ install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/lib
 install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/man/man1
 install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/ui
 
+echo "sundafei .......... itdeer"
+
 cp -a ${BUILD_DIR}/lib/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/lib/
 gzip -c tez.1 > $PREFIX/$STACK_HOME/$COMPONENT_NAME/man/man1/tez.1.gz
 cp -a ${BUILD_DIR}/*.jar $PREFIX/$STACK_HOME/$COMPONENT_NAME/
-cp -a ${BUILD_DIR}/*.war $PREFIX/$STACK_HOME/$COMPONENT_NAME/ui
+cp -a ${BUILD_DIR}/*.war $PREFIX/$STACK_HOME/$COMPONENT_NAME/ui/
 
 cp tez-site.xml  $PREFIX/$CONF_DIR
 
