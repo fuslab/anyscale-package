@@ -14,28 +14,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+echo "-------------- Tez-do-component-build-started -----------"
+
 set -xe
 
 . `dirname $0`/bigtop.bom
 
-if [ $HOSTTYPE = "powerpc64le" ] ; then
-  git clone https://github.com/ibmsoe/phantomjs-1
-  cd phantomjs-1
-  export PHANTOMJS_CDNURL=https://github.com/ibmsoe/phantomjs/releases/download/2.1.1
-  npm install -g
-  cd ..
-  rm -rf phantomjs-1
-  sed  -i "s|<nodeVersion>.*</nodeVersion>|<nodeVersion>v4.4.7</nodeVersion>|" tez-ui/pom.xml
-  sed  -i "s|<npmVersion>.*</npmVersion>|<npmVersion>2.15.3</npmVersion>|" tez-ui/pom.xml
-  sed -i 's|"phantomjs": .*|"phantomjs": "^1.9.19"|' tez-ui/src/main/webapp/package.json
-  sed  -i "s|<frontend-maven-plugin.version>.*</frontend-maven-plugin.version>|<frontend-maven-plugin.version>1.1</frontend-maven-plugin.version>|" pom.xml
-fi
+base_path=`pwd`
 
-BUILD_TEZ_OPTS="clean package \
--Dtar -Dhadoop.version=${HADOOP_VERSION} \
--Phadoop26 \
--DskipTests"
+sed  -i "s|<hadoop.version>.*</hadoop.version>|<hadoop.version>3.1.1</hadoop.version>|" pom.xml
+sed -i "/bower install/{n;n;s/install/install --allow-root --remove-unnecessary-resolutions=false/g}" tez-ui/pom.xml
 
-#mvn versions:set -DnewVersion=${TEZ_VERSION}
+mvn clean package -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -DskipTests=true -Phadoop31 -Dtar -Dhadoop.version=${HADOOP_VERSION}
+rm -fr build && mkdir build
 
-mvn ${BUILD_TEZ_OPTS} "$@"
+echo " doing untar tez"
+tar -C build --strip-components=1 -xzf ${base_path}/tez-dist/target/tez-$TEZ_VERSION-minimal.tar.gz
+cp ${base_path}/tez-dist/target/tez-$TEZ_VERSION.tar.gz build/lib
+
+# save components`s .bin package
+tar -zcvf tez-$TEZ_VERSION.tar.gz build/
+mv tez-$TEZ_VERSION.tar.gz ../../../tar/
+
+echo "-------------- Tez-do-component-build-completed --------------"
