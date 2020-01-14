@@ -19,18 +19,14 @@ usage() {
   echo "
 usage: $0 <options>
   Required not-so-options:
-     --build-dir=DIR             path to hive/build/dist
+     --build-dir=DIR             path to path to dist.dir
+     --source-dir=DIR            path to package shared files dir
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --doc-dir=DIR               path to install docs into [/usr/share/doc/hive]
-     --hive-dir=DIR               path to install hive home [/usr/lib/hive]
-     --installed-hive-dir=DIR     path where hive-dir will end up on target system
-     --bin-dir=DIR               path to install bins [/usr/bin]
-     --examples-dir=DIR          path to install examples [doc-dir/examples]
-     --hcatalog-dir=DIR          path to install hcatalog [/usr/lib/hcatalog]
-     --installed-hcatalog-dir=DIR path where hcatalog-dir will end up on target system
-     ... [ see source for more similar options ]
+     --lib-dir=DIR               path to install Nifi home [/usr/[stack_name]/[stack_version]/hive/lib]
+     --stack-home=DIR            path to install dirs [/usr/[stack_name]/[stack_version]/hive]
+     --component-name=NAME       component-name
   "
   exit 1
 }
@@ -39,14 +35,10 @@ OPTS=$(getopt \
   -n $0 \
   -o '' \
   -l 'prefix:' \
-  -l 'doc-dir:' \
-  -l 'hive-dir:' \
-  -l 'installed-hive-dir:' \
-  -l 'bin-dir:' \
-  -l 'examples-dir:' \
-  -l 'python-dir:' \
-  -l 'hcatalog-dir:' \
-  -l 'installed-hcatalog-dir:' \
+  -l 'lib-dir:' \
+  -l 'source-dir:' \
+  -l 'stack-home:' \
+  -l 'component-name:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -62,29 +54,17 @@ while true ; do
         --build-dir)
         BUILD_DIR=$2 ; shift 2
         ;;
-        --doc-dir)
-        DOC_DIR=$2 ; shift 2
+        --source-dir)
+        SOURCE_DIR=$2 ; shift 2
         ;;
-        --hive-dir)
-        HIVE_DIR=$2 ; shift 2
+        --lib-dir)
+        LIB_DIR=$2 ; shift 2
         ;;
-        --installed-hive-dir)
-        INSTALLED_HIVE_DIR=$2 ; shift 2
+        --stack-home)
+        STACK_HOME=$2 ; shift 2
         ;;
-        --bin-dir)
-        BIN_DIR=$2 ; shift 2
-        ;;
-        --examples-dir)
-        EXAMPLES_DIR=$2 ; shift 2
-        ;;
-        --python-dir)
-        PYTHON_DIR=$2 ; shift 2
-        ;;
-        --hcatalog-dir)
-        HCATALOG_DIR=$2 ; shift 2
-        ;;
-        --installed-hcatalog-dir)
-        INSTALLED_HCATALOG_DIR=$2 ; shift 2
+        --component-name)
+        COMPONENT_NAME=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -103,6 +83,64 @@ for var in PREFIX BUILD_DIR ; do
     usage
   fi
 done
+
+if [ -f "$SOURCE_DIR/bigtop.bom" ]; then
+  . $SOURCE_DIR/bigtop.bom
+fi
+
+LIB_DIR=${LIB_DIR:-$STACK_HOME/$COMPONENT_NAME}
+install -d -m 0755 $PREFIX/$LIB_DIR
+
+CONF_DIR=${CONF_DIR:-$STACK_HOME/etc/$COMPONENT_NAME/conf.dist}
+install -d -m 0755 $PREFIX/$CONF_DIR
+cp -a ${BUILD_DIR}/conf/* $PREFIX/$CONF_DIR
+
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/doc
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/jdbc
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/lib
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/log
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/man
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/scripts
+
+
+
+
+
+
+
+# Provide the runtime dirs
+install -d -m 0755 $PREFIX/var/lib/hive
+install -d -m 0755 $PREFIX/var/log/hive
+
+install -d -m 0755 $PREFIX/var/lib/hive-hcatalog
+install -d -m 0755 $PREFIX/var/log/hive-hcatalog
+for DIR in ${HCATALOG_SHARE_DIR} ; do
+    (cd $DIR &&
+     for j in hive-hcatalog-*.jar; do
+       if [[ $j =~ hive-hcatalog-(.*)-${HIVE_VERSION}.jar ]]; then
+         name=${BASH_REMATCH[1]}
+         ln -s $j hive-hcatalog-$name.jar
+       fi
+    done)
+done
+
+
+# Remove Windows files
+find $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin -name '*.cmd' | xargs rm -f
+find $PREFIX/$STACK_HOME/$COMPONENT_NAME/hive-hcatalog/bin -name '*.cmd' | xargs rm -f
+
+
+
+
+
+
+
+
+
+
+
+
 
 MAN_DIR=$PREFIX/usr/share/man/man1
 DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/hive}
