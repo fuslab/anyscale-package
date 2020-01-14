@@ -183,7 +183,7 @@ bigtop {
         source      = destination 
         }
       url { 
-        download_path = "/$name/$name-${version.base}/"
+        download_path = "/$name/${version.base}/"
         site = "${apache.APACHE_MIRROR}/${download_path}"
         archive = "${apache.APACHE_ARCHIVE}/${download_path}" 
       }
