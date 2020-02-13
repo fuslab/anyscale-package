@@ -31,6 +31,6 @@ mkdir build
 # Build CAI
 
 # Generate binary package
-cp -a /ws/jdp-package/dl/cai-0.1.0-src/* build/
+cp -a /ws/jdp-package/dl/cai-${CAI_VERSION}-src/* build/
 
 echo "-------------- CAI-do-component-build-completed --------------"

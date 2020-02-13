@@ -21,7 +21,7 @@
 %define stack_version %{soft_stack_version}
 
 %define stack_home /usr/%{stack_name}/%{stack_version}
-%define component_name flink
+%define component_name knox
 %define component_install_dir %{stack_home}/%{component_name}
 
 
@@ -30,48 +30,29 @@
 
 
 Name: %{component_name}%{soft_package_version}
-Version: %{flink_version}
-Release: %{flink_release}
-Summary: Apache Flink is an open source platform for distributed stream and batch data processing.
-URL: http://www.fusionlab.cn
+Version: %{knox_version}
+Release: %{knox_release}
+Summary: REST API and Application Gateway for the Apache Hadoop Ecosystem.
+URL: http://knox.apache.org/
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{component_name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0
-Source0: %{component_name}-%{flink_base_version}-src.tar.gz
+Source0: %{component_name}-%{knox_base_version}-src.tar.gz
 Source1: bigtop.bom
 Source2: do-component-build
 Source3: install.sh
 Source4: init.d.tmpl
-Source5: flink-jobmanager.svc
-Source6: flink-taskmanager.svc
-# Requires: bigtop-utils >= 0.7
 Requires(pre): jdp-select
+Requires(pre): ranger%{soft_package_version}-knox-plugin
 AutoReq: no
 
 
-%description
-Apache Flink is an open source platform for distributed stream and batch data processing.
-Flink’s core is a streaming dataflow engine that provides data distribution, communication,
-and fault tolerance for distributed computations over data streams.
-
-Flink includes several APIs for creating applications that use the Flink engine:
-    * DataStream API for unbounded streams embedded in Java and Scala, and
-    * DataSet API for static data embedded in Java, Scala, and Python,
-    * Table API with a SQL-like expression language embedded in Java and Scala.
-
-Flink also bundles libraries for domain-specific use cases:
-    * Machine Learning library, and
-    * Gelly, a graph processing API and library.
-
-Some of the key features of Apache Flink includes.
-    * Complete Event Processing (CEP)
-    * Fault-tolerance via Lightweight Distributed Snapshots
-    * Hadoop-native YARN & HDFS implementation
-
+%description 
+Apache Knox gateway is a specialized reverse proxy gateway for various Hadoop REST APIs. However, the gateway is built entirely upon a fairly generic framework. This framework is used to “plug-in” all of the behavior that makes it specific to Hadoop in general and any particular Hadoop REST API. It would be equally as possible to create a customized reverse proxy for other non-Hadoop HTTP endpoints. This approach is taken to ensure that the Apache Knox gateway can scale with the rapidly evolving Hadoop ecosystem.
 
 %prep
-%setup -n %{component_name}-%{flink_base_version}-src
+%setup -n %{component_name}-%{knox_base_version}-src
 
 
 %build
@@ -82,7 +63,7 @@ bash %{SOURCE2}
 %__rm -rf $RPM_BUILD_ROOT
 
 bash $RPM_SOURCE_DIR/install.sh \
-  --build-dir=`pwd`/build         \
+  --build-dir=`pwd`/build  \
   --source-dir=$RPM_SOURCE_DIR \
   --prefix=$RPM_BUILD_ROOT  \
   --stack-home=%{stack_home}  \
@@ -109,15 +90,19 @@ cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/con
 %attr(0755,root,root) %{stack_home}/%{etc_dir}/conf.dist/
 
 %attr(0755,root,root) %{component_install_dir}/bin/
-%attr(0755,root,root) %{component_install_dir}/examples/
+%attr(0755,root,root) %{component_install_dir}/data/
+%attr(0755,root,root) %{component_install_dir}/dep/
+%attr(0755,root,root) %{component_install_dir}/ext/
 %attr(0755,root,root) %{component_install_dir}/lib/
-%attr(0755,root,root) %{component_install_dir}/licenses/
-%attr(0755,root,root) %{component_install_dir}/opt/
+%attr(0755,root,root) %{component_install_dir}/samples/
+%attr(0755,root,root) %{component_install_dir}/templates/
 
 %attr(0644,root,root) %{component_install_dir}/LICENSE
+%attr(0644,root,root) %{component_install_dir}/ISSUES
+%attr(0644,root,root) %{component_install_dir}/CHANGES
 %attr(0644,root,root) %{component_install_dir}/NOTICE
-%attr(0644,root,root) %{component_install_dir}/README.txt
+%attr(0644,root,root) %{component_install_dir}/README
 
-%{component_install_dir}/log
+%{component_install_dir}/logs
 %{component_install_dir}/run
 %{component_install_dir}/conf

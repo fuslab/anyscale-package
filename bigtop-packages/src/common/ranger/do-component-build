@@ -14,17 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
 
 echo "-------------- Ranger-do-component-build-started -----------"
 
+set -ex
+
 . `dirname $0`/bigtop.bom
 
+mvn clean compile package assembly:assembly install -DskipTests=true -Drat.skip "$@"
 
-mvn clean compile package assembly:assembly install -DskipTests -Drat.skip "$@"
-
-echo;echo
 mkdir build
+
 for f in target/ranger*.tar.gz
 do
 	tar -C build -xf ${f}
