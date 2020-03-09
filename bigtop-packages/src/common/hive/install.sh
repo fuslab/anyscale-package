@@ -101,8 +101,8 @@ install -d -m 0755 $PREFIX/$CONF_DIR
 install -d -m 0755 $PREFIX/$CONF_LLAP_DIR
 cp -a ${BUILD_DIR}/conf/* $PREFIX/$CONF_DIR
 cp -a ${BUILD_DIR}/conf/* $PREFIX/$CONF_LLAP_DIR
-cp -a $SOURCE_DIR/hive-site.xml > $PREFIX/$CONF_DIR
-cp -a $SOURCE_DIR/hive-site.xml > $PREFIX/$CONF_LLAP_DIR
+cp -a $SOURCE_DIR/hive-site.xml $PREFIX/$CONF_DIR
+cp -a $SOURCE_DIR/hive-site.xml $PREFIX/$CONF_LLAP_DIR
 
 
 install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin
