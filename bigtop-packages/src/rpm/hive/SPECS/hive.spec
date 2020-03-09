@@ -227,8 +227,8 @@ cp -r %{stack_home}/etc/%{component_name}/default/* /etc/hive-hcatalog/conf/
 %attr(0755,root,root) %{component_install_dir}/metastore/
 %attr(0755,root,root) %{component_install_dir}/scripts/
 
-%attr(0755,root,root) %{component_install_dir}/conf
-%attr(0755,root,root) %{component_install_dir}/conf_llap
+%{component_install_dir}/conf
+%{component_install_dir}/conf_llap
 
 %attr(0755,root,root) %{component_install_dir}/lib/
 %exclude %{usr_lib_hive}/lib/hive-jdbc-*.jar
@@ -257,7 +257,7 @@ cp -r %{stack_home}/etc/%{component_name}/default/* /etc/hive-hcatalog/conf/
 %attr(0755,root,root) %{component_install_dir}/man/hive-hcatalog.1.*
 
 %attr(0755,root,root) %{component_install_dir}/hive-hcatalog/bin/
-%attr(0755,root,root) %{component_install_dir}/hive-hcatalog/etc/hcatalog
+%{component_install_dir}/hive-hcatalog/etc/hcatalog
 %attr(0755,root,root) %{component_install_dir}/hive-hcatalog/libexec/
 %attr(0755,root,root) %{component_install_dir}/hive-hcatalog/share/hcatalog/
 %attr(0755,root,root) %{component_install_dir}/hive-hcatalog/sbin/update-hcatalog-env.sh
@@ -336,7 +336,7 @@ cp -r %{stack_home}/etc/%{component_name}/default/* /etc/hive-hcatalog/conf/
 %files webhcat
 %defattr(-,root,root,755)
 %attr(0755,root,root) %{stack_home}/etc/hive-webhcat/conf.dist/
-%attr(0755,root,root) %{component_install_dir}/hive-hcatalog/etc/webhcat
+%{component_install_dir}/hive-hcatalog/etc/webhcat
 %attr(0755,root,root) %{component_install_dir}/hive-hcatalog/sbin/webhcat_config.sh
 %attr(0755,root,root) %{component_install_dir}/hive-hcatalog/sbin/webhcat_server.sh
 %attr(0755,root,root) %{component_install_dir}/hive-hcatalog/share/

@@ -96,7 +96,7 @@ install -d -m 0755 $PREFIX/$LIB_DIR
 
 ### default
 CONF_DIR=${CONF_DIR:-$STACK_HOME/etc/$COMPONENT_NAME/conf.dist}
-CONF_LLAP_DIR=${CONF_DIR:-$STACK_HOME/etc/$COMPONENT_NAME/conf_llap.dist}
+CONF_LLAP_DIR=${CONF_LLAP_DIR:-$STACK_HOME/etc/$COMPONENT_NAME/conf_llap.dist}
 install -d -m 0755 $PREFIX/$CONF_DIR
 install -d -m 0755 $PREFIX/$CONF_LLAP_DIR
 cp -a ${BUILD_DIR}/conf/* $PREFIX/$CONF_DIR
