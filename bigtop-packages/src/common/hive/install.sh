@@ -1,6 +1,5 @@
+#!/bin/bash
 
-<<<<<<< HEAD
-=======
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -252,4 +251,3 @@ cp -a $SOURCE_DIR/hive-webhcat-server.default $PREFIX/$DEFAULT_CONF_DIR/
 mv $PREFIX/$DEFAULT_CONF_DIR/hive-webhcat-server.default $PREFIX/$DEFAULT_CONF_DIR/hive-webhcat-server
 
 cp -a $SOURCE_DIR/hive-server $PREFIX/$STACK_HOME/$COMPONENT_NAME/etc/rc.d/init.d/
->>>>>>> f6b84fa5942516a8f7a012f9e195c8a721fe7c68
