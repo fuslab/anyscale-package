@@ -250,4 +250,4 @@ cp -a ${BUILD_DIR}/hcatalog/share/webhcat $PREFIX/$STACK_HOME/hive-hcatalog/shar
 cp -a $SOURCE_DIR/hive-webhcat-server.default $PREFIX/$DEFAULT_CONF_DIR/
 mv $PREFIX/$DEFAULT_CONF_DIR/hive-webhcat-server.default $PREFIX/$DEFAULT_CONF_DIR/hive-webhcat-server
 
-cp -a $SOURCE_DIR/hive-server $PREFIX/$STACK_HOME/$COMPONENT_NAME/etc/rc.d/init.d/
+cp -a $SOURCE_DIR/hive-webhcat-server $PREFIX/$STACK_HOME/$COMPONENT_NAME/etc/rc.d/init.d/
