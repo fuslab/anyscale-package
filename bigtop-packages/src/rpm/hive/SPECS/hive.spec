@@ -177,7 +177,7 @@ Init scripts for WebHcat server.
 
 
 %build
-#bash %{SOURCE2}
+bash %{SOURCE2}
 
 
 %install
