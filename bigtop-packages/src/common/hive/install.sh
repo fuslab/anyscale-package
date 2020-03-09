@@ -125,7 +125,7 @@ ln -s /etc/hive_llap/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/conf_llap
 
 
 ### hcatalog
-HCATALOG_CONF_DIR=${CONF_DIR:-$STACK_HOME/etc/hive-hcatalog/conf.dist}
+HCATALOG_CONF_DIR=${HCATALOG_CONF_DIR:-$STACK_HOME/etc/hive-hcatalog/conf.dist}
 install -d -m 0755 $PREFIX/$HCATALOG_CONF_DIR
 cp -a ${BUILD_DIR}/hcatalog/etc/hcatalog/* $PREFIX/$HCATALOG_CONF_DIR
 
@@ -177,7 +177,7 @@ chmod 755 $wrapper
 
 
 ### hcatalog-server
-DEFAULT_CONF_DIR=${CONF_DIR:-$STACK_HOME/etc/default}
+DEFAULT_CONF_DIR=${DEFAULT_CONF_DIR:-$STACK_HOME/etc/default}
 install -d -m 0755 $PREFIX/$DEFAULT_CONF_DIR
 cp -a $SOURCE_DIR/hive-hcatalog-server.default $PREFIX/$DEFAULT_CONF_DIR/
 mv $PREFIX/$DEFAULT_CONF_DIR/hive-hcatalog-server.default $PREFIX/$DEFAULT_CONF_DIR/hive-hcatalog-server
@@ -233,7 +233,7 @@ cp -a $SOURCE_DIR/hive-server $PREFIX/$STACK_HOME/$COMPONENT_NAME/etc/rc.d/init.
 
 
 ### webhcat 
-WEBHCAT_CONF_DIR=${CONF_DIR:-$STACK_HOME/etc/hive-webhcat/conf.dist}
+WEBHCAT_CONF_DIR=${WEBHCAT_CONF_DIR:-$STACK_HOME/etc/hive-webhcat/conf.dist}
 install -d -m 0755 $PREFIX/$WEBHCAT_CONF_DIR
 cp -a ${BUILD_DIR}/hcatalog/etc/webhcat/* $PREFIX/$WEBHCAT_CONF_DIR
 
