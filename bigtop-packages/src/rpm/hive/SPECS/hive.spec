@@ -177,7 +177,7 @@ Init scripts for WebHcat server.
 
 
 %build
-bash %{SOURCE2}
+#bash %{SOURCE2}
 
 
 %install
@@ -231,15 +231,15 @@ cp -r %{stack_home}/etc/%{component_name}/default/* /etc/hive-hcatalog/conf/
 %{component_install_dir}/conf_llap
 
 %attr(0755,root,root) %{component_install_dir}/lib/
-%exclude %{usr_lib_hive}/lib/hive-jdbc-*.jar
-%exclude %{usr_lib_hive}/lib/hive-metastore-*.jar
-%exclude %{usr_lib_hive}/lib/hive-serde-*.jar
-%exclude %{usr_lib_hive}/lib/hive-exec-*.jar
-%exclude %{usr_lib_hive}/lib/libthrift-*.jar
-%exclude %{usr_lib_hive}/lib/hive-service-*.jar
-%exclude %{usr_lib_hive}/lib/libfb303-*.jar
-%exclude %{usr_lib_hive}/lib/log4j-*.jar
-%exclude %{usr_lib_hive}/lib/commons-logging-*.jar
+%exclude %{component_install_dir}/lib/hive-jdbc-*.jar
+%exclude %{component_install_dir}/lib/hive-metastore-*.jar
+%exclude %{component_install_dir}/lib/hive-serde-*.jar
+%exclude %{component_install_dir}/lib/hive-exec-*.jar
+%exclude %{component_install_dir}/lib/libthrift-*.jar
+%exclude %{component_install_dir}/lib/hive-service-*.jar
+%exclude %{component_install_dir}/lib/libfb303-*.jar
+%exclude %{component_install_dir}/lib/log4j-*.jar
+%exclude %{component_install_dir}/lib/commons-logging-*.jar
 
 
 
