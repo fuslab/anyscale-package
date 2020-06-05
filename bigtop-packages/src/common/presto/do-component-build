@@ -14,24 +14,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-echo "-------------- Knox-do-component-build-started -----------"
-
 set -ex
 
-. `dirname ${0}`/bigtop.bom
+echo "-------------- Presto-do-component-build-started -----------"
 
 base_path=`pwd`
 
 echo "current path: ${base_path}"
 
+. `dirname $0`/bigtop.bom
+
 # Generate build  
 rm -rf build
 mkdir build
 
-# "Build knox"
-mvn -Ppackage -DskipTests=true clean install
+# Build Presto
+mvn clean install -DskipTests=true
 
 # Generate binary package
-tar -zxvf target/${KNOX_VERSION}/knox-${KNOX_VERSION}.tar.gz --strip-components 1 -C build
+cp -a presto-server/target/presto-server-${PRESTO_VERSION}/* build/
 
-echo "-------------- Knox-do-component-build-completed --------------"
+echo "-------------- Presto-do-component-build-completed --------------"

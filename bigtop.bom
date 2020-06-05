@@ -732,5 +732,25 @@ bigtop {
       }
     }
 
+    'presto' {
+      name    = 'presto'
+      pkg     = name
+      relNotes = 'facebook presto'
+      version { 
+        base = '0.235.1';
+        pkg = base;
+        release = 1
+      }
+      tarball {
+        source      = "$name-${version.base}-src.tar.gz"
+        destination = source
+      }
+      url {
+        download_path = "/$name/${version.base}/"
+        site = "${apache.APACHE_MIRROR}/${download_path}"
+        archive = "${apache.APACHE_ARCHIVE}/${download_path}" 
+      }
+    }
+
   }
 }
