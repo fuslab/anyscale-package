@@ -23,6 +23,8 @@ class bigtop_toolchain::packages {
         $mysql_devel="mariadb-devel"
       }
       $pkgs = [
+        "epel-release",
+        "centos-release-scl",
         "unzip",
         "curl",
         "wget",
@@ -69,7 +71,15 @@ class bigtop_toolchain::packages {
         "bison",
         "perl-Env",
         "libffi-devel",
-        "R"
+        "R",
+        "zip",
+        "sed",
+        "cmake3",
+        "ninja-build",
+        "devtoolset-9",
+        "libicu-devel",
+        "libtool-ltdl-devel",
+        "unixODBC-devel"
       ]
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [

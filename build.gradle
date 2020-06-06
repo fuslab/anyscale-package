@@ -155,7 +155,7 @@ allprojects {
   targetCompatibility = langLevel
 
   repositories {
-    maven { url "http://repo.maven.apache.org/maven2" }
+    maven { url "https://repo.maven.apache.org/maven2" }
     mavenCentral()
   }
 }
@@ -379,8 +379,8 @@ def generate_nexus_tasks = { name, url, snapshot ->
   }
 }
 
-def repos = [ [ "name": "conjars", "url" : "http://conjars.org", 'snapshot':'RELEASE'],
-          [ "name": "repository.jboss.org", "url": "http://repository.jboss.org/nexus/content/groups/public/", 'snapshot': 'RELEASE'],
+def repos = [ [ "name": "conjars", "url" : "https://conjars.org", 'snapshot':'RELEASE'],
+          [ "name": "repository.jboss.org", "url": "https://repository.jboss.org/nexus/content/groups/public/", 'snapshot': 'RELEASE'],
           [ "name": "apache.snapshots.https", "url": "https://repository.apache.org/content/repositories/snapshots", "snapshot": 'SNAPSHOT'],
           [ "name": "apache.snapshots", "url": "https://repository.apache.org/content/repositories/snapshots", "snapshot": 'SNAPSHOT'],
           [ "name": "maven2-repository.atlassian", "url": "https://maven.atlassian.com/repository/public", "snapshot": 'RELASE']]
