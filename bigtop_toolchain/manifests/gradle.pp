@@ -26,8 +26,8 @@ class bigtop_toolchain::gradle {
   exec {"/usr/bin/unzip -x -o /usr/src/${gradle}-bin.zip":
     cwd         => '/usr/local',
     refreshonly => true,
-    subscribe   => Exec["/usr/bin/wget http://services.gradle.org/distributions/${gradle}-bin.zip"],
-    require     => Exec["/usr/bin/wget http://services.gradle.org/distributions/${gradle}-bin.zip"],
+    subscribe   => Exec["/usr/bin/wget https://services.gradle.org/distributions/${gradle}-bin.zip"],
+    require     => Exec["/usr/bin/wget https://services.gradle.org/distributions/${gradle}-bin.zip"],
   }
 
   file {'/usr/local/gradle':

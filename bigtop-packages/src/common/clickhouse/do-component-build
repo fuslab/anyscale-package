@@ -33,7 +33,7 @@ export CXX=/opt/rh/devtoolset-9/root/usr/bin/g++
 export THREADS=$(grep -c ^processor /proc/cpuinfo)
 
 # CMAKE_BUILD_TYPE = Release、Debug、RelWithDebugInfo、MinSizeRel
-export CMAKE_BUILD_TYPE=RelWithDebInfo
+export CMAKE_BUILD_TYPE=Release
 
 echo "CMAKE=$CMAKE"
 echo "CC=$CC"
