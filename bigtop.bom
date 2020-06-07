@@ -657,7 +657,7 @@ bigtop {
       pkg     = name
       relNotes = 'Yandex Clickhouse'
       version { 
-        base = '20.3.8.53-lts';
+        base = '20.3.8.53';
         pkg = base;
         release = 1 
       }
