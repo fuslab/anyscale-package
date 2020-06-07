@@ -50,16 +50,9 @@ CMAKE_OPTIONS="${CMAKE_OPTIONS} -DWERROR=0"
 rm -rf build
 mkdir build
 cd build
-$CMAKE .. -DCMAKE_INSTALL_PREFIX=/opt/jdp/3.3.0.0-108/clickhouse -DCMAKE_BUILD_TYPE:STRING="${CMAKE_BUILD_TYPE}" ${CMAKE_OPTIONS}
+echo ${soft_package_version}
+$CMAKE .. -DCMAKE_INSTALL_PREFIX=/usr/jdp/3.3.0.0-108/clickhouse -DCMAKE_BUILD_TYPE:STRING="${CMAKE_BUILD_TYPE}" ${CMAKE_OPTIONS}
 make -j $THREADS
-cd ..
-
-# Install clickhouse rdbms
-cd build
-DAEMONS="clickhouse clickhouse-test clickhouse-compressor clickhouse-client clickhouse-server"
-for daemon in $DAEMONS; do
-	DESTDIR=%{buildroot} $CMAKE -DCOMPONENT=$daemon -P cmake_install.cmake
-done
 cd ..
 
 echo "-------------- ClickHouse-do-component-build-completed --------------"
