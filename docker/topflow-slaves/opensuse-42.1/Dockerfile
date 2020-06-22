@@ -12,5 +12,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-cp ../../../bigtop_toolchain/bin/puppetize.sh .
-docker build --pull=true -t bigtop/puppet:centos-7 .
+FROM bigtop/puppet:opensuse-42.1
+MAINTAINER dev@bigtop.apache.org
+
+COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
+
+RUN puppet apply -e "include bigtop_toolchain::installer"
+COPY . /tmp/bigtop
+RUN cd /tmp/bigtop && ./gradlew && cd && rm -rf /tmp/bigtop

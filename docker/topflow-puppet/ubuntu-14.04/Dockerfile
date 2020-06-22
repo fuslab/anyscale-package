@@ -12,5 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-cp ../../../bigtop_toolchain/bin/puppetize.sh .
-docker build --pull=true -t bigtop/puppet:centos-7 .
+FROM ubuntu:14.04
+MAINTAINER evansye@apache.org
+
+COPY puppetize.sh /tmp/puppetize.sh
+
+RUN bash /tmp/puppetize.sh
