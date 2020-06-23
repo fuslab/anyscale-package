@@ -96,8 +96,8 @@ install -d -m 0755 $PREFIX/$LIB_DIR
 
 CONF_DIR=${CONF_DIR:-$STACK_HOME/etc/${COMPONENT_NAME}-server/conf.dist}
 install -d -m 0755 $PREFIX/$CONF_DIR
-cp -a ${BUILD_DIR}/dbms/programs/server/config.xml $PREFIX/$CONF_DIR
-cp -a ${BUILD_DIR}/dbms/programs/server/users.xml $PREFIX/$CONF_DIR
+cp -a ${BUILD_DIR}/programs/server/config.xml $PREFIX/$CONF_DIR
+cp -a ${BUILD_DIR}/programs/server/users.xml $PREFIX/$CONF_DIR
 
 # create folders structure to be distributed
 INSTALL_DIR=$PREFIX/$STACK_HOME/$COMPONENT_NAME
