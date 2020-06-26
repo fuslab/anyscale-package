@@ -26,22 +26,32 @@ echo "current path: ${base_path}"
 
 # Basic environment
 export CMAKE=cmake3
-export CC=/opt/rh/devtoolset-7/root/usr/bin/gcc
-export CXX=/opt/rh/devtoolset-7/root/usr/bin/g++
+export CC=/opt/rh/devtoolset-9/root/usr/bin/gcc
+export CXX=/opt/rh/devtoolset-9/root/usr/bin/g++
 
 # Detect number of threads to run 'make' command
 export THREADS=$(grep -c ^processor /proc/cpuinfo)
+
+# CMAKE_BUILD_TYPE = Release、Debug、RelWithDebugInfo、MinSizeRel
+export CMAKE_BUILD_TYPE=Release
 
 echo "CMAKE=$CMAKE"
 echo "CC=$CC"
 echo "CXX=$CXX"
 echo "THREADS=$THREADS"
 
+echo "CentOS 7 has some special CMAKE_OPTIONS"
+CMAKE_OPTIONS="${CMAKE_OPTIONS} -DGLIBC_COMPATIBILITY=OFF"
+CMAKE_OPTIONS="${CMAKE_OPTIONS} -DNO_WERROR=1"
+# Starting with v20.3 there is new option to tolerate warnings
+CMAKE_OPTIONS="${CMAKE_OPTIONS} -DWERROR=0"
+
 # Build clickhouse rdbms
 rm -rf build
 mkdir build
 cd build
-$CMAKE .. -DCMAKE_INSTALL_PREFIX=/usr/jdp/3.2.0.0-108/clickhouse -DCMAKE_BUILD_TYPE:STRING=Release  -DHAVE_THREE_PARAM_SCHED_SETAFFINITY=1 -DOPENSSL_SSL_LIBRARY=/usr/lib64/libssl.so -DOPENSSL_CRYPTO_LIBRARY=/usr/lib64/libcrypto.so -DOPENSSL_INCLUDE_DIR=/usr/include/openssl
+echo ${soft_package_version}
+$CMAKE .. -DCMAKE_INSTALL_PREFIX=/usr/jdp/3.3.0.0-108/clickhouse -DCMAKE_BUILD_TYPE:STRING="${CMAKE_BUILD_TYPE}" ${CMAKE_OPTIONS}
 make -j $THREADS
 cd ..
 

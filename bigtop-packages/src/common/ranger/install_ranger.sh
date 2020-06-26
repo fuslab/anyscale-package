@@ -35,7 +35,7 @@ OPTS=$(getopt \
   -n $0 \
   -o '' \
   -l 'build-dir:' \
-  -l 'rdf-dir:' \
+  -l 'jdp-dir:' \
   -l 'prefix:' \
   -l 'doc-dir:' \
   -l 'app-dir:' \
@@ -55,8 +55,8 @@ while true ; do
         --prefix)
         PREFIX=$2 ; shift 2
         ;;
-        --rdf-dir)
-        RDF_DIR=$2 ; shift 2
+        --jdp-dir)
+        JDP_DIR=$2 ; shift 2
         ;;
          --component)
         COMPONENT=$2 ; shift 2
@@ -78,7 +78,7 @@ while true ; do
     esac
 done
 
-for var in PREFIX BUILD_DIR COMPONENT RDF_DIR ; do
+for var in PREFIX BUILD_DIR COMPONENT JDP_DIR ; do
   if [ -z "$(eval "echo \$$var")" ]; then
     echo Missing param: $var
     usage
@@ -97,7 +97,7 @@ then
 fi
 
 # Create the required directories.
-install -d -m 0755 ${PREFIX}/${RDF_DIR}/$APP_DIR
+install -d -m 0755 ${PREFIX}/${JDP_DIR}/$APP_DIR
 
 install -d -m 0755 ${PREFIX}/$ETC_DIR/{admin,usersync,kms,tagsync}
 
@@ -105,61 +105,61 @@ install -d -m 0755 ${PREFIX}/var/{log,run}/ranger/{admin,usersync,kms,tagsync}
 
 
 # Copy artifacts to the appropriate Linux locations.
-cp -r ${BUILD_DIR}/ranger-*-${COMPONENT}/* ${PREFIX}/${RDF_DIR}/${APP_DIR}/
+cp -r ${BUILD_DIR}/ranger-*-${COMPONENT}/* ${PREFIX}/${JDP_DIR}/${APP_DIR}/
 
 
 if [[ "${COMPONENT}" = "admin" ]]
 then
     cp -a ${BUILD_DIR}/ranger-*-${COMPONENT}/ews/webapp/WEB-INF/classes/conf.dist ${PREFIX}/${ADMIN_CONF_DIR}
-    ln -s /etc/ranger/admin/conf ${PREFIX}/${RDF_DIR}/${APP_DIR}/conf
-    ln -s ${RDF_DIR}/${APP_DIR}/conf ${PREFIX}/${RDF_DIR}/${APP_DIR}/ews/webapp/WEB-INF/classes/conf
-    #ln -s /var/log/ranger/admin ${PREFIX}/${RDF_DIR}/${APP_DIR}/ews/logs
-    ln -s ${RDF_DIR}/${APP_DIR}/ews/start-ranger-admin.sh ${PREFIX}/${RDF_DIR}/${APP_DIR}/ews/ranger-admin-start
-    ln -s ${RDF_DIR}/${APP_DIR}/ews/stop-ranger-admin.sh ${PREFIX}/${RDF_DIR}/${APP_DIR}/ews/ranger-admin-stop
+    ln -s /etc/ranger/admin/conf ${PREFIX}/${JDP_DIR}/${APP_DIR}/conf
+    ln -s ${JDP_DIR}/${APP_DIR}/conf ${PREFIX}/${JDP_DIR}/${APP_DIR}/ews/webapp/WEB-INF/classes/conf
+    #ln -s /var/log/ranger/admin ${PREFIX}/${JDP_DIR}/${APP_DIR}/ews/logs
+    ln -s ${JDP_DIR}/${APP_DIR}/ews/start-ranger-admin.sh ${PREFIX}/${JDP_DIR}/${APP_DIR}/ews/ranger-admin-start
+    ln -s ${JDP_DIR}/${APP_DIR}/ews/stop-ranger-admin.sh ${PREFIX}/${JDP_DIR}/${APP_DIR}/ews/ranger-admin-stop
 fi
 
 if [[ "${COMPONENT}" = "usersync" ]]
 then
     echo "usersync"
     cp -a ${BUILD_DIR}/ranger-*-${COMPONENT}/conf.dist ${PREFIX}/${USERSYNC_CONF_DIR}
-    ln -s /etc/ranger/usersync/conf ${PREFIX}/${RDF_DIR}/${APP_DIR}/conf
-    #ln -s /var/log/ranger/usersync ${PREFIX}/${RDF_DIR}/${APP_DIR}/logs
-    ln -s ${RDF_DIR}/${APP_DIR}/start.sh ${PREFIX}/${RDF_DIR}/${APP_DIR}/ranger-usersync-start
-    ln -s ${RDF_DIR}/${APP_DIR}/stop.sh ${PREFIX}/${RDF_DIR}/${APP_DIR}/ranger-usersync-stop
+    ln -s /etc/ranger/usersync/conf ${PREFIX}/${JDP_DIR}/${APP_DIR}/conf
+    #ln -s /var/log/ranger/usersync ${PREFIX}/${JDP_DIR}/${APP_DIR}/logs
+    ln -s ${JDP_DIR}/${APP_DIR}/start.sh ${PREFIX}/${JDP_DIR}/${APP_DIR}/ranger-usersync-start
+    ln -s ${JDP_DIR}/${APP_DIR}/stop.sh ${PREFIX}/${JDP_DIR}/${APP_DIR}/ranger-usersync-stop
 fi
 
 if [[ "${COMPONENT}" = "kms" ]]
 then
     echo "kms"
     cp -a ${BUILD_DIR}/ranger-*-${COMPONENT}/ews/webapp/WEB-INF/classes/conf.dist ${PREFIX}/${KMS_CONF_DIR}
-    ln -s /etc/ranger/kms/conf ${PREFIX}/${RDF_DIR}/${APP_DIR}/conf
-    ln -s ${RDF_DIR}/${APP_DIR}/conf ${PREFIX}/${RDF_DIR}/${APP_DIR}/ews/webapp/WEB-INF/classes/conf
-    #ln -s /var/log/ranger/kms ${PREFIX}/${RDF_DIR}/${APP_DIR}/logs
+    ln -s /etc/ranger/kms/conf ${PREFIX}/${JDP_DIR}/${APP_DIR}/conf
+    ln -s ${JDP_DIR}/${APP_DIR}/conf ${PREFIX}/${JDP_DIR}/${APP_DIR}/ews/webapp/WEB-INF/classes/conf
+    #ln -s /var/log/ranger/kms ${PREFIX}/${JDP_DIR}/${APP_DIR}/logs
 fi
 
 if [[ "${COMPONENT}" = "tagsync" ]]
 then
     echo "tagsync"
     cp -a ${BUILD_DIR}/ranger-*-${COMPONENT}/conf.dist ${PREFIX}/${TAGSYNC_CONF_DIR}
-    ln -s /etc/ranger/tagsync/conf ${PREFIX}/${RDF_DIR}/${APP_DIR}/conf
-    #ln -s /var/log/ranger/tagsync ${PREFIX}/${RDF_DIR}/${APP_DIR}/logs
+    ln -s /etc/ranger/tagsync/conf ${PREFIX}/${JDP_DIR}/${APP_DIR}/conf
+    #ln -s /var/log/ranger/tagsync ${PREFIX}/${JDP_DIR}/${APP_DIR}/logs
 fi
 
 # For other Components
 if [[ "${COMPONENT}" = "hive-plugin" || "${COMPONENT}" = "hbase-plugin" || "${COMPONENT}" = "storm-plugin" || "${COMPONENT}" = "hdfs-plugin" || "${COMPONENT}" = "yarn-plugin" || "${COMPONENT}" = "kafka-plugin" || "${COMPONENT}" = "atlas-plugin" || "${COMPONENT}" = "knox-plugin" ]]
 then
-	RDF_COMPONENT=${COMPONENT}
-	[[ "${COMPONENT}" = "hdfs-plugin" ]] && RDF_COMPONENT="hadoop"
-	[[ "${COMPONENT}" = "yarn-plugin" ]] && RDF_COMPONENT="hadoop"
-	[[ "${COMPONENT}" = "storm-plugin" ]] && RDF_COMPONENT="storm"
-	[[ "${COMPONENT}" = "hbase-plugin" ]] && RDF_COMPONENT="hbase"
-	[[ "${COMPONENT}" = "hive-plugin" ]] && RDF_COMPONENT="hive"
-	[[ "${COMPONENT}" = "kafka-plugin" ]] && RDF_COMPONENT="kafka"
-	[[ "${COMPONENT}" = "atlas-plugin" ]] && RDF_COMPONENT="atlas"
-	[[ "${COMPONENT}" = "knox-plugin" ]] && RDF_COMPONENT="knox"
+	JDP_COMPONENT=${COMPONENT}
+	[[ "${COMPONENT}" = "hdfs-plugin" ]] && JDP_COMPONENT="hadoop"
+	[[ "${COMPONENT}" = "yarn-plugin" ]] && JDP_COMPONENT="hadoop"
+	[[ "${COMPONENT}" = "storm-plugin" ]] && JDP_COMPONENT="storm"
+	[[ "${COMPONENT}" = "hbase-plugin" ]] && JDP_COMPONENT="hbase"
+	[[ "${COMPONENT}" = "hive-plugin" ]] && JDP_COMPONENT="hive"
+	[[ "${COMPONENT}" = "kafka-plugin" ]] && JDP_COMPONENT="kafka"
+	[[ "${COMPONENT}" = "atlas-plugin" ]] && JDP_COMPONENT="atlas"
+	[[ "${COMPONENT}" = "knox-plugin" ]] && JDP_COMPONENT="knox"
 	[[ "${COMPONENT}" = "knox-plugin" ]] && lib="ext" || lib="lib"
-	install -d -m 0755 ${PREFIX}/${RDF_DIR}/${RDF_COMPONENT}/${lib}
-	cp -r $BUILD_DIR/ranger-*-${COMPONENT}/lib/* ${PREFIX}/${RDF_DIR}/${RDF_COMPONENT}/${lib}/
-	[[ "${COMPONENT}" = "hive-plugin" ]] && install -d -m 0755 ${PREFIX}/${RDF_DIR}/hive2/${lib}/ && cp -r $BUILD_DIR/ranger-*-${COMPONENT}/lib/* ${PREFIX}/${CRH_DIR}/hive2/${lib}/
-	[[ "${COMPONENT}" = "yarn-plugin" ]] || ln -s /usr/share/java/ojdbc6.jar ${PREFIX}/${RDF_DIR}/${RDF_COMPONENT}/${lib}/ojdbc6.jar
+	install -d -m 0755 ${PREFIX}/${JDP_DIR}/${JDP_COMPONENT}/${lib}
+	cp -r $BUILD_DIR/ranger-*-${COMPONENT}/lib/* ${PREFIX}/${JDP_DIR}/${JDP_COMPONENT}/${lib}/
+	[[ "${COMPONENT}" = "hive-plugin" ]] && install -d -m 0755 ${PREFIX}/${JDP_DIR}/hive2/${lib}/ && cp -r $BUILD_DIR/ranger-*-${COMPONENT}/lib/* ${PREFIX}/${JDP_DIR}/hive2/${lib}/
+	[[ "${COMPONENT}" = "yarn-plugin" ]] || ln -s /usr/share/java/ojdbc6.jar ${PREFIX}/${JDP_DIR}/${JDP_COMPONENT}/${lib}/ojdbc6.jar
 fi

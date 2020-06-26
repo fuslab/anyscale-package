@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Set brp-java-repack-jars disable
+%define __jar_repack %{nil}
+
 # Set the following parameters
 %define stack_name %{soft_stack_name}
 %define stack_version %{soft_stack_version}

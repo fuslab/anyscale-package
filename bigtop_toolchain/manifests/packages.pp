@@ -69,7 +69,14 @@ class bigtop_toolchain::packages {
         "bison",
         "perl-Env",
         "libffi-devel",
-        "R"
+        "R",
+        "zip",
+        "sed",
+        "cmake3",
+        "devtoolset-9",
+        "libicu-devel",
+        "libtool-ltdl-devel",
+        "unixODBC-devel"
       ]
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [

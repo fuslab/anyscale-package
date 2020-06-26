@@ -77,9 +77,9 @@ bigtop {
 /** Base Configuration of the mirror and archives */
 
   version = "1.2.1"
-  soft_stack_version = "3.3.0.0-108"
-  soft_package_version = "-3-3-0-0-108"
-  soft_stack_name = "jdp"
+  soft_stack_version = "1.0.0.0-108"
+  soft_package_version = "-1-0-0-0-108"
+  soft_stack_name = "anyscale"
 
   stack {
     'jdk' { version = "1." + ( System.getenv('BIGTOP_JDK') ?: "8" ); version_base = version }
@@ -90,8 +90,8 @@ bigtop {
     APACHE_ARCHIVE = "http://archive.fusionlab.cn/dist/3.3.0.0/"
   }
   git { 
-    user = "jdp-dev"
-    token = "jdp@jikelab.com"
+    user = "anyscale-dev"
+    token = "anyscale@fusionlab.cn"
   }
 /** End of Base Configuration */
 
@@ -371,7 +371,7 @@ bigtop {
       pkg     = name
       relNotes = 'Apache Flink'
       version { 
-        base = '1.7.0'; 
+        base = '1.9.1'; 
         pkg = base; 
         release = 1 
       }
@@ -533,18 +533,18 @@ bigtop {
       name    = 'ranger'
       relNotes = 'Apache Ranger'
       version { 
-        base = '0.7.1'; 
+        base = '1.2.0'; 
         pkg = base; 
         release = 1 
       }
       tarball { 
-        source      = "$name-${version.base}.tar.gz"
+        source      = "$name-${version.base}-src.tar.gz"
         destination = source 
       }
       url { 
         download_path = "/$name/${version.base}/"
         site = "${apache.APACHE_MIRROR}/${download_path}"
-        archive = "${apache.APACHE_ARCHIVE}/${download_path}" 
+        archive = "${apache.APACHE_ARCHIVE}/${download_path}"
       }
     }
 
@@ -691,7 +691,7 @@ bigtop {
       pkg     = name
       relNotes = 'Yandex Clickhouse'
       version { 
-        base = '19.4.0';
+        base = '20.3.8.53';
         pkg = base;
         release = 1 
       }
@@ -740,6 +740,46 @@ bigtop {
         destination = source 
       }
       url { 
+        download_path = "/$name/${version.base}/"
+        site = "${apache.APACHE_MIRROR}/${download_path}"
+        archive = "${apache.APACHE_ARCHIVE}/${download_path}" 
+      }
+    }
+
+    'knox' {
+      name    = 'knox'
+      pkg     = name
+      relNotes = 'Apache Knox'
+      version { 
+        base = '1.0.0';
+        pkg = base;
+        release = 1
+      }
+      tarball { 
+        source      = "$name-${version.base}-src.tar.gz"
+        destination = source
+      }
+      url { 
+        download_path = "/$name/${version.base}/"
+        site = "${apache.APACHE_MIRROR}/${download_path}"
+        archive = "${apache.APACHE_ARCHIVE}/${download_path}" 
+      }
+    }
+
+    'presto' {
+      name    = 'presto'
+      pkg     = name
+      relNotes = 'facebook presto'
+      version { 
+        base = '0.235.1';
+        pkg = base;
+        release = 1
+      }
+      tarball {
+        source      = "$name-${version.base}-src.tar.gz"
+        destination = source
+      }
+      url {
         download_path = "/$name/${version.base}/"
         site = "${apache.APACHE_MIRROR}/${download_path}"
         archive = "${apache.APACHE_ARCHIVE}/${download_path}" 

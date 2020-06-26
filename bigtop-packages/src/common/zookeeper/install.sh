@@ -26,8 +26,8 @@ usage: $0 <options>
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --lib-dir=DIR               path to install Zookeeper home [/usr/[stack_name]/[stack_version]/zookeeper/lib]
-     --stack-home=DIR            path to install dirs [/usr/[stack_name]/[stack_version]/zookeeper]
+     --lib-dir=DIR               path to install Zookeeper home [/opt/[stack_name]/[stack_version]/zookeeper/lib]
+     --stack-home=DIR            path to install dirs [/opt/[stack_name]/[stack_version]/zookeeper]
      --component-name=NAME       component-name
   "
   exit 1
