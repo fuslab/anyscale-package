@@ -12,142 +12,60 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%define hadoop_username hadoop
-%define etc_hive /etc/%{name}
-%define config_hive %{etc_hive}/conf
-%define conf_hcatalog %{_sysconfdir}/hive-hcatalog/conf
-%define conf_webhcat  %{_sysconfdir}/hive-webhcat/conf
-%define usr_lib_hive /usr/lib/%{name}
-%define usr_lib_hcatalog /usr/lib/hive-hcatalog
-%define var_lib_hive /var/lib/%{name}
-%define var_lib_hcatalog /var/lib/%{name}-hcatalog
-%define var_log_hcatalog /var/log/%{name}-hcatalog
-%define usr_bin /usr/bin
-%define hive_config_virtual hive_active_configuration
-%define man_dir %{_mandir}
-%define hive_services hive-metastore hive-server2 hive-hcatalog-server hive-webhcat-server
-# After we run "ant package" we'll find the distribution here
-%define hive_dist build/dist
 
-%if  %{!?suse_version:1}0
+# Set the following parameters
 
-%define doc_hive %{_docdir}/%{name}-%{hive_version}
-%define alternatives_cmd alternatives
+%define stack_name %{soft_stack_name}
+%define stack_version %{soft_stack_version}
 
-%global initd_dir %{_sysconfdir}/rc.d/init.d
+%define stack_home /usr/%{stack_name}/%{stack_version}
+%define component_name hive
+%define component_install_dir %{stack_home}/%{component_name}
 
-%else
-
-# Only tested on openSUSE 11.4. le'ts update it for previous release when confirmed
-%if 0%{suse_version} > 1130
-%define suse_check \# Define an empty suse_check for compatibility with older sles
-%endif
-
-%define doc_hive %{_docdir}/%{name}
-%define alternatives_cmd update-alternatives
-
-%global initd_dir %{_sysconfdir}/rc.d
-
-%define __os_install_post \
-    %{suse_check} ; \
-    /usr/lib/rpm/brp-compress ; \
-    %{nil}
-
-%endif
+%define etc_dir /etc/%{component_name}
+%define config_dir %{etc_dir}/conf
 
 
-Name: hive
+Name: %{component_name}%{soft_package_version}
 Version: %{hive_version}
 Release: %{hive_release}
 Summary: Hive is a data warehouse infrastructure built on top of Hadoop
-License: ASL 2.0
-URL: http://hive.apache.org/
-Group: Development/Libraries
-Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
+URL: http://www.fusionlab.cn
+Group: Applications/Engineering
 BuildArch: noarch
-Source0: apache-%{name}-%{hive_base_version}-src.tar.gz
-Source1: do-component-build
-Source2: install_hive.sh
-Source3: init.d.tmpl
-Source4: hive-site.xml
-Source6: hive-metastore.default
-Source7: hive.1
-Source8: hive-site.xml
-Source10: hive-metastore.svc
+Buildroot: %(mktemp -ud %{_tmppath}/%{component_name}-%{version}-%{release}-XXXXXX)
+License: ASL 2.0
+Source0: %{component_name}-%{hive_base_version}-src.tar.gz
+Source1: bigtop.bom
+Source2: do-component-build
+Source3: install.sh
+Source4: init.d.tmpl
+Source5: hive.1
+Source6: hive-site.xml
+Source7: hive-hcatalog.1
+Source8: hive-hcatalog-server.default
+Source9: hive-metastore.default
+Source10: hive-server.default
 Source11: hive-server2.default
-Source12: hive-server2.svc
-Source13: hive-hcatalog.1
-Source14: hive-hcatalog-server.svc
-Source15: hive-webhcat-server.svc
-Source16: hive-hcatalog-server.default
-Source17: hive-webhcat-server.default
-Source18: bigtop.bom
-#BIGTOP_PATCH_FILES
-Requires: hadoop-client, bigtop-utils >= 0.7, zookeeper, hive-jdbc = %{version}-%{release}
-Conflicts: hadoop-hive
-Obsoletes: %{name}-webinterface
+Source12: hive-webhcat-server.default
+
+Source13: hive-hcatalog-server
+Source14: hive-metastore
+Source15: hive-server2
+Source16: hive-server
+Source17: hive-webhcat-server
+
+Requires(pre): jdp-select
+AutoReq: no
+
 
 %description 
 Hive is a data warehouse infrastructure built on top of Hadoop that provides tools to enable easy data summarization, adhoc querying and analysis of large datasets data stored in Hadoop files. It provides a mechanism to put structure on this data and it also provides a simple query language called Hive QL which is based on SQL and which enables users familiar with SQL to query this data. At the same time, this language also allows traditional map/reduce programmers to be able to plug in their custom mappers and reducers to do more sophisticated analysis which may not be supported by the built-in capabilities of the language.
 
-%if  %{?suse_version:1}0
-# Required for init scripts
-Requires: insserv
-%else
-# Required for init scripts
-Requires: /lib/lsb/init-functions
-%endif
-
-%package server2
-Summary: Provides a Hive Thrift service with improved concurrency support.
-Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
-
-%if  %{?suse_version:1}0
-# Required for init scripts
-Requires: insserv
-%else
-# Required for init scripts
-Requires: /lib/lsb/init-functions
-%endif
-
-%description server2
-This optional package hosts a Thrift server for Hive clients across a network to use with improved concurrency support.
-%package metastore
-Summary: Shared metadata repository for Hive.
-Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
-
-%if  %{?suse_version:1}0
-# Required for init scripts
-Requires: insserv
-%else
-# Required for init scripts
-Requires: /lib/lsb/init-functions
-%endif
 
 
-%description metastore
-This optional package hosts a metadata server for Hive clients across a network to use.
 
-%package hbase
-Summary: Provides integration between Apache HBase and Apache Hive
-Group: Development/Libraries
-Requires: hive = %{version}-%{release}, hbase
-
-%description hbase
-This optional package provides integration between Apache HBase and Apache Hive
-
-%package jdbc
-Summary: Provides libraries necessary to connect to Apache Hive via JDBC
-Group: Development/Libraries
-Requires: hadoop-client
-
-%description jdbc
-This package provides libraries necessary to connect to Apache Hive via JDBC
-
+### hcatalog
 %package hcatalog
 Summary: Apache Hcatalog is a data warehouse infrastructure built on top of Hadoop
 Group: Development/Libraries
@@ -161,6 +79,76 @@ This includes:
     * Providing interoperability across data processing tools such as Pig, Map Reduce, Streaming, and Hive.
 
 
+
+
+### hcatalog-server
+%package hcatalog-server
+Summary: Init scripts for HCatalog server
+Group: System/Daemons
+Requires: %{name}-hcatalog = %{version}-%{release}
+Requires: initscripts
+
+%description hcatalog-server
+Init scripts for HCatalog server
+
+
+
+
+### jdbc
+%package jdbc
+Summary: Provides libraries necessary to connect to Apache Hive via JDBC
+Group: Development/Libraries
+Requires: hadoop-client
+
+%description jdbc
+This package provides libraries necessary to connect to Apache Hive via JDBC
+
+
+
+
+### metastore
+%package metastore
+Summary: Shared metadata repository for Hive.
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
+Requires: /lib/lsb/init-functions
+
+%description metastore
+This optional package hosts a metadata server for Hive clients across a network to use.
+
+
+
+
+### server2
+%package server2
+Summary: Provides a Hive Thrift service with improved concurrency support.
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
+Requires: /lib/lsb/init-functions
+
+%description server2
+This optional package hosts a Thrift server for Hive clients across a network to use with improved concurrency support.
+
+
+
+
+### server
+%package server
+Summary: Provides a Hive Thrift service with improved concurrency support.
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
+Requires: /lib/lsb/init-functions
+
+%description server
+This optional package hosts a Thrift server for Hive clients across a network to use with improved concurrency support.
+
+
+
+
+### webhcat
 %package webhcat
 Summary: WebHcat provides a REST-like web API for HCatalog and related Hadoop components.
 Group: Development/Libraries
@@ -170,240 +158,194 @@ Requires: %{name}-hcatalog = %{version}-%{release}
 WebHcat provides a REST-like web API for HCatalog and related Hadoop components.
 
 
-%package hcatalog-server
-Summary: Init scripts for HCatalog server
-Group: System/Daemons
-Requires: %{name}-hcatalog = %{version}-%{release}
-
-%if  %{?suse_version:1}0
-# Required for init scripts
-Requires: insserv
-%endif
-
-%if  0%{?mgaversion}
-# Required for init scripts
-Requires: initscripts
-%endif
-
-# CentOS 5 does not have any dist macro
-# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
-# Required for init scripts
-Requires: /lib/lsb/init-functions
-%endif
-
-%description hcatalog-server
-Init scripts for HCatalog server
 
 
+### webhcat-server
 %package webhcat-server
 Summary: Init scripts for WebHcat server
 Group: System/Daemons
 Requires: %{name}-webhcat = %{version}-%{release}
-
-%if  %{?suse_version:1}0
-# Required for init scripts
-Requires: insserv
-%endif
-
-%if  0%{?mgaversion}
-# Required for init scripts
 Requires: initscripts
-%endif
-
-# CentOS 5 does not have any dist macro
-# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
-%define __os_install_post \
-    %{_rpmconfigdir}/brp-compress ; \
-    %{_rpmconfigdir}/brp-strip-static-archive %{__strip} ; \
-    %{_rpmconfigdir}/brp-strip-comment-note %{__strip} %{__objdump} ; \
-    /usr/lib/rpm/brp-python-bytecompile ; \
-    %{nil}
-# Required for init scripts
-Requires: /lib/lsb/init-functions
-%endif
 
 %description webhcat-server
 Init scripts for WebHcat server.
 
-%prep
-%setup -q -n apache-%{name}-%{hive_base_version}-src
 
-#BIGTOP_PATCH_COMMANDS
+
+%prep
+%setup -n %{component_name}-%{hive_base_version}-src
+
 
 %build
-bash %{SOURCE1}
+bash %{SOURCE2}
 
-#########################
-#### INSTALL SECTION ####
-#########################
+
 %install
 %__rm -rf $RPM_BUILD_ROOT
 
-cp $RPM_SOURCE_DIR/hive.1 .
-cp $RPM_SOURCE_DIR/hive-hcatalog.1 .
-cp $RPM_SOURCE_DIR/hive-site.xml .
-/bin/bash %{SOURCE2} \
+
+bash $RPM_SOURCE_DIR/install.sh \
+  --build-dir=`pwd`/build  \
+  --source-dir=$RPM_SOURCE_DIR \
   --prefix=$RPM_BUILD_ROOT \
-  --build-dir=%{hive_dist} \
-  --doc-dir=$RPM_BUILD_ROOT/%{doc_hive}
+  --stack-home=%{stack_home}  \
+  --component-name=%{component_name}
 
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
-%__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
-%__install -m 0644 $RPM_SOURCE_DIR/hive-metastore.default $RPM_BUILD_ROOT/etc/default/%{name}-metastore
-%__install -m 0644 $RPM_SOURCE_DIR/hive-server2.default $RPM_BUILD_ROOT/etc/default/%{name}-server2
-%__install -m 0644 $RPM_SOURCE_DIR/hive-hcatalog-server.default $RPM_BUILD_ROOT/etc/default/%{name}-hcatalog-server
-%__install -m 0644 $RPM_SOURCE_DIR/hive-webhcat-server.default $RPM_BUILD_ROOT/etc/default/%{name}-webhcat-server
-
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/log/%{name}
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{name}
-
-# We need to get rid of jars that happen to be shipped in other Bigtop packages
-%__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/zookeeper-*.jar
-%__ln_s  /usr/lib/zookeeper/zookeeper.jar  $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
-%__ln_s  /usr/lib/hbase/hbase-common.jar /usr/lib/hbase/hbase-client.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
-
-# Workaround for BIGTOP-583
-%__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/slf4j-log4j12-*.jar
-
-for service in %{hive_services}
-do
-    # Install init script
-    init_file=$RPM_BUILD_ROOT/%{initd_dir}/${service}
-    bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/${service}.svc rpm $init_file
-done
 
 %pre
-getent group hive >/dev/null || groupadd -r hive
-getent passwd hive >/dev/null || useradd -c "Hive" -s /sbin/nologin -g hive -r -d %{var_lib_hive} hive 2> /dev/null || :
 
-# Manage configuration symlink
+
 %post
+install -d -m 0755 $PREFIX/%{config_dir}
+install -d -m 0755 $PREFIX/etc/hive_llap/conf
+install -d -m 0755 $PREFIX/etc/hive-hcatalog/conf
+install -d -m 0755 $PREFIX/etc/hive-webhcat/conf
 
-# Install config alternatives
-%{alternatives_cmd} --install %{config_hive} %{name}-conf %{etc_hive}/conf.dist 30
+cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/conf/
+cp -r %{stack_home}/etc/%{component_name}/conf_llap.dist/* /etc/hive_llap/conf
+cp -r %{stack_home}/etc/%{component_name}/default/* /etc/hive-hcatalog/conf/
 
-
-# Upgrade
-if [ "$1" -gt 1 ]; then
-  old_metastore="${var_lib_hive}/metastore/\${user.name}_db"
-  new_metastore="${var_lib_hive}/metastore/metastore_db"
-  if [ -d $old_metastore ]; then
-    mv $old_metastore $new_metastore || echo "Failed to automatically rename old metastore. Make sure to resolve this before running Hive."
-  fi
-fi
-
-%preun
-if [ "$1" = 0 ]; then
-  %{alternatives_cmd} --remove %{name}-conf %{etc_hive}/conf.dist || :
-fi
+/usr/bin/jdp-select set %{component_name}-client %{stack_version}
+/usr/bin/jdp-select set %{component_name}-metastore %{stack_version}
+/usr/bin/jdp-select set %{component_name}-server2 %{stack_version}
+/usr/bin/jdp-select set %{component_name}-server2-hive2 %{stack_version}
+/usr/bin/jdp-select set %{component_name}-webhcat %{stack_version}
 
 
-%post hcatalog
-%{alternatives_cmd} --install %{conf_hcatalog} hive-hcatalog-conf %{conf_hcatalog}.dist 30
-
-%preun hcatalog
-if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove hive-hcatalog-conf %{conf_hcatalog}.dist || :
-fi
-
-%post webhcat
-%{alternatives_cmd} --install %{conf_webhcat} hive-webhcat-conf %{conf_webhcat}.dist 30
-
-%preun webhcat
-if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove hive-webhcat-conf %{conf_webhcat}.dist || :
-fi
-
-#######################
-#### FILES SECTION ####
-#######################
+### default
 %files
-%attr(1777,hive,hive) %dir %{var_lib_hive}/metastore
 %defattr(-,root,root,755)
-%config(noreplace) %{etc_hive}/conf.dist
-%{usr_lib_hive}
-%{usr_bin}/hive
-%{usr_bin}/beeline
-%{usr_bin}/hiveserver2
-%attr(0755,hive,hive) %dir %{var_lib_hive}
-%attr(0755,hive,hive) %dir %{_localstatedir}/log/%{name}
-%attr(0755,hive,hive) %dir %{_localstatedir}/run/%{name}
-%doc %{doc_hive}
-%{man_dir}/man1/hive.1.*
-%exclude %dir %{usr_lib_hive}
-%exclude %dir %{usr_lib_hive}/lib
-%exclude %{usr_lib_hive}/lib/hive-jdbc-*.jar
-%exclude %{usr_lib_hive}/lib/hive-metastore-*.jar
-%exclude %{usr_lib_hive}/lib/hive-serde-*.jar
-%exclude %{usr_lib_hive}/lib/hive-exec-*.jar
-%exclude %{usr_lib_hive}/lib/libthrift-*.jar
-%exclude %{usr_lib_hive}/lib/hive-service-*.jar
-%exclude %{usr_lib_hive}/lib/libfb303-*.jar
-%exclude %{usr_lib_hive}/lib/log4j-*.jar
-%exclude %{usr_lib_hive}/lib/commons-logging-*.jar
-%exclude %{usr_lib_hive}/lib/hbase-*.jar
-%exclude %{usr_lib_hive}/lib/hive-hbase-handler*.jar
+%attr(0755,root,root) %{stack_home}/etc/hive/conf.dist/
+%attr(0755,root,root) %{stack_home}/etc/hive/conf_llap.dist/
 
-%files hbase
-%defattr(-,root,root,755)
-%{usr_lib_hive}/lib/hbase-*.jar
-%{usr_lib_hive}/lib/hive-hbase-handler*.jar
+%attr(0755,root,root) %{component_install_dir}/bin/
+%exclude %{component_install_dir}/bin/hcat
 
-%files jdbc
-%defattr(-,root,root,755)
-%dir %{usr_lib_hive}
-%dir %{usr_lib_hive}/lib
-%{usr_lib_hive}/lib/hive-jdbc-*.jar
-%{usr_lib_hive}/lib/hive-metastore-*.jar
-%{usr_lib_hive}/lib/hive-serde-*.jar
-%{usr_lib_hive}/lib/hive-exec-*.jar
-%{usr_lib_hive}/lib/libthrift-*.jar
-%{usr_lib_hive}/lib/hive-service-*.jar
-%{usr_lib_hive}/lib/libfb303-*.jar
-%{usr_lib_hive}/lib/log4j-*.jar
-%{usr_lib_hive}/lib/commons-logging-*.jar
+%attr(0755,root,root) %{component_install_dir}/binary-package-licenses/
+%attr(0755,root,root) %{component_install_dir}/doc/
+%attr(0755,root,root) %{component_install_dir}/man/hive.1.*
+%attr(0755,root,root) %{component_install_dir}/metastore/
+%attr(0755,root,root) %{component_install_dir}/scripts/
 
+%{component_install_dir}/conf
+%{component_install_dir}/conf_llap
+
+%attr(0755,root,root) %{component_install_dir}/lib/
+%exclude %{component_install_dir}/lib/hive-jdbc-*.jar
+%exclude %{component_install_dir}/lib/hive-metastore-*.jar
+%exclude %{component_install_dir}/lib/hive-serde-*.jar
+%exclude %{component_install_dir}/lib/hive-exec-*.jar
+%exclude %{component_install_dir}/lib/libthrift-*.jar
+%exclude %{component_install_dir}/lib/hive-service-*.jar
+%exclude %{component_install_dir}/lib/libfb303-*.jar
+%exclude %{component_install_dir}/lib/log4j-*.jar
+%exclude %{component_install_dir}/lib/commons-logging-*.jar
+
+
+
+
+
+
+### hcatalog
 %files hcatalog
 %defattr(-,root,root,755)
-%config(noreplace) %attr(755,root,root) %{conf_hcatalog}.dist
-%attr(0775,hive,hive) %{var_lib_hcatalog}
-%attr(0775,hive,hive) %{var_log_hcatalog}
-%dir %{usr_lib_hcatalog}
-%{usr_lib_hcatalog}/bin
-%{usr_lib_hcatalog}/etc/hcatalog
-%{usr_lib_hcatalog}/libexec
-%{usr_lib_hcatalog}/share/hcatalog
-%{usr_lib_hcatalog}/sbin/update-hcatalog-env.sh
-%{usr_lib_hcatalog}/sbin/hcat*
-%{usr_bin}/hcat
-%{man_dir}/man1/hive-hcatalog.1.*
+%dir %{stack_home}/etc/hive-hcatalog
+%attr(0755,root,root) %{stack_home}/etc/hive-hcatalog/conf.dist/
 
+%attr(0755,root,root) %{component_install_dir}/bin/hcat
+%attr(0755,root,root) %{component_install_dir}/log/hive-hcatalog
+%attr(0755,root,root) %{component_install_dir}/man/hive-hcatalog.1.*
+
+%attr(0755,root,root) %{stack_home}/hive-hcatalog/bin/
+%{stack_home}/hive-hcatalog/etc/hcatalog
+%attr(0755,root,root) %{stack_home}/hive-hcatalog/libexec/
+%attr(0755,root,root) %{stack_home}/hive-hcatalog/share/hcatalog/
+%attr(0755,root,root) %{stack_home}/hive-hcatalog/sbin/update-hcatalog-env.sh
+%attr(0755,root,root) %{stack_home}/hive-hcatalog/sbin/hcat_server.*
+%attr(0755,root,root) %{stack_home}/hive-hcatalog/sbin/hcatcfg.*
+
+
+
+
+
+
+### hcatalog-server
+%files hcatalog-server
+%defattr(-,root,root,755)
+%attr(0755,root,root) %{stack_home}/etc/default/hive-hcatalog-server
+%attr(0755,root,root) %{component_install_dir}/etc/rc.d/init.d/hive-hcatalog-server
+
+
+
+
+
+
+### jdbc ok
+%files jdbc
+%defattr(-,root,root,755)
+%attr(0755,root,root) %{component_install_dir}/jdbc/
+%attr(0755,root,root) %{component_install_dir}/lib/hive-jdbc-*.jar
+%attr(0755,root,root) %{component_install_dir}/lib/hive-metastore-*.jar
+%attr(0755,root,root) %{component_install_dir}/lib/hive-serde-*.jar
+%attr(0755,root,root) %{component_install_dir}/lib/hive-exec-*.jar
+%attr(0755,root,root) %{component_install_dir}/lib/libthrift-*.jar
+%attr(0755,root,root) %{component_install_dir}/lib/hive-service-*.jar
+%attr(0755,root,root) %{component_install_dir}/lib/libfb303-*.jar
+%attr(0755,root,root) %{component_install_dir}/lib/log4j-*.jar
+%attr(0755,root,root) %{component_install_dir}/lib/commons-logging-*.jar
+
+
+
+
+
+
+### metastore ok
+%files metastore
+%defattr(-,root,root,755)
+%attr(0755,root,root) %{stack_home}/etc/default/hive-metastore
+%attr(0755,root,root) %{component_install_dir}/etc/rc.d/init.d/hive-metastore
+
+
+
+
+
+
+### server2 ok
+%files server2
+%defattr(-,root,root,755)
+%attr(0755,root,root) %{stack_home}/etc/default/hive-server2
+%attr(0755,root,root) %{component_install_dir}/etc/rc.d/init.d/hive-server2
+
+
+
+
+
+
+### server ok
+%files server
+%defattr(-,root,root,755)
+%attr(0755,root,root) %{stack_home}/etc/default/hive-server
+%attr(0755,root,root) %{component_install_dir}/etc/rc.d/init.d/hive-server
+
+
+
+
+
+
+### webhcat ok
 %files webhcat
 %defattr(-,root,root,755)
-%config(noreplace) %attr(755,root,root) %{conf_webhcat}.dist
-%{usr_lib_hcatalog}/share/webhcat
-%{usr_lib_hcatalog}/etc/webhcat
-%{usr_lib_hcatalog}/sbin/webhcat*
+%attr(0755,root,root) %{stack_home}/etc/hive-webhcat/conf.dist/
+%{stack_home}/hive-hcatalog/etc/webhcat
+%attr(0755,root,root) %{stack_home}/hive-hcatalog/sbin/webhcat_config.sh
+%attr(0755,root,root) %{stack_home}/hive-hcatalog/sbin/webhcat_server.sh
+%attr(0755,root,root) %{stack_home}/hive-hcatalog/share/
 
-%define service_macro() \
-%files %1 \
-%attr(0755,root,root)/%{initd_dir}/%{name}-%1 \
-%config(noreplace) /etc/default/%{name}-%1 \
-%post %1 \
-chkconfig --add %{name}-%1 \
-\
-%preun %1 \
-if [ "$1" = 0 ] ; then \
-        service %{name}-%1 stop > /dev/null \
-        chkconfig --del %{name}-%1 \
-fi \
-%postun %1 \
-if [ $1 -ge 1 ]; then \
-   service %{name}-%1 condrestart >/dev/null 2>&1 || : \
-fi
-%service_macro server2
-%service_macro metastore
-%service_macro hcatalog-server
-%service_macro webhcat-server
+
+
+
+### webhcat-server ok
+%files webhcat-server
+%defattr(-,root,root,755)
+%attr(0755,root,root) %{stack_home}/etc/default/hive-webhcat-server
+%attr(0755,root,root) %{component_install_dir}/etc/rc.d/init.d/hive-webhcat-server

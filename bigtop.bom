@@ -121,12 +121,20 @@ bigtop {
     'hadoop' {
       name    = 'hadoop'
       relNotes = 'Apache Hadoop'
-      version { base = '3.1.1'; pkg = base; release = 1 }
-      tarball { destination = "${name}-${version.base}.tar.gz"
-                source      = "${name}-${version.base}-src.tar.gz" }
-      url     { download_path = "/$name/common/$name-${version.base}"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      version { 
+        base = '3.1.1'; 
+        pkg = base; 
+        release = 1 
+      }
+      tarball { 
+        destination = "${name}-${version.base}.tar.gz"
+        source      = "${name}-${version.base}-src.tar.gz" 
+      }
+      url     { 
+        download_path = "/$name/common/$name-${version.base}"
+        site = "${apache.APACHE_MIRROR}/${download_path}"
+        archive = "${apache.APACHE_ARCHIVE}/${download_path}" 
+      }
     }
     'ignite-hadoop' {
       name    = 'ignite-hadoop'
@@ -142,12 +150,20 @@ bigtop {
     'hbase' {
       name    = 'hbase'
       relNotes = 'Apache HBase'
-      version { base = '2.0.2'; pkg = base; release = 1 }
-      tarball { destination = "${name}-${version.base}.tar.gz"
-                source      = "${name}-${version.base}-src.tar.gz" }
-      url     { download_path = "/$name/${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      version { 
+        base = '2.0.2'; 
+        pkg = base; 
+        release = 1 
+      }
+      tarball { 
+        destination = "${name}-${version.base}.tar.gz"
+        source      = "${name}-${version.base}-src.tar.gz" 
+      }
+      url     { 
+        download_path = "/$name/${version.base}/"
+        site = "${apache.APACHE_MIRROR}/${download_path}"
+        archive = "${apache.APACHE_ARCHIVE}/${download_path}" 
+      }
     }
 
     'pig' {
@@ -163,23 +179,41 @@ bigtop {
     }
     'hive' {
       name    = 'hive'
+      pkg     = name
       relNotes = 'Apache Hive'
-      version { base = '1.2.1'; pkg = base; release = 1 }
-      tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
-                source      = destination }
-      url     { download_path = "/$name/$name-${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      version { 
+        base = '3.1.0'; 
+        pkg = base; 
+        release = 1 
+      }
+      tarball { 
+        destination = "${name}-${version.base}-src.tar.gz"
+        source      = destination 
+        }
+      url { 
+        download_path = "/$name/${version.base}/"
+        site = "${apache.APACHE_MIRROR}/${download_path}"
+        archive = "${apache.APACHE_ARCHIVE}/${download_path}" 
+      }
     }
     'tez' {
       name    = 'tez'
+      pkg     = name
       relNotes = 'Apache TEZ'
-      version { base = '0.6.2'; pkg = base; release = 1 }
-      tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
-                source      = destination }
-      url     { download_path = "/$name/${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      version { 
+        base = '0.9.1'; 
+        pkg = base; 
+        release = 1 
+      }
+      tarball { 
+        destination = "${name}-${version.base}-src.tar.gz"
+        source      = destination 
+      }
+      url { 
+        download_path = "/$name/${version.base}/"
+        site = "${apache.APACHE_MIRROR}/${download_path}"
+        archive = "${apache.APACHE_ARCHIVE}/${download_path}" 
+      }
     }
     'sqoop' {
       name    = 'sqoop'

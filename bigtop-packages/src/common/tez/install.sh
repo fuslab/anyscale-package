@@ -15,22 +15,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -ex
+set -e
 
 usage() {
   echo "
 usage: $0 <options>
   Required not-so-options:
      --build-dir=DIR             path to tez dist.dir
+     --source-dir=DIR            path to package shared files dir
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --doc-dir=DIR               path to install docs into [/usr/share/doc/tez]
-     --lib-dir=DIR               path to install tez home [/usr/lib/tez]
-     --installed-lib-dir=DIR     path where lib-dir will end up on target system
-     --bin-dir=DIR               path to install bins [/usr/bin]
-     --examples-dir=DIR          path to install examples [doc-dir/examples]
-     ... [ see source for more similar options ]
+     --doc-dir=DIR               path to install docs into [/usr/[stack_name]/[stack_version]/tez/lib]
+     --stack-home=DIR            path to install dirs [/usr/[stack_name]/[stack_version]/tez]
+     --component-name=NAME       component-name
   "
   exit 1
 }
@@ -39,14 +37,10 @@ OPTS=$(getopt \
   -n $0 \
   -o '' \
   -l 'prefix:' \
-  -l 'doc-dir:' \
   -l 'lib-dir:' \
-  -l 'installed-lib-dir:' \
-  -l 'bin-dir:' \
-  -l 'examples-dir:' \
-  -l 'conf-dir:' \
-  -l 'sbin-dir:' \
-  -l 'libexec-dir:' \
+  -l 'source-dir:' \
+  -l 'stack-home:' \
+  -l 'component-name:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -62,20 +56,17 @@ while true ; do
         --build-dir)
         BUILD_DIR=$2 ; shift 2
         ;;
-        --doc-dir)
-        DOC_DIR=$2 ; shift 2
+        --source-dir)
+        SOURCE_DIR=$2 ; shift 2
         ;;
         --lib-dir)
         LIB_DIR=$2 ; shift 2
         ;;
-        --installed-lib-dir)
-        INSTALLED_LIB_DIR=$2 ; shift 2
+        --stack-home)
+        STACK_HOME=$2 ; shift 2
         ;;
-        --examples-dir)
-        EXAMPLES_DIR=$2 ; shift 2
-        ;;
-        --libexec-dir)
-        LIBEXEC_DIR=$2 ; shift 2
+        --component-name)
+        COMPONENT_NAME=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -95,21 +86,28 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
-DOC_DIR=${DOC_DIR:-/usr/share/doc/tez}
-LIB_DIR=${LIB_DIR:-/usr/lib/tez}
-CONF_DIR=${CONF_DIR:-/etc/tez/conf}
+if [ -f "$SOURCE_DIR/bigtop.bom" ]; then
+  . $SOURCE_DIR/bigtop.bom
+fi
 
-install -d -m 0755 $PREFIX/$MAN_DIR
-gzip -c tez.1 > $PREFIX/$MAN_DIR/tez.1.gz
-
+LIB_DIR=${LIB_DIR:-$STACK_HOME/$COMPONENT_NAME}
 install -d -m 0755 $PREFIX/$LIB_DIR
-install -d -m 0755 $PREFIX/$LIB_DIR/lib
-install -d -m 0755 $PREFIX/$DOC_DIR
+
+CONF_DIR=${CONF_DIR:-$STACK_HOME/etc/$COMPONENT_NAME/conf.dist}
 install -d -m 0755 $PREFIX/$CONF_DIR
-install -d -m 0755 $PREFIX/$MAN_DIR
 
-cp tez-site.xml  $PREFIX/$CONF_DIR
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/doc
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/lib
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/man/man1
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/ui
 
-tar -C  $PREFIX/$LIB_DIR -xzf  $BUILD_DIR/tez-dist/target/tez*-minimal.tar.gz
+cp -a ${BUILD_DIR}/lib/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/lib/
+gzip -c $SOURCE_DIR/tez.1 > $PREFIX/$STACK_HOME/$COMPONENT_NAME/man/man1/tez.1.gz
+cp -a ${BUILD_DIR}/*.jar $PREFIX/$STACK_HOME/$COMPONENT_NAME/
+cp -a ${BUILD_DIR}/*.war $PREFIX/$STACK_HOME/$COMPONENT_NAME/ui/
 
+cp $SOURCE_DIR/tez-site.xml  $PREFIX/$CONF_DIR
+
+ln -s /var/log/$COMPONENT_NAME $PREFIX/$STACK_HOME/$COMPONENT_NAME/logs
+ln -s /var/run/$COMPONENT_NAME $PREFIX/$STACK_HOME/$COMPONENT_NAME/run
+ln -s /etc/$COMPONENT_NAME/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/conf
