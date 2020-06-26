@@ -22,7 +22,7 @@
 %define stack_name %{soft_stack_name}
 %define stack_version %{soft_stack_version}
 
-%define stack_home /usr/%{stack_name}/%{stack_version}
+%define stack_home /opt/%{stack_name}/%{stack_version}
 %define component_name superset
 %define component_install_dir %{stack_home}/%{component_name}
 
@@ -45,7 +45,7 @@ Source1: bigtop.bom
 Source2: do-component-build
 Source3: install.sh
 Source4: init.d.tmpl
-Requires(pre): jdp-select
+Requires(pre): anyscale-select
 Requires: postgresql-libs, openssl >= 1.0.2k
 AutoReq: no
 
@@ -78,7 +78,7 @@ bash $RPM_SOURCE_DIR/install.sh \
 %post
 install -d -m 0755 $PREFIX/%{config_dir}
 cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/conf/
-/usr/bin/jdp-select set %{component_name} %{stack_version}
+/usr/bin/anyscale-select set %{component_name} %{stack_version}
 
 %preun
 

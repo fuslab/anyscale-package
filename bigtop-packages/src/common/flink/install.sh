@@ -26,8 +26,8 @@ usage: $0 <options>
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --lib-dir=DIR               path to install flink home [/usr/[stack_name]/[stack_version]/flink/lib]
-     --stack-home=DIR            path to install dirs [/usr/[stack_name]/[stack_version]/flink]
+     --lib-dir=DIR               path to install flink home [/opt/[stack_name]/[stack_version]/flink/lib]
+     --stack-home=DIR            path to install dirs [/opt/[stack_name]/[stack_version]/flink]
      --component-name=NAME       component-name
   "
   exit 1

@@ -26,8 +26,8 @@ usage: $0 <options>
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --lib-dir=DIR               path to install clickhouse home [/usr/[stack_name]/[stack_version]/clickhouse/lib]
-     --stack-home=DIR            path to install dirs [/usr/[stack_name]/[stack_version]/clickhouse]
+     --lib-dir=DIR               path to install clickhouse home [/opt/[stack_name]/[stack_version]/clickhouse/lib]
+     --stack-home=DIR            path to install dirs [/opt/[stack_name]/[stack_version]/clickhouse]
      --component-name=NAME       component-name
   "
   exit 1

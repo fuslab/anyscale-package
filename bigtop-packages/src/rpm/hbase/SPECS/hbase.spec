@@ -18,7 +18,7 @@
 %define stack_name %{soft_stack_name}
 %define stack_version %{soft_stack_version}
 
-%define stack_home /usr/%{stack_name}/%{stack_version}
+%define stack_home /opt/%{stack_name}/%{stack_version}
 %define component_name hbase
 %define component_install_dir %{stack_home}/%{component_name}
 
@@ -107,7 +107,7 @@ Source7: regionserver-init.d.tpl
 #BIGTOP_PATCH_FILES
 BuildArch: noarch
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
-Requires: hadoop%{soft_package_version}, zookeeper%{soft_package_version} >= 3.4.0, jdp-select >= %{stack_version}
+Requires: hadoop%{soft_package_version}, zookeeper%{soft_package_version} >= 3.4.0, anyscale-select >= %{stack_version}
 
 %if  0%{?mgaversion}
 Requires: bsh-utils

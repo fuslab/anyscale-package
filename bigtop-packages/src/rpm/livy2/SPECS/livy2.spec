@@ -17,7 +17,7 @@
 %define stack_name %{soft_stack_name}
 %define stack_version %{soft_stack_version}
 
-%define stack_home /usr/%{stack_name}/%{stack_version}
+%define stack_home /opt/%{stack_name}/%{stack_version}
 %define component_name livy2
 %define component_install_dir %{stack_home}/%{component_name}
 
@@ -39,7 +39,7 @@ Source0: %{component_name}-%{livy2_base_version}-src.tar.gz
 Source1: bigtop.bom
 Source2: do-component-build 
 Source3: install.sh
-Requires(pre):  jdp-select
+Requires(pre):  anyscale-select
 AutoReq: no
 
 
@@ -72,7 +72,7 @@ bash $RPM_SOURCE_DIR/install.sh \
 %post
 install -d -m 0755 $PREFIX/%{config_dir}
 cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/conf/
-/usr/bin/jdp-select set %{component_name}-server %{stack_version}
+/usr/bin/anyscale-select set %{component_name}-server %{stack_version}
 
 
 %preun

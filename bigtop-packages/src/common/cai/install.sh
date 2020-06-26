@@ -26,8 +26,8 @@ usage: $0 <options>
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --lib-dir=DIR               path to install cai home [/usr/[stack_name]/[stack_version]/cai/lib]
-     --stack-home=DIR            path to install dirs [/usr/[stack_name]/[stack_version]/cai]
+     --lib-dir=DIR               path to install cai home [/opt/[stack_name]/[stack_version]/cai/lib]
+     --stack-home=DIR            path to install dirs [/opt/[stack_name]/[stack_version]/cai]
      --stack-version=NAME        stack version 
      --component-name=NAME       component name
   "

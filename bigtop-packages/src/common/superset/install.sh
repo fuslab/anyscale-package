@@ -26,8 +26,8 @@ usage: $0 <options>
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --lib-dir=DIR               path to install Superset home [/usr/[stack_name]/[stack_version]/superset/lib]
-     --stack-home=DIR            path to install dirs [/usr/[stack_name]/[stack_version]/superset]
+     --lib-dir=DIR               path to install Superset home [/opt/[stack_name]/[stack_version]/superset/lib]
+     --stack-home=DIR            path to install dirs [/opt/[stack_name]/[stack_version]/superset]
      --component-name=NAME       component-name
   "
   exit 1

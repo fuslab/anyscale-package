@@ -20,7 +20,7 @@
 %define stack_name %{soft_stack_name}
 %define stack_version %{soft_stack_version}
 
-%define stack_home /usr/%{stack_name}/%{stack_version}
+%define stack_home /opt/%{stack_name}/%{stack_version}
 %define component_name flink
 %define component_install_dir %{stack_home}/%{component_name}
 
@@ -46,7 +46,7 @@ Source4: init.d.tmpl
 Source5: flink-jobmanager.svc
 Source6: flink-taskmanager.svc
 # Requires: bigtop-utils >= 0.7
-Requires(pre): jdp-select
+Requires(pre): anyscale-select
 AutoReq: no
 
 
@@ -95,7 +95,7 @@ bash $RPM_SOURCE_DIR/install.sh \
 %post
 install -d -m 0755 $PREFIX/%{config_dir}
 cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/conf/
-/usr/bin/jdp-select set %{component_name} %{stack_version}
+/usr/bin/anyscale-select set %{component_name} %{stack_version}
 
 
 %preun

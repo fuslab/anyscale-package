@@ -17,7 +17,7 @@
 %define stack_name %{soft_stack_name}
 %define stack_version %{soft_stack_version}
 
-%define stack_home /usr/%{stack_name}/%{stack_version}
+%define stack_home /opt/%{stack_name}/%{stack_version}
 %define component_name ranger
 %define component_install_dir %{stack_home}/%{component_name}
 
@@ -319,9 +319,9 @@ bash %{SOURCE1}
 echo
 for comp in admin usersync kms tagsync hdfs-plugin yarn-plugin hive-plugin hbase-plugin knox-plugin storm-plugin kafka-plugin atlas-plugin
 do
-	env RANGER_VERSION=%{ranger_base_version} JDP_VERSION=%{stack_version}  stack_home=%{stack_home} /bin/bash %{SOURCE2} \
+	env RANGER_VERSION=%{ranger_base_version} ANYSCALE_VERSION=%{stack_version}  stack_home=%{stack_home} /bin/bash %{SOURCE2} \
   		--prefix=$RPM_BUILD_ROOT \
-  		--jdp-dir=%{stack_home} \
+  		--anyscale-dir=%{stack_home} \
   		--build-dir=%{ranger_dist} \
   		--component=${comp} \
   		--doc-dir=$RPM_BUILD_ROOT/%{doc_ranger}
