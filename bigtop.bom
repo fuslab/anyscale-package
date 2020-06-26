@@ -86,8 +86,8 @@ bigtop {
     'scala' { version = '2.11.8'; version_base = version }
   }
   apache {
-    APACHE_MIRROR = "http://archive.fusionlab.cn/dist/3.3.0.0/"
-    APACHE_ARCHIVE = "http://archive.fusionlab.cn/dist/3.3.0.0/"
+    APACHE_MIRROR = "http://archive.fusionlab.cn/dist/1.0.0.0/"
+    APACHE_ARCHIVE = "http://archive.fusionlab.cn/dist/1.0.0.0/"
   }
   git { 
     user = "anyscale-dev"
