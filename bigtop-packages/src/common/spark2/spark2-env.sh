@@ -14,10 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export SPARK_HOME=${SPARK_HOME:-/usr/lib/spark}
+export SPARK_HOME=${SPARK_HOME:-/opt/anyscale/spark}
 export SPARK_LOG_DIR=${SPARK_LOG_DIR:-/var/log/spark}
 
-export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
+export HADOOP_HOME=${HADOOP_HOME:-/opt/anyscale/hadoop}
 export HADOOP_HDFS_HOME=${HADOOP_HDFS_HOME:-${HADOOP_HOME}/../hadoop-hdfs}
 export HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME:-${HADOOP_HOME}/../hadoop-mapreduce}
 export HADOOP_YARN_HOME=${HADOOP_YARN_HOME:-${HADOOP_HOME}/../hadoop-yarn}

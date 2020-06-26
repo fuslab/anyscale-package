@@ -25,7 +25,7 @@
 %define stack_name %{soft_stack_name}
 %define stack_version %{soft_stack_version}
 
-%define stack_home /usr/%{stack_name}/%{stack_version}
+%define stack_home /opt/%{stack_name}/%{stack_version}
 %define component_name hadoop
 %define component_install_dir %{stack_home}
 
@@ -184,7 +184,7 @@ Source29: hadoop-yarn-timelineserver.svc
 #BIGTOP_PATCH_FILES
 Buildroot: %{_tmppath}/%{component_name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
-Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, zookeeper%{soft_package_version} >= 3.4.0, jdp-select >= %{stack_version}, spark2%{soft_package_version}-yarn-shuffle
+Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, zookeeper%{soft_package_version} >= 3.4.0, anyscale-select >= %{stack_version}, spark2%{soft_package_version}-yarn-shuffle
 Requires: psmisc, %{netcat_package}
 # Sadly, Sun/Oracle JDK in RPM form doesn't provide libjvm.so, which means we have
 # to set AutoReq to no in order to minimize confusion. Not ideal, but seems to work.
@@ -530,7 +530,7 @@ env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
   --man-dir=$RPM_BUILD_ROOT%{man_hadoop} \
 
 # Forcing Zookeeper dependency to be on the packaged jar
-# %__ln_s -f /usr/lib/zookeeper/zookeeper.jar $RPM_BUILD_ROOT/%{lib_hadoop}/lib/zookeeper*.jar
+# %__ln_s -f /opt/anyscale/zookeeper/zookeeper.jar $RPM_BUILD_ROOT/%{lib_hadoop}/lib/zookeeper*.jar
 # Workaround for BIGTOP-583
 #%__rm -f $RPM_BUILD_ROOT/%{lib_hadoop}-*/lib/slf4j-log4j12-*.jar
 
@@ -610,7 +610,7 @@ getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce
 %post
 #%{alternatives_cmd} --install %{config_hadoop} %{component_name}-conf %{etc_hadoop}/conf.empty 10
 cp -r %{stack_home}/etc/%{component_name}/conf.empty /etc/%{component_name}/conf
-/usr/bin/jdp-select set %{component_name}-client %{stack_version}
+/usr/bin/anyscale-select set %{component_name}-client %{stack_version}
 
 %post httpfs
 %{alternatives_cmd} --install %{config_httpfs} %{component_name}-httpfs-conf %{etc_httpfs}/conf.empty 10
