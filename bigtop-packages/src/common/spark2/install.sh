@@ -150,7 +150,6 @@ ln -s /var/run/$COMPONENT_NAME/work $PREFIX/$STACK_HOME/$COMPONENT_NAME/work
 ln -s /etc/$COMPONENT_NAME/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/conf
 
 
-
 cat ${BUILD_DIR}/conf/spark-env.sh.template >> $PREFIX/$CONF_DIR/spark-env.sh
 echo "
 export HADOOP_HOME=$STACK_HOME/hadoop
