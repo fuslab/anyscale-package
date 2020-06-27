@@ -178,8 +178,8 @@ export HADOOP_HOME=\${HADOOP_HOME:-$STACK_HOME/hadoop}
 export HADOOP_MAPRED_HOME=\${HADOOP_MAPRED_HOME:-$STACK_HOME/hadoop-mapreduce}
 export HADOOP_YARN_HOME=\${HADOOP_YARN_HOME:-$STACK_HOME/hadoop-yarn}
 export HADOOP_LIBEXEC_DIR=\${HADOOP_HOME}/libexec
-export JDP_VERSION=\${JDP_VERSION:-3.2.0.0-108}
-export HADOOP_OPTS="\${HADOOP_OPTS} -Djdp.version=\${JDP_VERSION}"
+export ANYSCALE_VERSION=\${ANYSCALE_VERSION:-1.0.0.0-108}
+export HADOOP_OPTS="\${HADOOP_OPTS} -Danyscale.version=\${ANYSCALE_VERSION}"
 
 exec ${component#${PREFIX}}.distro "\$@"
 EOF
@@ -400,7 +400,7 @@ for conf in conf.pseudo ; do
   # Remove the ones that shouldn't be installed
   rm -rf $HADOOP_ETC_DIR/$conf/httpfs*
   
-  # keep cmd files by jdp-3.1
+  # keep cmd files by anyscale-1.1
   # rm -rf $HADOOP_ETC_DIR/$conf/*.cmd
 
   # Overlay the -site files

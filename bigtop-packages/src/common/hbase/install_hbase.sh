@@ -25,8 +25,8 @@ usage: $0 <options>
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --doc-dir=DIR               path to install docs into [/usr/share/doc/hbase]
-     --lib-dir=DIR               path to install hbase home [/usr/lib/hbase]
+     --doc-dir=DIR               path to install docs into [/opt/anyscale/share/doc/hbase]
+     --lib-dir=DIR               path to install hbase home [/opt/anyscale/hbase]
      --installed-lib-dir=DIR     path where lib-dir will end up on target system
      --bin-dir=DIR               path to install bins [/usr/bin]
      --examples-dir=DIR          path to install examples [doc-dir/examples]
@@ -161,8 +161,8 @@ export HADOOP_HOME=${HADOOP_HOME:-${STACK_HOME}/hadoop}
 export HADOOP_CONF=\${HADOOP_CONF:-${HADOOP_HOME}/conf}
 export ZOOKEEPER_HOME=\${ZOOKEEPER_HOME:-${STACK_HOME}/zookeeper}
 export HBASE_CLASSPATH=\$HADOOP_CONF:\$HADOOP_HOME/*:\$HADOOP_HOME/lib/*:\$ZOOKEEPER_HOME/*:\$HBASE_CLASSPATH
-export JDP_VERSION=\${JDP_VERSION:-3.2.0.0-108}
-export HBASE_OPTS="-Djdp.version=\${JDP_VERSION} \${HBASE_OPTS}"
+export ANYSCALE_VERSION=\${ANYSCALE_VERSION:-1.0.0.0-108}
+export HBASE_OPTS="-Danyscale.version=\${ANYSCALE_VERSION} \${HBASE_OPTS}"
 
 exec ${STACK_HOME}/hbase/bin/hbase.distro "\$@"
 EOF
