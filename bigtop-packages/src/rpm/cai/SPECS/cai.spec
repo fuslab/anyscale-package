@@ -38,7 +38,7 @@ Source1: bigtop.bom
 Source2: do-component-build
 Source3: install.sh
 Source4: init.d.tmpl
-Requires(pre): jdp-select  
+Requires(pre): anyscale-select  
 AutoReq: no
 
 
@@ -67,7 +67,7 @@ bash $RPM_SOURCE_DIR/install.sh \
 
 %post
 install -d -m 0755 /var/log/docker
-/usr/bin/jdp-select set %{component_name} %{stack_version}
+/usr/bin/anyscale-select set %{component_name} %{stack_version}
 
 
 %preun

@@ -43,7 +43,7 @@ Source1: bigtop.bom
 Source2: do-component-build
 Source3: install.sh
 Source4: init.d.tmpl
-Requires(pre): jdp-select  
+Requires(pre): anyscale-select  
 Requires(pre): unixODBC
 Requires(pre): libicu
 AutoReq: no
@@ -76,8 +76,8 @@ bash $RPM_SOURCE_DIR/install.sh \
 %post
 install -d -m 0755 $PREFIX/%{config_dir}
 cp -r %{stack_home}/etc/%{component_name}-server/conf.dist/* /etc/%{component_name}-server/conf/
-/usr/bin/jdp-select set %{component_name}-client %{stack_version}
-/usr/bin/jdp-select set %{component_name}-server %{stack_version}
+/usr/bin/anyscale-select set %{component_name}-client %{stack_version}
+/usr/bin/anyscale-select set %{component_name}-server %{stack_version}
 
 
 %preun
