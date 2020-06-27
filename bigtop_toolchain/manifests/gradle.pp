@@ -15,7 +15,7 @@
 
 class bigtop_toolchain::gradle {
 
-  $gradle_version = '2.14.1'
+  $gradle_version = '3.1'
   $gradle = "gradle-${gradle_version}"
 
   exec {"/usr/bin/wget https://services.gradle.org/distributions/${gradle}-bin.zip":

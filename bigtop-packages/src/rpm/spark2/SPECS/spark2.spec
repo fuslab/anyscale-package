@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+%define __jar_repack 0
 
 # Set the following parameters
 %define stack_name %{soft_stack_name}
