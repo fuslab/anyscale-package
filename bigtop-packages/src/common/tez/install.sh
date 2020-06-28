@@ -111,3 +111,15 @@ cp $SOURCE_DIR/tez-site.xml  $PREFIX/$CONF_DIR
 ln -s /var/log/$COMPONENT_NAME $PREFIX/$STACK_HOME/$COMPONENT_NAME/logs
 ln -s /var/run/$COMPONENT_NAME $PREFIX/$STACK_HOME/$COMPONENT_NAME/run
 ln -s /etc/$COMPONENT_NAME/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/conf
+
+
+
+### **********  create binary package  **********
+mkdir ${BUILD_DIR}/../$COMPONENT_NAME-$TEZ_VERSION-bin
+cp -a $PREFIX/$STACK_HOME/* ${BUILD_DIR}/../$COMPONENT_NAME-$TEZ_VERSION-bin/
+
+current_path=`pwd`
+
+cd ${BUILD_DIR}/../ && tar -zcf $COMPONENT_NAME-$TEZ_VERSION-bin.tar.gz $COMPONENT_NAME-$TEZ_VERSION-bin
+
+mv $COMPONENT_NAME-$TEZ_VERSION-bin.tar.gz $current_path/../../../tar/
