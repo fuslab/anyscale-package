@@ -254,8 +254,11 @@ cp -a $SOURCE_DIR/hive-webhcat-server $PREFIX/$STACK_HOME/$COMPONENT_NAME/etc/rc
 
 
 ### **********  create binary package  **********
-mkdir ${BUILD_DIR}/binary_package
-cp -a $PREFIX/$STACK_HOME/* ${BUILD_DIR}/binary_package/
+mkdir ${BUILD_DIR}/../hive-$HIVE_VERSION-bin
+cp -a $PREFIX/$STACK_HOME/* ${BUILD_DIR}/../hive-$HIVE_VERSION-bin/
 
-tar -zcvf hive-$HIVE_VERSION-bin.tar.gz ${BUILD_DIR}/binary_package/
-mv hive-$HIVE_VERSION-bin.tar.gz ../../../tar/
+current_path=`pwd`
+
+cd ${BUILD_DIR}/../ && tar -zcf hive-$HIVE_VERSION-bin.tar.gz hive-$HIVE_VERSION-bin
+
+mv hive-$HIVE_VERSION-bin.tar.gz $current_path/../../../tar/
