@@ -1,0 +1,39 @@
+From bee498d0920f7e42c38e9b33f8c427a5b6118859 Mon Sep 17 00:00:00 2001
+From: Dagang Wei <functicons@gmail.com>
+Date: Fri, 19 Oct 2018 18:01:00 -0700
+Subject: [PATCH] HIVE-20784 Migrate hbase.util.Base64 to java.util.Base64
+
+---
+ .../hadoop/hive/hbase/HiveHBaseTableSnapshotInputFormat.java | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHBaseTableSnapshotInputFormat.java b/hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHBaseTableSnapshotInputFormat.java
+index aedadc29b89..6862edd2681 100644
+--- a/hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHBaseTableSnapshotInputFormat.java
++++ b/hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHBaseTableSnapshotInputFormat.java
+@@ -26,8 +26,6 @@
+ import org.apache.hadoop.hbase.mapred.TableSnapshotInputFormat;
+ import org.apache.hadoop.hbase.protobuf.ProtobufUtil;
+ import org.apache.hadoop.hbase.protobuf.generated.ClientProtos;
+-import org.apache.hadoop.hbase.util.Base64;
+-import org.apache.hadoop.hbase.util.Bytes;
+ import org.apache.hadoop.mapred.FileInputFormat;
+ import org.apache.hadoop.mapred.InputFormat;
+ import org.apache.hadoop.mapred.InputSplit;
+@@ -36,6 +34,7 @@
+ import org.apache.hadoop.mapred.Reporter;
+ 
+ import java.io.IOException;
++import java.util.Base64;
+ import java.util.List;
+ 
+ public class HiveHBaseTableSnapshotInputFormat
+@@ -54,7 +53,7 @@ private static void setColumns(JobConf job) throws IOException {
+   // Copied from HBase's TableMapreduceUtil since it is not public API
+   static String convertScanToString(Scan scan) throws IOException {
+     ClientProtos.Scan proto = ProtobufUtil.toScan(scan);
+-    return Base64.encodeBytes(proto.toByteArray());
++    return Base64.getEncoder().encodeToString(proto.toByteArray());
+   }
+ 
+   @Override

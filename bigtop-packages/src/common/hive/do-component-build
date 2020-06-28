@@ -50,5 +50,5 @@ cp -R standalone-metastore/binary-package-licenses build/
 
 
 # save components`s .bin package
-tar -zcvf hive-$HIVE_VERSION-bin.tar.gz build/
-mv hive-$HIVE_VERSION-bin.tar.gz ../../../tar/
+#tar -zcvf hive-$HIVE_VERSION-bin.tar.gz build/
+#mv hive-$HIVE_VERSION-bin.tar.gz ../../../tar/

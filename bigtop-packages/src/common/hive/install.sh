@@ -251,3 +251,11 @@ cp -a $SOURCE_DIR/hive-webhcat-server.default $PREFIX/$DEFAULT_CONF_DIR/
 mv $PREFIX/$DEFAULT_CONF_DIR/hive-webhcat-server.default $PREFIX/$DEFAULT_CONF_DIR/hive-webhcat-server
 
 cp -a $SOURCE_DIR/hive-webhcat-server $PREFIX/$STACK_HOME/$COMPONENT_NAME/etc/rc.d/init.d/
+
+
+### **********  create binary package  **********
+mkdir ${BUILD_DIR}/binary_package
+cp -a $PREFIX/$STACK_HOME/* ${BUILD_DIR}/binary_package/
+
+tar -zcvf hive-$HIVE_VERSION-bin.tar.gz ${BUILD_DIR}/binary_package/
+mv hive-$HIVE_VERSION-bin.tar.gz ../../../tar/
