@@ -18,7 +18,7 @@
 %define stack_name %{soft_stack_name}
 %define stack_version %{soft_stack_version}
 
-%define stack_home /usr/%{stack_name}/%{stack_version}
+%define stack_home /opt/%{stack_name}/%{stack_version}
 %define component_name hive
 %define component_install_dir %{stack_home}/%{component_name}
 
@@ -54,6 +54,8 @@ Source14: hive-metastore
 Source15: hive-server2
 Source16: hive-server
 Source17: hive-webhcat-server
+
+Patch0:451.patch
 
 Requires(pre): jdp-select
 AutoReq: no
@@ -174,6 +176,8 @@ Init scripts for WebHcat server.
 
 %prep
 %setup -n %{component_name}-%{hive_base_version}-src
+
+%patch0 -p1
 
 
 %build
