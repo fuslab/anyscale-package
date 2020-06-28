@@ -118,3 +118,15 @@ ln -s $STACK_HOME/$COMPONENT_NAME/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/confi
 cp -a $SOURCE_DIR/$COMPONENT_NAME $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/
 component_install_dir=$STACK_HOME/$COMPONENT_NAME
 sed -i -e "s#KAFKA_HOME=#KAFKA_HOME=$component_install_dir#g" $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/$COMPONENT_NAME
+
+
+
+### **********  create binary package  **********
+mkdir ${BUILD_DIR}/../$COMPONENT_NAME-$KAFKA_VERSION-bin
+cp -a $PREFIX/$STACK_HOME/* ${BUILD_DIR}/../$COMPONENT_NAME-$KAFKA_VERSION-bin/
+
+current_path=`pwd`
+
+cd ${BUILD_DIR}/../ && tar -zcf $COMPONENT_NAME-$KAFKA_VERSION-bin.tar.gz $COMPONENT_NAME-$KAFKA_VERSION-bin
+
+mv $COMPONENT_NAME-$KAFKA_VERSION-bin.tar.gz $current_path/../../../tar/

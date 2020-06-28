@@ -39,8 +39,8 @@ mkdir -p examples/lib/ && cd .. && cp -r examples/build/libs/* build/examples/li
 #cp -r contrib/kafka-ganglia/build/libs/* build/libs
 
 # save components`s .bin package
-tar -zcvf kafka-$KAFKA_VERSION-bin.tar.gz build/
-mv kafka-$KAFKA_VERSION-bin.tar.gz ../../../tar/
+#tar -zcvf kafka-$KAFKA_VERSION-bin.tar.gz build/
+#mv kafka-$KAFKA_VERSION-bin.tar.gz ../../../tar/
 
 echo "-------------- Kafka-do-component-build-completed --------------"
 
