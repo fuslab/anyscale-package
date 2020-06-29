@@ -31,7 +31,8 @@ export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:
 
 gradle wrapper
 
-./gradlew -PscalaVersion=2.11.12 clean jarAll javadocJar srcJar releaseTarGz -x signArchives
+# ./gradlew -PscalaVersion=2.11.12 clean jarAll javadocJar srcJar releaseTarGz -x signArchives
+./gradlew clean -PscalaVersion=2.11 releaseTarGz -x signArchives
 
 rm -rf build && mkdir build && tar -C build --strip-components=1 -xzf core/build/distributions/kafka_2.11-1.0.1.tgz
 cd build && tar -C site-docs --strip-components=1 -xzf site-docs/kafka_*.tgz && rm -fr site-docs/kafka_*.tgz
