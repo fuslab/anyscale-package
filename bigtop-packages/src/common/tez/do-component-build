@@ -23,7 +23,7 @@ set -xe
 
 base_path=`pwd`
 
-mvn clean package -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -DskipTests=true -Phadoop31 -Dtar -Dhadoop.version=${HADOOP_VERSION}
+mvn clean package -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -DskipTests=true -Dtar -Dhadoop.version=${HADOOP_VERSION}
 rm -fr build && mkdir build
 rm -fr build/conf && mkdir build/conf
 
