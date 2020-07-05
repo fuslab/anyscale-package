@@ -113,7 +113,7 @@ done
 cd ..
 
 echo `pwd`
-cp -a $STACK_HOME/$COMPONENT_NAME/* $INSTALL_DIR/
+#cp -a $PREFIX/$STACK_HOME/$COMPONENT_NAME/* $INSTALL_DIR/
 
 # create symlink 
 ln -s /var/log/${COMPONENT_NAME}-server $PREFIX/$STACK_HOME/$COMPONENT_NAME/logs

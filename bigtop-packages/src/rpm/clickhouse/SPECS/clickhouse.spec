@@ -92,13 +92,6 @@ cp -r %{stack_home}/etc/%{component_name}-server/conf.dist/* /etc/%{component_na
 
 %attr(0755,root,root) %{component_install_dir}/bin/
 %attr(0755,root,root) %{component_install_dir}/share/
-%attr(0755,root,root) %{component_install_dir}/share/clickhouse/bin
-
-
-# %attr(0755,root,root) %{component_install_dir}/share/clickhouse/headers/bin
-# %attr(0755,root,root) %{component_install_dir}/share/clickhouse/headers/contrib
-# %attr(0755,root,root) %{component_install_dir}/share/clickhouse/headers/dbms
-# %attr(0755,root,root) %{component_install_dir}/share/clickhouse/headers/libs/libcommon
 
 
 %{component_install_dir}/logs

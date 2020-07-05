@@ -1,0 +1,118 @@
+#!/bin/bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -ex
+
+[ -f anyscale-parcel.props ] && . anyscale-parcel.props
+
+PKG_ARCHIVE=${PKG_ARCHIVE:-"http://repos.jenkins.fusionlab.cn/anyscale1-nightly/"}
+ANYSCALE_VERSION=${ANYSCALE_VERSION:-"1"}
+
+# If PKG_FORMAT not specified assume tarballs
+if [ -z "$PKG_FORMAT" ] ; then
+  rm -rf build
+  mkdir build
+  cat > build/anyscale-parcel.props <<__EOT__
+PKG_ARCHIVE="$PKG_ARCHIVE"
+ANYSCALE_VERSION="$ANYSCALE_VERSION"
+__EOT__
+  tar -C build -czf build/anyscale-parcel-${FULL_VERSION}.tar.gz anyscale-parcel.props
+  exit 0
+fi
+
+REDHAT_RELEASES="rhel|redhat|centos|red.hat"
+SUSE_RELEASES="suse|sles"
+UBUNTU_RELEASES="lucid|maverick|squeeze"
+ARC="`uname -m`"
+
+if [ "$ARC" = "x86_64" ] ; then
+  DEB_ARC="amd64"
+else
+  DEB_ARC="i386"
+fi
+
+# The following block is quite messy, since it has
+# to account for different URL schemas for different
+# types of repos
+if egrep -i $UBUNTU_RELEASES /etc/*release ;then
+  for release in `echo $UBUNTU_RELEASES | tr '|' ' '` ; do
+    if fgrep -q $release /etc/*release ; then
+      PKGS="`curl ${PKG_ARCHIVE}/ubuntu/${release}/${DEB_ARC}/cdh/dists/${release}-cdh${ANYSCALE_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
+             sed -ne '/^Filename:/s#^Filename: #'"${PKG_ARCHIVE}/ubuntu/${release}/${DEB_ARC}/cdh/"'#p'`"
+    fi
+  done
+elif [ -f /etc/debian_version ] ;then
+  release=squeeze
+  PKGS="`curl ${PKG_ARCHIVE}/debian/${release}/${DEB_ARC}/cdh/dists/${release}-cdh${ANYSCALE_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
+         sed -ne '/^Filename:/s#^Filename: #'"${PKG_ARCHIVE}/debian/${release}/${DEB_ARC}/cdh/"'#p'`"
+elif egrep -i $REDHAT_RELEASES /etc/*release ;then
+  if fgrep "6." /etc/*release ;then
+    PKGS="${PKG_ARCHIVE}/redhat/6/${ARC}/cdh/${ANYSCALE_VERSION}/RPMS"
+  else
+    PKGS="${PKG_ARCHIVE}/redhat/5/${ARC}/cdh/${ANYSCALE_VERSION}/RPMS"
+  fi
+elif egrep -i $SUSE_RELEASES /etc/*release ;then
+  PKGS="${PKG_ARCHIVE}/sles/11/${ARC}/cdh/${ANYSCALE_VERSION}/RPMS/"
+else
+  echo "Looks like we don't support the following OS:"
+  cat /etc/*release
+  exit 1
+fi
+
+# Download the packages
+rm -rf dl
+mkdir dl
+(cd dl ; wget -N -r -l2 --no-parent $PKGS)
+
+# Make sure we filter out the most recent versions of the packages
+#RPMS=`find dl -name \*.rpm -printf '%p\t'  -exec rpm -q --qf '%{NAME}\n' -p {} \; 2>/dev/null`
+#DEBS=`find dl -name \*.deb -printf '%p\t'  -exec bash -c 'dpkg -I {} | grep Package: | cut -f3 -d\  ' \; 2>/dev/null` 
+
+# Unpack the bits
+rm -rf build
+mkdir build
+echo 'anyscale-parcel' > build/seen_deb 
+echo 'anyscale-parcel' > build/seen_rpm
+for pkg in $(ls -t `find dl -type f`) ; do
+  case $pkg in
+     *.deb) PKG_NAME=`dpkg -I $pkg | grep Package: | cut -f3 -d\  `
+            grep -q '^'$PKG_NAME'$' build/seen_deb || dpkg -x $pkg ./build
+            echo $PKG_NAME >> build/seen_deb
+            ;;
+     *.rpm) PKG_NAME=`rpm -q --qf '%{NAME}' -p $pkg`
+            grep -q '^'$PKG_NAME'$' build/seen_rpm || rpm2cpio $pkg | (cd build ; cpio -i --make-directories)
+            echo $PKG_NAME >> build/seen_rpm
+            ;;
+  esac
+  rm $pkg
+done
+
+# Fix the symlinks
+for link in `find build/usr/lib/ -type l` ; do
+  target=`readlink $link`
+  TOPDIR=`echo $link | sed -e 's#^build/usr/lib/##' -e 's#[^/]\+#..#g' -e 's#/..$##'`
+  case $target in
+    /etc/*/conf)
+                mkdir -p build/usr/`dirname $target` || :
+                rm -f $link
+                ln -s $TOPDIR/../etc/`echo $target | cut -f3 -d/`  $link
+                ;;
+    /usr/lib/*)
+                rm -f $link
+                ln -s $TOPDIR/`echo $target |sed -e 's#/usr/lib/##'` $link
+                ;;
+  esac
+done
