@@ -43,7 +43,7 @@ Source4: tez-site.xml
 Source5: tez.1
 Source6: init.d.tmpl
 Requires(pre): anyscale-select >= %{stack_version}
-Requires: hadoop%{soft_package_version}, hadoop-hdfs%{soft_package_version}, hadoop-yarn%{soft_package_version}, hadoop-mapreduce%{soft_package_version}
+Requires: hadoop%{soft_package_version}, hadoop%{soft_package_version}-hdfs, hadoop%{soft_package_version}-yarn, hadoop%{soft_package_version}-mapreduce
 AutoReq: no
 
 

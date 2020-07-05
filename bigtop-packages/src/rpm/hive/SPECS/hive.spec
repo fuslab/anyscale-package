@@ -98,7 +98,7 @@ Init scripts for HCatalog server
 %package jdbc
 Summary: Provides libraries necessary to connect to Apache Hive via JDBC
 Group: Development/Libraries
-Requires: hadoop-client%{soft_package_version}
+Requires: hadoop%{soft_package_version}-client
 
 %description jdbc
 This package provides libraries necessary to connect to Apache Hive via JDBC
