@@ -26,8 +26,8 @@ usage: $0 <options>
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --lib-dir=DIR               path to install Nifi home [/usr/[stack_name]/[stack_version]/hive/lib]
-     --stack-home=DIR            path to install dirs [/usr/[stack_name]/[stack_version]/hive]
+     --lib-dir=DIR               path to install Nifi home [/opt/[stack_name]/[stack_version]/hive/lib]
+     --stack-home=DIR            path to install dirs [/opt/[stack_name]/[stack_version]/hive]
      --component-name=NAME       component-name
   "
   exit 1

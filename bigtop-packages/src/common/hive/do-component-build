@@ -26,11 +26,11 @@ base_path=`pwd`
 
 HIVE_MAVEN_OPTS=" -Dhbase.version=$HBASE_VERSION \
 -Dzookeeper.version=$ZOOKEEPER_VERSION \
--Dhadoop.mr.rev=23 \
+-Dhadoop.mr.rev=31 \
 -Dhadoop.security.version=$HADOOP_VERSION \
--Dhadoop-23.version=$HADOOP_VERSION \
--Dhbase.hadoop2.version=$HBASE_VERSION \
--Dmvn.hadoop.profile=hadoop23 \
+-Dhadoop-31.version=$HADOOP_VERSION \
+-Dhbase.hadoop3.version=$HBASE_VERSION \
+-Dmvn.hadoop.profile=hadoop31 \
 -DskipTests \
 -Dhbase.version.with.hadoop.version=$HBASE_VERSION \
 -Dtez.version=${TEZ_VERSION} \

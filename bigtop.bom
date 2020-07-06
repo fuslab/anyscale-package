@@ -151,7 +151,7 @@ bigtop {
       name    = 'hbase'
       relNotes = 'Apache HBase'
       version { 
-        base = '2.0.2'; 
+        base = '2.1.6'; 
         pkg = base; 
         release = 1 
       }
@@ -780,6 +780,47 @@ bigtop {
         destination = source
       }
       url {
+        download_path = "/$name/${version.base}/"
+        site = "${apache.APACHE_MIRROR}/${download_path}"
+        archive = "${apache.APACHE_ARCHIVE}/${download_path}" 
+      }
+    }
+
+
+    'impala' {
+      name    = 'impala'
+      pkg     = name
+      relNotes = 'Apache Impala'
+      version { 
+        base = '3.4.0'; 
+        pkg = base; 
+        release = 1 
+      }
+      tarball { 
+        destination = "$name-${version.base}-src.tar.gz"
+        source      = destination 
+      }
+      url     { 
+        download_path = "/$name/${version.base}/"
+        site = "${apache.APACHE_MIRROR}/${download_path}"
+        archive = "${apache.APACHE_ARCHIVE}/${download_path}" 
+      }
+    }
+
+    'kudu' {
+      name    = 'kudu'
+      pkg     = name
+      relNotes = 'Apache Kudu'
+      version { 
+        base = '1.12.0'; 
+        pkg = base; 
+        release = 1 
+      }
+      tarball { 
+        destination = "$name-${version.base}-src.tar.gz"
+        source      = destination 
+      }
+      url     { 
         download_path = "/$name/${version.base}/"
         site = "${apache.APACHE_MIRROR}/${download_path}"
         archive = "${apache.APACHE_ARCHIVE}/${download_path}" 
