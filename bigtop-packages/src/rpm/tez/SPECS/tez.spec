@@ -42,8 +42,8 @@ Source3: install.sh
 Source4: tez-site.xml
 Source5: tez.1
 Source6: init.d.tmpl
-Requires(pre): jdp-select
-Requires: hadoop hadoop-hdfs hadoop-yarn hadoop-mapreduce
+Requires(pre): anyscale-select >= %{stack_version}
+Requires: hadoop%{soft_package_version}, hadoop%{soft_package_version}-hdfs, hadoop%{soft_package_version}-yarn, hadoop%{soft_package_version}-mapreduce
 AutoReq: no
 
 
@@ -76,7 +76,7 @@ bash $RPM_SOURCE_DIR/install.sh \
 %post
 install -d -m 0755 $PREFIX/%{config_dir}
 cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/conf/
-/usr/bin/jdp-select set %{component_name} %{stack_version}
+/usr/bin/anyscale-select set %{component_name} %{stack_version}
 
 
 %preun

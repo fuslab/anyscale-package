@@ -26,8 +26,8 @@ usage: $0 <options>
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --doc-dir=DIR               path to install docs into [/usr/[stack_name]/[stack_version]/tez/lib]
-     --stack-home=DIR            path to install dirs [/usr/[stack_name]/[stack_version]/tez]
+     --doc-dir=DIR               path to install docs into [/opt/[stack_name]/[stack_version]/tez/lib]
+     --stack-home=DIR            path to install dirs [/opt/[stack_name]/[stack_version]/tez]
      --component-name=NAME       component-name
   "
   exit 1
