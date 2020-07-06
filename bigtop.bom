@@ -151,7 +151,7 @@ bigtop {
       name    = 'hbase'
       relNotes = 'Apache HBase'
       version { 
-        base = '2.1.6'; 
+        base = '2.0.2'; 
         pkg = base; 
         release = 1 
       }
