@@ -1,0 +1,64 @@
+#!/bin/bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+echo "-------------- Impala-do-component-build-started -----------"
+
+set -ex
+
+. `dirname ${0}`/bigtop.bom
+
+base_path=`pwd`
+
+
+/bin/sh bin/bootstrap_system.sh
+source bin/impala-config.sh
+/bin/sh buildall.sh -noclean -release
+
+rm -fr build && mkdir build
+
+echo " doing untar impala"
+
+## 准备整理Impala的二进制包，copy到build目录
+# mkdir build/impala_udf
+# cp be/src/udf/{uda-test-harness-impl.h,uda-test-harness.h,udf-debug.h,udf-test-harness.h,udf.h} build/impala_udf/
+
+# mkdir build/impala-shell
+# cp -r shell/build/impala-shell-*-RELEASE/* build/impala-shell/
+
+# mkdir -p build/debug/{thirdparty,be}
+# cp -r toolchain/thrift-* build/debug/thirdparty/
+# cp -r toolchain/snappy-* build/debug/thirdparty/
+# cp -r toolchain/re2-* build/debug/thirdparty/
+# cp -r toolchain/rapidjson-* build/debug/thirdparty/
+# cp -r toolchain/openldap-* build/debug/thirdparty/
+# cp -r toolchain/lz4-* build/debug/thirdparty/
+# cp -r toolchain/gtest-* build/debug/thirdparty/
+# cp -r toolchain/gperftools-* build/debug/thirdparty/
+# cp -r toolchain/glog-* build/debug/thirdparty/
+# cp -r toolchain/gflags-* build/debug/thirdparty/
+# cp -r toolchain/avro-* build/debug/thirdparty/
+
+# mkdir -p build/debug/be/{src,generated-sources}
+# cp -r be/src/util build/debug/be/src/
+# cp -r be/src/udf/udf* build/debug/be/src/
+
+
+
+
+
+# mkdir build/www
+# cp -r www/* build/www/
