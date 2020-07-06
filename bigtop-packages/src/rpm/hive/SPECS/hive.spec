@@ -57,7 +57,7 @@ Source17: hive-webhcat-server
 
 Patch0:451.patch
 
-Requires(pre): jdp-select
+Requires(pre): anyscale-select >= %{stack_version}
 AutoReq: no
 
 
@@ -71,7 +71,7 @@ Hive is a data warehouse infrastructure built on top of Hadoop that provides too
 %package hcatalog
 Summary: Apache Hcatalog is a data warehouse infrastructure built on top of Hadoop
 Group: Development/Libraries
-Requires: hadoop, hive, bigtop-utils >= 0.7
+Requires: hadoop%{soft_package_version}, hive%{soft_package_version}
 
 %description hcatalog
 Apache HCatalog is a table and storage management service for data created using Apache Hadoop.
@@ -100,7 +100,7 @@ Init scripts for HCatalog server
 %package jdbc
 Summary: Provides libraries necessary to connect to Apache Hive via JDBC
 Group: Development/Libraries
-Requires: hadoop-client
+Requires: hadoop%{soft_package_version}-client
 
 %description jdbc
 This package provides libraries necessary to connect to Apache Hive via JDBC
@@ -209,11 +209,11 @@ cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/con
 cp -r %{stack_home}/etc/%{component_name}/conf_llap.dist/* /etc/hive_llap/conf
 cp -r %{stack_home}/etc/%{component_name}/default/* /etc/hive-hcatalog/conf/
 
-/usr/bin/jdp-select set %{component_name}-client %{stack_version}
-/usr/bin/jdp-select set %{component_name}-metastore %{stack_version}
-/usr/bin/jdp-select set %{component_name}-server2 %{stack_version}
-/usr/bin/jdp-select set %{component_name}-server2-hive2 %{stack_version}
-/usr/bin/jdp-select set %{component_name}-webhcat %{stack_version}
+/usr/bin/anyscale-select set %{component_name}-client %{stack_version}
+/usr/bin/anyscale-select set %{component_name}-metastore %{stack_version}
+/usr/bin/anyscale-select set %{component_name}-server2 %{stack_version}
+/usr/bin/anyscale-select set %{component_name}-server2-hive2 %{stack_version}
+/usr/bin/anyscale-select set %{component_name}-webhcat %{stack_version}
 
 
 ### default
