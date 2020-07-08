@@ -52,6 +52,8 @@ rm -fr hive && mkdir hive
 cp -R build/* hive/
 tar -zcf hive.tar.gz hive/
 
+mv hive.tar.gz build/
+
 # save components`s .bin package
 #tar -zcvf hive-$HIVE_VERSION-bin.tar.gz build/
 #mv hive-$HIVE_VERSION-bin.tar.gz ../../../tar/
