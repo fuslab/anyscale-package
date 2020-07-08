@@ -122,6 +122,7 @@ cp -a ${BUILD_DIR}/scripts/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/scripts/
 ln -s /etc/hive/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/conf
 ln -s /etc/hive_llap/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/conf_llap
 
+cp -a ${BUILD_DIR}/hive.tar.gz $PREFIX/$STACK_HOME/$COMPONENT_NAME/
 
 
 ### hcatalog

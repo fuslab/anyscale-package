@@ -48,6 +48,9 @@ echo " doing untar hive"
 tar -C build --strip-components=1 -xzf packaging/target/apache-hive-${HIVE_VERSION}-bin.tar.gz
 cp -R standalone-metastore/binary-package-licenses build/
 
+rm -fr hive && mkdir hive
+cp -R build/* hive/
+tar -zcf hive.tar.gz hive/
 
 # save components`s .bin package
 #tar -zcvf hive-$HIVE_VERSION-bin.tar.gz build/

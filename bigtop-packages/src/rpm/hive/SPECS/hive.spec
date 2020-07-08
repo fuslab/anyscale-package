@@ -113,6 +113,7 @@ This package provides libraries necessary to connect to Apache Hive via JDBC
 Summary: Shared metadata repository for Hive.
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
+Requires: %{name}-jdbc = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
 Requires: /lib/lsb/init-functions
 
@@ -230,6 +231,8 @@ cp -r %{stack_home}/etc/%{component_name}/default/* /etc/hive-hcatalog/conf/
 %attr(0755,root,root) %{component_install_dir}/man/hive.1.*
 %attr(0755,root,root) %{component_install_dir}/metastore/
 %attr(0755,root,root) %{component_install_dir}/scripts/
+
+%attr(0755,root,root) %{component_install_dir}/hive.tar.gz
 
 %{component_install_dir}/conf
 %{component_install_dir}/conf_llap
