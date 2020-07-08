@@ -94,6 +94,8 @@ cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/con
 %attr(0755,root,root) %{component_install_dir}/doc/
 %attr(0755,root,root) %{component_install_dir}/ui/
 
+%attr(0755,root,root) %{component_install_dir}/tez.tar.gz
+
 %{component_install_dir}/logs
 %{component_install_dir}/run
 %{component_install_dir}/conf
