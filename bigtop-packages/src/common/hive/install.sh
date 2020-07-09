@@ -148,7 +148,7 @@ cp -a ${BUILD_DIR}/hcatalog/libexec/* $PREFIX/$STACK_HOME/hive-hcatalog/libexec/
 cp -a ${BUILD_DIR}/hcatalog/sbin/{hcatcfg.py,hcat_server.py,hcat_server.sh,update-hcatalog-env.sh} $PREFIX/$STACK_HOME/hive-hcatalog/sbin/
 cp -a ${BUILD_DIR}/hcatalog/share/hcatalog $PREFIX/$STACK_HOME/hive-hcatalog/share/
 
-for DIR in $PREFIX/$STACK_HOME/hive-hcatalog/share/ ; do
+for DIR in $PREFIX/$STACK_HOME/hive-hcatalog/share/hcatalog/ ; do
     (cd $DIR &&
      for j in hive-hcatalog-*.jar; do
        if [[ $j =~ hive-hcatalog-(.*)-${HIVE_VERSION}.jar ]]; then
