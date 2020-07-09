@@ -57,6 +57,7 @@ Source17: hive-webhcat-server
 
 Patch0:451.patch
 
+Requires: hadoop%{soft_package_version}-client, zookeeper%{soft_package_version}, %{name}-jdbc = %{version}-%{release}
 Requires(pre): anyscale-select >= %{stack_version}
 AutoReq: no
 
@@ -113,7 +114,6 @@ This package provides libraries necessary to connect to Apache Hive via JDBC
 Summary: Shared metadata repository for Hive.
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
-Requires: %{name}-jdbc = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
 Requires: /lib/lsb/init-functions
 
@@ -169,6 +169,7 @@ Summary: Init scripts for WebHcat server
 Group: System/Daemons
 Requires: %{name}-webhcat = %{version}-%{release}
 Requires: initscripts
+Requires: /lib/lsb/init-functions
 
 %description webhcat-server
 Init scripts for WebHcat server.
