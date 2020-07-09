@@ -195,7 +195,8 @@ bash $RPM_SOURCE_DIR/install.sh \
   --source-dir=$RPM_SOURCE_DIR \
   --prefix=$RPM_BUILD_ROOT \
   --stack-home=%{stack_home}  \
-  --component-name=%{component_name}
+  --component-name=%{component_name} \
+  --hive-version=%{hive_version}
 
 
 %pre

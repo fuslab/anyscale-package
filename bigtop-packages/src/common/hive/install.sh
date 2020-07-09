@@ -41,6 +41,7 @@ OPTS=$(getopt \
   -l 'source-dir:' \
   -l 'stack-home:' \
   -l 'component-name:' \
+  -l 'hive-version:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -67,6 +68,9 @@ while true ; do
         ;;
         --component-name)
         COMPONENT_NAME=$2 ; shift 2
+        ;;
+        --hive-version)
+        HIVE_VERSION=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -143,6 +147,18 @@ ln -s /etc/$COMPONENT_NAME-hcatalog/conf $PREFIX/$STACK_HOME/hive-hcatalog/etc/h
 cp -a ${BUILD_DIR}/hcatalog/libexec/* $PREFIX/$STACK_HOME/hive-hcatalog/libexec/
 cp -a ${BUILD_DIR}/hcatalog/sbin/{hcatcfg.py,hcat_server.py,hcat_server.sh,update-hcatalog-env.sh} $PREFIX/$STACK_HOME/hive-hcatalog/sbin/
 cp -a ${BUILD_DIR}/hcatalog/share/hcatalog $PREFIX/$STACK_HOME/hive-hcatalog/share/
+
+for DIR in $PREFIX/$STACK_HOME/hive-hcatalog/share/ ; do
+    (cd $DIR &&
+     for j in hive-hcatalog-*.jar; do
+       if [[ $j =~ hive-hcatalog-(.*)-${HIVE_VERSION}.jar ]]; then
+         name=${BASH_REMATCH[1]}
+         ln -s $j hive-hcatalog-$name.jar
+       fi
+    done)
+done
+
+
 gzip -c $SOURCE_DIR/hive-hcatalog.1 > $PREFIX/$STACK_HOME/$COMPONENT_NAME/man/hive-hcatalog.1.gz
 
 wrapper=$PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/hcat
