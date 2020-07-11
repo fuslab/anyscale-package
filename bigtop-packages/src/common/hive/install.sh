@@ -128,10 +128,6 @@ ln -s /etc/hive_llap/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/conf_llap
 
 cp -a ${BUILD_DIR}/hive.tar.gz $PREFIX/$STACK_HOME/$COMPONENT_NAME/
 
-ln -s /usr/bin/hive $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/hive
-ln -s /usr/bin/hiveserver2 $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/hiveserver2
-
-
 
 ### hcatalog
 HCATALOG_CONF_DIR=${HCATALOG_CONF_DIR:-$STACK_HOME/etc/hive-hcatalog/conf.dist}
@@ -152,7 +148,6 @@ cp -a ${BUILD_DIR}/hcatalog/libexec/* $PREFIX/$STACK_HOME/hive-hcatalog/libexec/
 cp -a ${BUILD_DIR}/hcatalog/sbin/{hcatcfg.py,hcat_server.py,hcat_server.sh,update-hcatalog-env.sh} $PREFIX/$STACK_HOME/hive-hcatalog/sbin/
 cp -a ${BUILD_DIR}/hcatalog/share/hcatalog $PREFIX/$STACK_HOME/hive-hcatalog/share/
 
-ln -s /usr/bin/hcat $PREFIX/$STACK_HOME/hive-hcatalog/bin/hcat
 
 for DIR in $PREFIX/$STACK_HOME/hive-hcatalog/share/hcatalog/ ; do
     (cd $DIR &&
