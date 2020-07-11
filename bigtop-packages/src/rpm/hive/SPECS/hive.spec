@@ -207,6 +207,7 @@ install -d -m 0755 $PREFIX/%{config_dir}
 install -d -m 0755 $PREFIX/etc/hive_llap/conf
 install -d -m 0755 $PREFIX/etc/hive-hcatalog/conf
 install -d -m 0755 $PREFIX/etc/hive-webhcat/conf
+install -d -m 0755 $PREFIX/etc/hive2/conf
 
 cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/conf/
 cp -r %{stack_home}/etc/%{component_name}/conf_llap.dist/* /etc/hive_llap/conf

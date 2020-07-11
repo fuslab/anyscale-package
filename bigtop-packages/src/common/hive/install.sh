@@ -158,6 +158,9 @@ for DIR in $PREFIX/$STACK_HOME/hive-hcatalog/share/hcatalog/ ; do
     done)
 done
 
+ln -s /usr/bin/$COMPONENT_NAME $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/hive
+ln -s /usr/bin/hiveserver2 $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/hiveserver2
+ln -s /usr/bin/hcat $PREFIX/$STACK_HOME/$COMPONENT_NAME/../hive-hcatalog/bin/hcat
 
 gzip -c $SOURCE_DIR/hive-hcatalog.1 > $PREFIX/$STACK_HOME/$COMPONENT_NAME/man/hive-hcatalog.1.gz
 
