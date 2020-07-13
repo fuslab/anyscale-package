@@ -28,15 +28,11 @@ rm -fr build && mkdir build
 rm -fr build/conf && mkdir build/conf
 
 echo " doing untar tez"
-tar -zxf ${base_path}/tez-dist/target/tez-$TEZ_VERSION-minimal.tar.gz -C build
-cp ${base_path}/tez-dist/target/tez-$TEZ_VERSION.tar.gz build/lib/
+tar -zxf ${base_path}/tez-dist/target/tez-$TEZ_VERSION.tar.gz -C build
+cp ${base_path}/tez-dist/target/tez-$TEZ_VERSION.tar.gz ./
 
-
-rm -fr tez && mkdir tez
-cp -a build/* tez/
-tar -zcf tez.tar.gz tez/
-
-mv tez.tar.gz build/
+mv tez-$TEZ_VERSION.tar.gz tez.tar.gz
+mv tez.tar.gz build/lib/
 
 # save components`s .bin package
 #tar -zcvf tez-$TEZ_VERSION.tar.gz build/

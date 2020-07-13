@@ -75,11 +75,17 @@ bash $RPM_SOURCE_DIR/install.sh \
 
 %post
 install -d -m 0755 $PREFIX/%{config_dir}
+install -d -m 0755 $PREFIX/%{etc_dir}_llap/conf
+
 cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/conf/
 /usr/bin/anyscale-select set %{component_name} %{stack_version}
 
 
 %preun
+
+rm -fr /etc/tez
+rm -fr /etc/tez_llap
+rm -fr %{component_install_dir}
 
 
 %files
