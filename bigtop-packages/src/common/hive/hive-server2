@@ -52,8 +52,8 @@ PROC_NAME="java"
 
 SERVICE_NAME="hive-server2"
 
-export HIVE_HOME="/usr/jdp/current/hive-server2/../hive"
-export HADOOP_HOME="/usr/jdp/current/hive-server2/../hadoop"
+export HIVE_HOME="/opt/anyscale/current/hive-server2/../hive"
+export HADOOP_HOME="/opt/anyscale/current/hive-server2/../hadoop"
 
 SVC_USER="${SVC_USER:-hive}"
 

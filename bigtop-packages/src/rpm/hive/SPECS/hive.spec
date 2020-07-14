@@ -217,9 +217,9 @@ cp -r %{stack_home}/etc/%{component_name}-hcatalog/conf.dist/* /etc/hive-hcatalo
 /usr/bin/anyscale-select set %{component_name}-server2-hive2 %{stack_version}
 /usr/bin/anyscale-select set %{component_name}-webhcat %{stack_version}
 
-ln -s /usr/bin/hive %{stack_home}/%{component_name}/bin/hive
-ln -s /usr/bin/hiveserver2 %{stack_home}/%{component_name}/bin/hiveserver2
-ln -s /usr/bin/hcat %{stack_home}/hive-hcatalog/bin/hcat
+#ln -s /usr/bin/hive %{stack_home}/%{component_name}/bin/hive
+#ln -s /usr/bin/hiveserver2 %{stack_home}/%{component_name}/bin/hiveserver2
+#ln -s /usr/bin/hcat %{stack_home}/hive-hcatalog/bin/hcat
 
 ### default
 %files
