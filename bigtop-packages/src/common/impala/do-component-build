@@ -23,6 +23,7 @@ set -ex
 
 base_path=`pwd`
 
+export IMPALA_HOME=$base_path
 
 /bin/sh bin/bootstrap_system.sh
 source bin/impala-config.sh
