@@ -17,28 +17,43 @@
 # limitations under the License.
 #
 
-export OOZIE_DATA=/var/lib/oozie
-export OOZIE_CATALINA_HOME=/usr/lib/bigtop-tomcat
-export CATALINA_TMPDIR=/var/lib/oozie
-export CATALINA_PID=/var/run/oozie/oozie.pid
-export CATALINA_BASE=/var/lib/oozie/tomcat-deployment
+
+#!/bin/bash
+
+if [ -d "/usr/lib/bigtop-tomcat" ]; then
+  export OOZIE_CONFIG=${OOZIE_CONFIG:-/opt/anyscale/current/oozie-client/conf}
+  export CATALINA_BASE=${CATALINA_BASE:-/opt/anyscale/current/oozie-client/oozie-server}
+  export CATALINA_TMPDIR=${CATALINA_TMPDIR:-/var/tmp/oozie}
+  export OOZIE_CATALINA_HOME=/usr/lib/bigtop-tomcat
+fi
+
+#Set JAVA HOME
+export JAVA_HOME=${JAVA_HOME}
+
+export JRE_HOME=${JAVA_HOME}
 
 # Set Oozie specific environment variables here.
 
 # Settings for the Embedded Tomcat that runs Oozie
 # Java System properties for Oozie should be specified in this variable
 #
-export CATALINA_OPTS="$CATALINA_OPTS -Xmx1024m"
+
+export CATALINA_OPTS="$CATALINA_OPTS -Xmx2048m"
 
 # Oozie configuration file to load from Oozie configuration directory
 #
 # export OOZIE_CONFIG_FILE=oozie-site.xml
-export OOZIE_CONFIG=/etc/oozie/conf
 
 # Oozie logs directory
 #
-# export OOZIE_LOG=${OOZIE_HOME}/logs
 export OOZIE_LOG=/var/log/oozie
+
+# Oozie pid directory
+#
+export CATALINA_PID=/var/run/oozie/oozie.pid
+
+#Location of the data for oozie
+export OOZIE_DATA=/hadoop/oozie/data
 
 # Oozie Log4J configuration file to load from Oozie configuration directory
 #
@@ -50,11 +65,11 @@ export OOZIE_LOG=/var/log/oozie
 
 # The port Oozie server runs
 #
-# export OOZIE_HTTP_PORT=11000
+export OOZIE_HTTP_PORT=11000
 
-# The port Oozie server runs if using SSL (HTTPS)
+# The admin port Oozie server runs
 #
-# export OOZIE_HTTPS_PORT=11443
+export OOZIE_ADMIN_PORT=11001
 
 # The host name Oozie server runs on
 #
@@ -63,15 +78,8 @@ export OOZIE_LOG=/var/log/oozie
 # The base URL for callback URLs to Oozie
 #
 # export OOZIE_BASE_URL="http://${OOZIE_HTTP_HOSTNAME}:${OOZIE_HTTP_PORT}/oozie"
+export JAVA_LIBRARY_PATH=/opt/anyscale/current/hadoop-client/lib/native/Linux-amd64-64
 
-# The location of the keystore for the Oozie server if using SSL (HTTPS)
-#
-# export OOZIE_HTTPS_KEYSTORE_FILE=${HOME}/.keystore
-
-# The password of the keystore for the Oozie server if using SSL (HTTPS)
-#
-# export OOZIE_HTTPS_KEYSTORE_PASS=password
-
-# The Oozie Instance ID
-#
-# export OOZIE_INSTANCE_ID="${OOZIE_HTTP_HOSTNAME}"
+# At least 1 minute of retry time to account for server downtime during
+# upgrade/downgrade
+export OOZIE_CLIENT_OPTS="${OOZIE_CLIENT_OPTS} -Doozie.connection.retry.count=5 "

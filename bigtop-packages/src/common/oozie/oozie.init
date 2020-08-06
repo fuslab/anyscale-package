@@ -31,10 +31,6 @@
 # Short-Description: Oozie server daemon
 ### END INIT INFO
 
-# Autodetect JAVA_HOME if not defined
-. /usr/lib/bigtop-utils/bigtop-detect-javahome
-. /usr/lib/bigtop-utils/bigtop-detect-classpath
-
 is_oozie_alive() {
   if [ ! -f "$OOZIE_PID" ]; then
     #not running
@@ -48,18 +44,30 @@ is_oozie_alive() {
   fi
 }
 
+# Pick up OOZIE_PID_DIR, OOZIE_LOG_DIR, OOZIE_TMP_DIR from this env.sh file
+d=`readlink /opt/anyscale/current/oozie-server`
+h=`dirname $d`
+export OOZIE_HOME="$h/oozie"
+CONF_DIR="${OOZIE_HOME}/conf"
+. ${CONF_DIR}/oozie-env.sh
+
+SVC_USER="${SVC_USER:-oozie}"
+
+OOZIE_PID_DIR="${OOZIE_PID_DIR:-/var/run/oozie}"
+OOZIE_LOG_DIR="${OOZIE_LOG_DIR:-/var/log/oozie}"
+OOZIE_TMP_DIR="${OOZIE_TMP_DIR:-/var/tmp/oozie}"
+
 start_oozie() {
-  . /usr/lib/oozie/tomcat-deployment.sh
-  install -d -o oozie -g oozie /var/run/oozie
-  install -d -o oozie -g oozie /var/log/oozie
-  install -d -o oozie -g oozie /var/tmp/oozie
-  su --shell=/bin/bash -l oozie -c "env JAVA_HOME=$JAVA_HOME /usr/lib/oozie/bin/oozied.sh start"
+  install -d -o ${SVC_USER} -g ${SVC_USER} $OOZIE_PID_DIR
+  install -d -o ${SVC_USER} -g ${SVC_USER} $OOZIE_LOG_DIR
+  install -d -o ${SVC_USER} -g ${SVC_USER} $OOZIE_TMP_DIR
+  su --shell=/bin/sh -l ${SVC_USER} -c /opt/anyscale/current/oozie-server/bin/oozie-start.sh
 }
 
 stop_oozie() {
   is_oozie_alive
   if [ "${STATUS}" = "0" ]; then
-    su --shell=/bin/bash -l oozie -c "env JAVA_HOME=$JAVA_HOME /usr/lib/oozie/bin/oozied.sh stop -force"
+    su --shell=/bin/sh -l ${SVC_USER} -c '/opt/anyscale/current/oozie-server/bin/oozied.sh stop -force'
     if [ $? -eq 0 ]; then
       is_oozie_alive
       if [ "${STATUS}" = "1" ]; then
@@ -75,15 +83,14 @@ stop_oozie() {
   fi
 }
 
-. /usr/lib/oozie/bin/oozie-env.sh
-
 OOZIE_PID=${CATALINA_PID}
 
 case "$1" in
   start)
         is_oozie_alive
         if [ "${STATUS}" = "0" ]; then
-          exit 0
+          echo "already running"
+          exit 1
         fi
         if [ "${STATUS}" = "1" ]; then
           rm ${OOZIE_PID}
@@ -129,20 +136,9 @@ case "$1" in
             ;;
         esac 
         ;;
-  init)
-        is_oozie_alive
-        if [ ${STATUS} -eq 0 ] ; then
-          echo "Error: Oozie is running. Stop it first."
-          exit 1
-        else
-          (cd /tmp ; su --shell=/bin/bash -l oozie -c "env JAVA_HOME=$JAVA_HOME /usr/lib/oozie/bin/ooziedb.sh create -run")
-        fi
-        exit 0
-        ;;
   *)
-        echo "Usage: $0 start|stop|status|restart|reload|force-reload|condrestart|try-restart|init" >&2
+        echo "Usage: $0 start|stop|status|restart|reload|force-reload|condrestart|try-restart" >&2
         exit 3
         ;;
 esac
 exit 6
-
