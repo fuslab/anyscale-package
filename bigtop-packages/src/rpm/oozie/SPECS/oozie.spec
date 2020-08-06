@@ -422,7 +422,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 
 
 ### sharelib-hive2 ok
-%files hcatalog-server
+%files sharelib-hive2
 %defattr(-,root,root,755)
 %attr(0755,root,root) %{component_install_dir}/share/lib/hive2
 
