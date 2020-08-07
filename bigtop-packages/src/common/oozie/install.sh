@@ -309,7 +309,7 @@ cp -a ${BUILD_DIR}/oozie.war $PREFIX/$STACK_HOME/$COMPONENT_NAME/
 
 
 ### **********  create binary package  **********
-mkdir ${BUILD_DIR}/../$COMPONENT_NAME-$OOZIE_VERSION-bin
+rm -fr ${BUILD_DIR}/../$COMPONENT_NAME-$OOZIE_VERSION-bin && mkdir ${BUILD_DIR}/../$COMPONENT_NAME-$OOZIE_VERSION-bin
 cp -a $PREFIX/$STACK_HOME/* ${BUILD_DIR}/../$COMPONENT_NAME-$OOZIE_VERSION-bin/
 
 current_path=`pwd`
