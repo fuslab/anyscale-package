@@ -356,7 +356,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 
 %attr(0755,root,root) %{stack_home}/etc/%{component_name}/tomcat-deployment.https/conf
 %attr(0755,root,root) %{stack_home}/etc/%{component_name}/tomcat-deployment.https/WEB-INF
-%{stack_home}/etc/%{component_name}/tomcat-deployment.https/
+%{stack_home}/etc/%{component_name}/tomcat-deployment.https/webapps
 
 %attr(0755,root,root) %{component_install_dir}/bin/
 %{component_install_dir}/conf

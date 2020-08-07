@@ -118,8 +118,8 @@ cp -a ${BUILD_DIR}/WEB-INF/web.xml $HTTP_CONF/WEB-INF/
 install -d -m 0755 $HPPTS_CONF/conf
 cp -a ${BUILD_DIR}/oozie-server/conf/* $HPPTS_CONF/conf
 install -d -m 0755 $HTTPS_CONF/WEB-INF
-cp -a ${BUILD_DIR}/WEB-INF/classes $HTTPS_CONF/WEB-INF
-cp -a ${BUILD_DIR}/WEB-INF/web.xml $HTTPS_CONF/WEB-INF
+cp -a ${BUILD_DIR}/WEB-INF/classes $HTTPS_CONF/WEB-INF/
+cp -a ${BUILD_DIR}/WEB-INF/web.xml $HTTPS_CONF/WEB-INF/
 
 
 ### Directory
@@ -181,7 +181,7 @@ install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/WEB-INF
 cp -a ${BUILD_DIR}/WEB-INF/classes $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/WEB-INF/
 cp -a ${BUILD_DIR}/WEB-INF/web.xml $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/WEB-INF/
 cp -a ${BUILD_DIR}/oozie-server/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/
-ln -s $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/webapps $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps
+ln -s $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/webapps 
 
 
 
