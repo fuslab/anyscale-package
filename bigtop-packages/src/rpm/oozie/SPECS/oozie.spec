@@ -350,26 +350,31 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 %defattr(-,root,root,755)
 
 %attr(0755,root,root) %{stack_home}/etc/%{component_name}/conf.server.dist/
-%attr(0755,root,root) %{stack_home}/etc/%{component_name}/tomcat-deployment.http/
-%attr(0755,root,root) %{stack_home}/etc/%{component_name}/tomcat-deployment.https/
+%attr(0755,root,root) %{stack_home}/etc/%{component_name}/tomcat-deployment.http/conf
+%attr(0755,root,root) %{stack_home}/etc/%{component_name}/tomcat-deployment.http/WEB-INF
+%{stack_home}/etc/%{component_name}/tomcat-deployment.https/webapps
 
-%attr(0755,root,root) %{component_install_dir}/oozie/bin/
-%attr(0755,root,root) %{component_install_dir}/oozie/conf/
+%attr(0755,root,root) %{stack_home}/etc/%{component_name}/tomcat-deployment.https/conf
+%attr(0755,root,root) %{stack_home}/etc/%{component_name}/tomcat-deployment.https/WEB-INF
+%{stack_home}/etc/%{component_name}/tomcat-deployment.https/
 
-%attr(0755,root,root) %{component_install_dir}/oozie/etc/rc.d/init.d/oozie-server
+%attr(0755,root,root) %{component_install_dir}/bin/
+%{component_install_dir}/conf
 
-%attr(0755,root,root) %{component_install_dir}/oozie/libext/
-%attr(0755,root,root) %{component_install_dir}/oozie/libserver/
-%attr(0755,root,root) %{component_install_dir}/oozie/libtools/
-%attr(0755,root,root) %{component_install_dir}/oozie/oozie-server/
+%attr(0755,root,root) %{component_install_dir}/etc/rc.d/init.d/oozie-server
 
-%attr(0755,root,root) %{component_install_dir}/oozie/schema/
-%attr(0755,root,root) %{component_install_dir}/oozie/share/lib/sharelib.properties
+%attr(0755,root,root) %{component_install_dir}/libext/
+%attr(0755,root,root) %{component_install_dir}/libserver/
+%attr(0755,root,root) %{component_install_dir}/libtools/
+%attr(0755,root,root) %{component_install_dir}/oozie-server/
 
-%attr(0755,root,root) %{component_install_dir}/oozie/tomcat-deployment/
-%attr(0755,root,root) %{component_install_dir}/oozie/webapps/
+%attr(0755,root,root) %{component_install_dir}/schema/
+%attr(0755,root,root) %{component_install_dir}/share/lib/sharelib.properties
 
-%attr(0755,root,root) /var/lib/oozie/data
+%attr(0755,root,root) %{component_install_dir}/tomcat-deployment/
+%attr(0755,root,root) %{component_install_dir}/webapps/
+
+%attr(0755,root,root) /var/lib/%{component_name}/data
 
 
 
