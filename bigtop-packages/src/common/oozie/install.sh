@@ -139,8 +139,8 @@ install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment
 install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps
 
 
-ln -s $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps $STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.http/webapps
-ln -s $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps $STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.https/webapps
+ln -s $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps $PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.http/webapps
+ln -s $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps $PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.https/webapps
 
 ### common 没做
 
@@ -156,11 +156,11 @@ cat $SOURCE_DIR/oozie.init > $PREFIX/$STACK_HOME/$COMPONENT_NAME/etc/rc.d/init.d
 
 
 
-cp -a ${BUILD_DIR}/WEB-INF/lib/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/libserver/
+cp -a ${BUILD_DIR}/webapps/WEB-INF/lib/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/libserver/
 
 
 cp -a ${BUILD_DIR}/libtools/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/libtools/
-cp -a ${BUILD_DIR}/WEB-INF/lib/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/libtools/
+cp -a ${BUILD_DIR}/webapps/WEB-INF/lib/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/libtools/
 
 
 
