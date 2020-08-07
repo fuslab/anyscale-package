@@ -142,7 +142,7 @@ install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps
 ln -s $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps $PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.http/webapps
 ln -s $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps $PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.https/webapps
 
-### common 没做
+### common ok
 
 cp -a ${BUILD_DIR}/bin/oozie*.sh $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/
 cp -a $SOURCE_DIR/oozie-env.sh  $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/
@@ -171,7 +171,7 @@ cp -a ${BUILD_DIR}/oozie-server/webapps $PREFIX/$STACK_HOME/$COMPONENT_NAME/oozi
 
 
 
-
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib
 cp -a ${BUILD_DIR}/share/lib/sharelib.properties $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/
 
 
@@ -206,11 +206,11 @@ cp -a ${BUILD_DIR}/oozie.war $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps/
 ### Client OK
 
 cp -a ${BUILD_DIR}/oozie-client/bin/oozie $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/
-ln -s /etc/oozie/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/conf
 cp -a ${BUILD_DIR}/oozie-client/{LICENSE.txt,NOTICE.txt,README.txt} $PREFIX/$STACK_HOME/$COMPONENT_NAME/doc/
 cp -a ${BUILD_DIR}/oozie-examples.tar.gz $PREFIX/$STACK_HOME/$COMPONENT_NAME/doc/
 cp -a ${BUILD_DIR}/docs/{release-log.txt,configuration.xsl} $PREFIX/$STACK_HOME/$COMPONENT_NAME/doc/
 
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/doc/lib
 cp -a ${BUILD_DIR}/oozie-client/lib/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/doc/lib
 gzip -c $SOURCE_DIR/oozie.1 > $PREFIX/$STACK_HOME/$COMPONENT_NAME/man/man1/oozie.1.gz
 
@@ -220,6 +220,7 @@ gzip -c $SOURCE_DIR/oozie.1 > $PREFIX/$STACK_HOME/$COMPONENT_NAME/man/man1/oozie
 
 
 ### sharelib
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/oozie
 cp -a ${BUILD_DIR}/share/lib/oozie/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/oozie/
 
 
@@ -228,6 +229,7 @@ cp -a ${BUILD_DIR}/share/lib/oozie/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/l
 
 
 ### sharelib-distcp
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/distcp
 cp -a ${BUILD_DIR}/share/lib/distcp/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/distcp/
 
 
@@ -236,6 +238,7 @@ cp -a ${BUILD_DIR}/share/lib/distcp/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/
 
 
 ### sharelib-hcatalog
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/hcatalog
 cp -a ${BUILD_DIR}/share/lib/hcatalog/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/hcatalog/
 
 
@@ -244,6 +247,7 @@ cp -a ${BUILD_DIR}/share/lib/hcatalog/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/shar
 
 
 ### sharelib-hive2
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/hive2
 cp -a ${BUILD_DIR}/share/lib/hive2/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/hive2/
 
 
@@ -252,6 +256,7 @@ cp -a ${BUILD_DIR}/share/lib/hive2/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/l
 
 
 ### sharelib-hive
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/hive
 cp -a ${BUILD_DIR}/share/lib/hive/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/hive/
 
 
@@ -260,6 +265,7 @@ cp -a ${BUILD_DIR}/share/lib/hive/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/li
 
 
 ### sharelib-mapreduce-streaming
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/mapreduce-streaming
 cp -a ${BUILD_DIR}/share/lib/mapreduce-streaming/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/mapreduce-streaming/
 
 
@@ -268,6 +274,7 @@ cp -a ${BUILD_DIR}/share/lib/mapreduce-streaming/* $PREFIX/$STACK_HOME/$COMPONEN
 
 
 ### sharelib-pig 
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/pig
 cp -a ${BUILD_DIR}/share/lib/pig/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/pig/
 
 
@@ -276,6 +283,7 @@ cp -a ${BUILD_DIR}/share/lib/pig/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib
 
 
 ### sharelib-spark
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/spark
 cp -a ${BUILD_DIR}/share/lib/spark/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/spark/
 
 
@@ -284,6 +292,7 @@ cp -a ${BUILD_DIR}/share/lib/spark/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/l
 
 
 ### sharelib-sqoop
+install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/sqoop
 cp -a ${BUILD_DIR}/share/lib/sqoop/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/share/lib/sqoop/
 
 
