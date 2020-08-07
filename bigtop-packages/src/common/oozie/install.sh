@@ -106,17 +106,17 @@ install -d -m 0755 $SERVER_CONF
 install -d -m 0755 $HTTP_CONF
 install -d -m 0755 $HPPTS_CONF
 
-cp -a ${BUILD_DIR}/conf/* $PREFIX/$CLIENT_CONF
-cp -a ${BUILD_DIR}/conf/* $PREFIX/$SERVER_CONF
+cp -a ${BUILD_DIR}/conf/* $CLIENT_CONF
+cp -a ${BUILD_DIR}/conf/* $SERVER_CONF
 
-cp -a ${BUILD_DIR}/oozie-server/conf/* $PREFIX/$HTTP_CONF
-ln -s $PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.http/webapps $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps
+install -d -m 0755 $HTTP_CONF/conf
+cp -a ${BUILD_DIR}/oozie-server/conf/* $HTTP_CONF/conf
 install -d -m 0755 $HTTP_CONF/WEB-INF
 cp -a ${BUILD_DIR}/WEB-INF/classes $HTTP_CONF/WEB-INF/
 cp -a ${BUILD_DIR}/WEB-INF/web.xml $HTTP_CONF/WEB-INF/
 
-cp -a ${BUILD_DIR}/oozie-server/conf/* $PREFIX/$HPPTS_CONF
-ln -s $PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.https/webapps $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps
+install -d -m 0755 $HPPTS_CONF/conf
+cp -a ${BUILD_DIR}/oozie-server/conf/* $HPPTS_CONF/conf
 install -d -m 0755 $HTTPS_CONF/WEB-INF
 cp -a ${BUILD_DIR}/WEB-INF/classes $HTTPS_CONF/WEB-INF
 cp -a ${BUILD_DIR}/WEB-INF/web.xml $HTTPS_CONF/WEB-INF
@@ -139,6 +139,8 @@ install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment
 install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps
 
 
+ln -s $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps $STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.http/webapps
+ln -s $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps $STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.https/webapps
 
 ### common 没做
 
