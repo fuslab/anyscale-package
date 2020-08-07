@@ -314,6 +314,6 @@ cp -a $PREFIX/$STACK_HOME/* ${BUILD_DIR}/../$COMPONENT_NAME-$OOZIE_VERSION-bin/
 
 current_path=`pwd`
 
-cd ${BUILD_DIR}/../ && tar -zcf hi$COMPONENT_NAMEve-$OOZIE_VERSION-bin.tar.gz $COMPONENT_NAME-$OOZIE_VERSION-bin
+cd ${BUILD_DIR}/../ && tar -zcf $COMPONENT_NAME-$OOZIE_VERSION-bin.tar.gz $COMPONENT_NAME-$OOZIE_VERSION-bin
 
 mv $COMPONENT_NAME-$OOZIE_VERSION-bin.tar.gz $current_path/../../../tar/
