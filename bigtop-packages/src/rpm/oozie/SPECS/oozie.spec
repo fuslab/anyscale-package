@@ -371,9 +371,10 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 %attr(0755,root,root) %{component_install_dir}/schema/
 %attr(0755,root,root) %{component_install_dir}/share/lib/sharelib.properties
 
+%attr(0755,root,root) %{component_install_dir}/webapps/
+
 %attr(0755,root,root) %{component_install_dir}/tomcat-deployment/WEB-INF
 %{component_install_dir}/tomcat-deployment/webapps
-%attr(0755,root,root) %{component_install_dir}/webapps/
 
 %attr(0755,root,root) /var/lib/%{component_name}/data
 

@@ -181,7 +181,7 @@ install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/WEB-INF
 cp -a ${BUILD_DIR}/WEB-INF/classes $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/WEB-INF/
 cp -a ${BUILD_DIR}/WEB-INF/web.xml $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/WEB-INF/
 cp -a ${BUILD_DIR}/oozie-server/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/
-ln -s $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/webapps 
+ln -s $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/webapps/../webapps $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/webapps
 
 
 
