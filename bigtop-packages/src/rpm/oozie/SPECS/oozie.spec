@@ -308,7 +308,7 @@ webapp for oozie
 
 
 %build
-bash %{SOURCE2}
+# bash %{SOURCE2}
 
 
 %install
