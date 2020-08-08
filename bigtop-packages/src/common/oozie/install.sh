@@ -139,8 +139,8 @@ install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment
 install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps
 
 
-ln -s $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps $PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.http/webapps
-ln -s $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps $PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.https/webapps
+ln -s $STACK_HOME/$COMPONENT_NAME/webapps $PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.http/webapps
+ln -s $STACK_HOME/$COMPONENT_NAME/webapps $PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.https/webapps
 
 ### common ok
 
@@ -181,7 +181,7 @@ install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/WEB-INF
 cp -a ${BUILD_DIR}/WEB-INF/classes $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/WEB-INF/
 cp -a ${BUILD_DIR}/WEB-INF/web.xml $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/WEB-INF/
 cp -a ${BUILD_DIR}/oozie-server/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/
-ln -s $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/webapps/../webapps $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/webapps
+ln -s $STACK_HOME/$COMPONENT_NAME/webapps $PREFIX/$STACK_HOME/$COMPONENT_NAME/tomcat-deployment/webapps
 
 
 
