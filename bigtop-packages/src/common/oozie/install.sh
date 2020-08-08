@@ -99,12 +99,12 @@ install -d -m 0755 $PREFIX/$LIB_DIR
 CLIENT_CONF=$PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/conf.client.dist
 SERVER_CONF=$PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/conf.server.dist
 HTTP_CONF=$PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.http
-HPPTS_CONF=$PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.https
+HTTPS_CONF=$PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.https
 
 install -d -m 0755 $CLIENT_CONF
 install -d -m 0755 $SERVER_CONF
 install -d -m 0755 $HTTP_CONF
-install -d -m 0755 $HPPTS_CONF
+install -d -m 0755 $HTTPS_CONF
 
 cp -a ${BUILD_DIR}/conf/* $CLIENT_CONF
 cp -a ${BUILD_DIR}/conf/* $SERVER_CONF
@@ -115,8 +115,8 @@ install -d -m 0755 $HTTP_CONF/WEB-INF
 cp -a ${BUILD_DIR}/WEB-INF/classes $HTTP_CONF/WEB-INF/
 cp -a ${BUILD_DIR}/WEB-INF/web.xml $HTTP_CONF/WEB-INF/
 
-install -d -m 0755 $HPPTS_CONF/conf
-cp -a ${BUILD_DIR}/oozie-server/conf/* $HPPTS_CONF/conf
+install -d -m 0755 $HTTPS_CONF/conf
+cp -a ${BUILD_DIR}/oozie-server/conf/* $HTTPS_CONF/conf
 install -d -m 0755 $HTTPS_CONF/WEB-INF
 cp -a ${BUILD_DIR}/WEB-INF/classes $HTTPS_CONF/WEB-INF/
 cp -a ${BUILD_DIR}/WEB-INF/web.xml $HTTPS_CONF/WEB-INF/
