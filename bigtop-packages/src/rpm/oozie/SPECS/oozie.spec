@@ -389,7 +389,6 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 
 %attr(0755,root,root) %{stack_home}/etc/%{component_name}/conf.client.dist/
 %attr(0755,root,root) %{component_install_dir}/bin/oozie
-%attr(0755,root,root) %{component_install_dir}/conf/
 %attr(0755,root,root) %{component_install_dir}/doc/
 %attr(0755,root,root) %{component_install_dir}/man
 

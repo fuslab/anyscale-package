@@ -305,7 +305,7 @@ cp -a ${BUILD_DIR}/oozie.war $PREFIX/$STACK_HOME/$COMPONENT_NAME/
 
 
 
-install -d -m 0755 $PREFIX//var/lib/$COMPONENT_NAME/data
+install -d -m 0755 $PREFIX/var/lib/$COMPONENT_NAME/data
 
 
 ### **********  create binary package  **********
