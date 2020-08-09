@@ -350,9 +350,10 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 %defattr(-,root,root,755)
 
 %attr(0755,root,root) %{stack_home}/etc/%{component_name}/conf.server.dist/
+
 %attr(0755,root,root) %{stack_home}/etc/%{component_name}/tomcat-deployment.http/conf
 %attr(0755,root,root) %{stack_home}/etc/%{component_name}/tomcat-deployment.http/WEB-INF
-%{stack_home}/etc/%{component_name}/tomcat-deployment.https/webapps
+%{stack_home}/etc/%{component_name}/tomcat-deployment.http/webapps
 
 %attr(0755,root,root) %{stack_home}/etc/%{component_name}/tomcat-deployment.https/conf
 %attr(0755,root,root) %{stack_home}/etc/%{component_name}/tomcat-deployment.https/WEB-INF
@@ -410,7 +411,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 ### sharelib-distcp ok
 %files sharelib-distcp
 %defattr(-,root,root,755)
-%attr(0755,root,root) %{component_install_dir}/share/lib/sharelib-distcp
+%attr(0755,root,root) %{component_install_dir}/share/lib/distcp
 
 
 
@@ -420,7 +421,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 ### sharelib-hcatalog ok
 %files sharelib-hcatalog
 %defattr(-,root,root,755)
-%attr(0755,root,root) %{component_install_dir}/share/lib/sharelib-hcatalog
+%attr(0755,root,root) %{component_install_dir}/share/lib/hcatalog
 
 
 
