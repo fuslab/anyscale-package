@@ -49,7 +49,7 @@ Source10: oozie-site.xml
 Source11: oozie.1
 
 Requires(pre): anyscale-select >= %{stack_version}
-Requires: oozie-client = %{version}, hadoop%{soft_package_version}-client
+Requires: hadoop%{soft_package_version}-client
 AutoReq: no
 
 
