@@ -340,7 +340,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 %files
 %defattr(-,root,root,755)
 
-
+%attr(0755,root,root) %{component_install_dir}/oozie-sharelib.tar.gz
 
 
 
@@ -381,6 +381,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 
 %attr(0755,root,root) %{component_install_dir}/webapps/oozie/
 %attr(0755,root,root) %{component_install_dir}/webapps/ROOT/
+%attr(0755,root,root) %{component_install_dir}/webapps/oozie.war
 
 %attr(0755,root,root) /var/lib/%{component_name}/data/
 

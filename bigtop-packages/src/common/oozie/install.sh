@@ -142,6 +142,8 @@ install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps
 ln -s $STACK_HOME/$COMPONENT_NAME/webapps $PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.http/webapps
 ln -s $STACK_HOME/$COMPONENT_NAME/webapps $PREFIX/$STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.https/webapps
 
+cp -a ${BUILD_DIR}/oozie-sharelib.tar.gz $PREFIX/$STACK_HOME/$COMPONENT_NAME/
+
 ### common ok
 
 cp -a ${BUILD_DIR}/bin/oozie*.sh $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/
