@@ -261,7 +261,7 @@ bigtop {
       pkg     = name
       relNotes = 'Apache Oozie'
       version { 
-        base = '4.3.1'; 
+        base = '4.4.0'; 
         pkg = base; 
         release = 1 
       }
