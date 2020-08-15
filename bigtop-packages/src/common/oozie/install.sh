@@ -147,10 +147,13 @@ cp -a ${BUILD_DIR}/oozie-sharelib.tar.gz $PREFIX/$STACK_HOME/$COMPONENT_NAME/
 ### common ok
 
 cp -a ${BUILD_DIR}/bin/oozie*.sh $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/
+cp -a ${BUILD_DIR}/bin/oozied.distro $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/
 cp -a $SOURCE_DIR/oozie-env.sh  $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/
 
 
 ln -s /etc/oozie/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/conf
+
+ln -s /etc/oozie/conf/oozie-env.sh $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/oozie-env.sh
 
 
 install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/etc/rc.d/init.d/
@@ -207,7 +210,8 @@ cp -a ${BUILD_DIR}/oozie.war $PREFIX/$STACK_HOME/$COMPONENT_NAME/webapps/
 
 ### Client OK
 
-cp -a ${BUILD_DIR}/oozie-client/bin/oozie $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/
+cp -a ${BUILD_DIR}/bin/oozie $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/
+cp -a ${BUILD_DIR}/bin/oozie.distro $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/
 cp -a ${BUILD_DIR}/oozie-client/{LICENSE.txt,NOTICE.txt,README.txt} $PREFIX/$STACK_HOME/$COMPONENT_NAME/doc/
 cp -a ${BUILD_DIR}/oozie-examples.tar.gz $PREFIX/$STACK_HOME/$COMPONENT_NAME/doc/
 cp -a ${BUILD_DIR}/docs/{release-log.txt,configuration.xsl} $PREFIX/$STACK_HOME/$COMPONENT_NAME/doc/

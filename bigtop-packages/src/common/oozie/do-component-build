@@ -36,6 +36,30 @@ cd build && mv oozie-sharelib-${OOZIE_VERSION}.tar.gz oozie-sharelib.tar.gz
 
 tar -zxf oozie-sharelib.tar.gz
 tar -zxf oozie-client-${OOZIE_VERSION}.tar.gz && rm -fr oozie-client-${OOZIE_VERSION}.tar.gz && mv oozie-client-${OOZIE_VERSION} oozie-client
-unzip docs.zip && rm -fr docs.zip
+unzip -q docs.zip && rm -fr docs.zip
 
 mkdir webapps && unzip -q oozie.war -d ./webapps/
+
+cd ./bin/ && mv oozie oozie.distro && mv oozied.sh oozied.distro
+
+wrapper=oozie
+install -d -m 0755 `dirname $wrapper`
+cat > $wrapper <<EOF
+#!/bin/bash
+export ANYSCALE_VERSION=${ANYSCALE_VERSION:-1-0-0-0-108}
+export OOZIE_CLIENT_OPTS="-Danyscale.version=${ANYSCALE_VERSION} ${OOZIE_CLIENT_OPTS}
+exec /opt/anyscale/1.0.0.0-108/oozie/bin/oozie.distro "$@"
+EOF
+chmod 755 $wrapper
+
+wrapper=oozied.sh
+install -d -m 0755 `dirname $wrapper`
+cat > $wrapper <<EOF
+#!/bin/bash
+export ANYSCALE_VERSION=${ANYSCALE_VERSION:-1-0-0-0-108}
+export CATALINA_OPTS="-Danyscale.version=${ANYSCALE_VERSION} ${CATALINA_OPTS}"
+exec /opt/anyscale/1.0.0.0-108/oozie/bin/oozied.distro "$@"
+EOF
+chmod 755 $wrapper
+
+cd ../../

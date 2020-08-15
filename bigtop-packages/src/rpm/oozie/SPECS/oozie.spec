@@ -49,7 +49,7 @@ Source10: oozie-site.xml
 Source11: oozie.1
 
 Requires(pre): anyscale-select >= %{stack_version}
-Requires: hadoop%{soft_package_version}-client
+Requires: oozie%{soft_package_version}-client, hadoop%{soft_package_version}-client
 AutoReq: no
 
 
@@ -341,7 +341,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 %defattr(-,root,root,755)
 
 %attr(0755,root,root) %{component_install_dir}/oozie-sharelib.tar.gz
-
+%attr(0755,root,root) %{component_install_dir}/oozie.war
 
 
 
@@ -396,6 +396,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 
 %attr(0755,root,root) %{stack_home}/etc/%{component_name}/conf.client.dist/
 %attr(0755,root,root) %{component_install_dir}/bin/oozie
+%attr(0755,root,root) %{component_install_dir}/bin/oozie.distro
 %attr(0755,root,root) %{component_install_dir}/doc/
 %attr(0755,root,root) %{component_install_dir}/man/
 %{component_install_dir}/conf
@@ -417,7 +418,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 ### sharelib-distcp ok
 %files sharelib-distcp
 %defattr(-,root,root,755)
-%attr(0755,root,root) %{component_install_dir}/share/lib/distcp
+%attr(0755,root,root) %{component_install_dir}/share/lib/distcp/
 
 
 
@@ -427,7 +428,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 ### sharelib-hcatalog ok
 %files sharelib-hcatalog
 %defattr(-,root,root,755)
-%attr(0755,root,root) %{component_install_dir}/share/lib/hcatalog
+%attr(0755,root,root) %{component_install_dir}/share/lib/hcatalog/
 
 
 
@@ -437,7 +438,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 ### sharelib-hive2 ok
 %files sharelib-hive2
 %defattr(-,root,root,755)
-%attr(0755,root,root) %{component_install_dir}/share/lib/hive2
+%attr(0755,root,root) %{component_install_dir}/share/lib/hive2/
 
 
 
@@ -447,7 +448,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 ### sharelib-hive ok
 %files sharelib-hive
 %defattr(-,root,root,755)
-%attr(0755,root,root) %{component_install_dir}/share/lib/hive
+%attr(0755,root,root) %{component_install_dir}/share/lib/hive/
 
 
 
@@ -457,7 +458,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 ### sharelib-mapreduce-streaming ok
 %files sharelib-mapreduce-streaming
 %defattr(-,root,root,755)
-%attr(0755,root,root) %{component_install_dir}/share/lib/mapreduce-streaming
+%attr(0755,root,root) %{component_install_dir}/share/lib/mapreduce-streaming/
 
 
 
@@ -467,7 +468,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 ### sharelib-pig ok
 %files sharelib-pig
 %defattr(-,root,root,755)
-%attr(0755,root,root) %{component_install_dir}/share/lib/pig
+%attr(0755,root,root) %{component_install_dir}/share/lib/pig/
 
 
 
@@ -477,7 +478,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 ### sharelib-spark ok
 %files sharelib-spark
 %defattr(-,root,root,755)
-%attr(0755,root,root) %{component_install_dir}/share/lib/spark
+%attr(0755,root,root) %{component_install_dir}/share/lib/spark/
 
 
 
@@ -487,7 +488,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_na
 ### sharelib-sqoop ok
 %files sharelib-sqoop
 %defattr(-,root,root,755)
-%attr(0755,root,root) %{component_install_dir}/share/lib/sqoop
+%attr(0755,root,root) %{component_install_dir}/share/lib/sqoop/
 
 
 
