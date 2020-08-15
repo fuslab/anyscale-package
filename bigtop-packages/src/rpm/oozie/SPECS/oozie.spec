@@ -362,6 +362,7 @@ ln -s /etc/oozie/conf/oozie-env.sh %{component_install_dir}/bin/oozie-env.sh
 %{stack_home}/etc/%{component_name}/tomcat-deployment.https/webapps
 
 %attr(0755,root,root) %{component_install_dir}/bin/*.sh
+%attr(0755,root,root) %{component_install_dir}/bin/oozied.distro
 
 
 %attr(0755,root,root) %{component_install_dir}/etc/rc.d/init.d/oozie-server
