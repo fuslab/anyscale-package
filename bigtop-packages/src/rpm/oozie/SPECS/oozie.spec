@@ -331,6 +331,8 @@ install -d -m 0755 $PREFIX/%{config_dir}
 
 cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_name}/conf/
 
+ln -s /etc/oozie/conf/oozie-env.sh %{component_install_dir}/bin/oozie-env.sh
+
 /usr/bin/anyscale-select set %{component_name}-client %{stack_version}
 /usr/bin/anyscale-select set %{component_name}-server %{stack_version}
 

@@ -153,7 +153,7 @@ cp -a $SOURCE_DIR/oozie-env.sh  $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/
 
 ln -s /etc/oozie/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/conf
 
-ln -s /etc/oozie/conf/oozie-env.sh $PREFIX/$STACK_HOME/$COMPONENT_NAME/bin/oozie-env.sh
+
 
 
 install -d -m 0755 $PREFIX/$STACK_HOME/$COMPONENT_NAME/etc/rc.d/init.d/
