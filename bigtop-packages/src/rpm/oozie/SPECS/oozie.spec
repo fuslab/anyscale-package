@@ -49,7 +49,7 @@ Source10: oozie-site.xml
 Source11: oozie.1
 
 Requires(pre): anyscale-select >= %{stack_version}
-Requires: oozie%{soft_package_version}-client, hadoop%{soft_package_version}-client
+Requires: oozie%{soft_package_version}-client, oozie%{soft_package_version}-common, oozie%{soft_package_version}-webapp, hadoop%{soft_package_version}-client
 AutoReq: no
 
 
@@ -332,6 +332,7 @@ install -d -m 0755 $PREFIX/%{config_dir}
 cp -r %{stack_home}/etc/%{component_name}/conf.client.dist/* /etc/%{component_name}/conf/
 
 ln -s /etc/oozie/conf/oozie-env.sh %{component_install_dir}/bin/oozie-env.sh
+ln -s %{stack_home}/etc/%{component_name}/tomcat-deployment.http/conf %{component_install_dir}/oozie-server/conf
 
 /usr/bin/anyscale-select set %{component_name}-client %{stack_version}
 /usr/bin/anyscale-select set %{component_name}-server %{stack_version}
@@ -344,6 +345,7 @@ ln -s /etc/oozie/conf/oozie-env.sh %{component_install_dir}/bin/oozie-env.sh
 
 %attr(0755,root,root) %{component_install_dir}/oozie-sharelib.tar.gz
 %attr(0755,root,root) %{component_install_dir}/oozie.war
+
 
 
 
@@ -371,7 +373,7 @@ ln -s /etc/oozie/conf/oozie-env.sh %{component_install_dir}/bin/oozie-env.sh
 %attr(0755,root,root) %{component_install_dir}/libserver/
 %attr(0755,root,root) %{component_install_dir}/libtools/
 %attr(0755,root,root) %{component_install_dir}/oozie-server/webapps/
-%{component_install_dir}/oozie-server/conf
+
 
 %attr(0755,root,root) %{component_install_dir}/schema/
 

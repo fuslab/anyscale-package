@@ -170,7 +170,6 @@ cp -a ${BUILD_DIR}/webapps/WEB-INF/lib/* $PREFIX/$STACK_HOME/$COMPONENT_NAME/lib
 
 
 
-ln -s $STACK_HOME/etc/$COMPONENT_NAME/tomcat-deployment.http/conf $PREFIX/$STACK_HOME/$COMPONENT_NAME/oozie-server/conf
 cp -a ${BUILD_DIR}/oozie-server/webapps $PREFIX/$STACK_HOME/$COMPONENT_NAME/oozie-server/
 
 
