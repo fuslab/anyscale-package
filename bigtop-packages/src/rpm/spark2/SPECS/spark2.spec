@@ -146,7 +146,7 @@ cp -r %{stack_home}/etc/%{component_name}/conf.dist/* /etc/%{component_name}/con
 %attr(0755,root,root) %{component_install_dir}/README.md
 
 %attr(0755,root,root) %{component_install_dir}/R/
-%attr(0755,root,root) %{component_install_dir}/aux/
+#%attr(0755,root,root) %{component_install_dir}/aux/
 %attr(0755,root,root) %{component_install_dir}/bin/
 %attr(0755,root,root) %{component_install_dir}/data/
 %attr(0755,root,root) %{component_install_dir}/doc/
